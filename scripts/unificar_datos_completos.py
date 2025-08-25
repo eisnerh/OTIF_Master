@@ -160,10 +160,73 @@ def unificar_datos_completos():
         logger.info(f"📊 Registros con match en NO_ENTREGAS: {registros_con_match:,}")
         logger.info(f"📊 Registros sin match: {len(df_final_unido) - registros_con_match:,}")
         
-        # Guardar archivo final unido
+        # 6. AGREGAR COLUMNAS DE CONTEO: "Entregas" Y "No Entrega"
+        logger.info("📊 Agregando columnas de conteo: 'Entregas' y 'No Entrega'...")
+        
+        # Crear columna "Entregas" - contar 1 solo para la primera ocurrencia de cada combinación única
+        logger.info("🔢 Creando columna 'Entregas'...")
+        
+        # Crear un identificador único para cada combinación de Entrega + Familia
+        df_final_unido['combinacion_entrega_familia'] = df_final_unido['Entrega'] + '_' + df_final_unido['Familia']
+        
+        # Marcar solo la primera ocurrencia de cada combinación única
+        df_final_unido['Entregas'] = df_final_unido['combinacion_entrega_familia'].duplicated().map({True: 0, False: 1})
+        
+        # Crear columna "No Entrega" - contar 1 solo para la primera ocurrencia con "Cajas Equiv NE" > 0
+        logger.info("❌ Creando columna 'No Entrega'...")
+        
+        # Buscar columnas que contengan "Cajas Equiv NE"
+        columnas_cajas_equiv = [col for col in df_final_unido.columns if 'Cajas Equiv NE' in col]
+        
+        if columnas_cajas_equiv:
+            logger.info(f"📋 Columnas encontradas con 'Cajas Equiv NE': {columnas_cajas_equiv}")
+            
+            # Crear un identificador único para cada combinación de Entrega + Familia
+            df_final_unido['combinacion_no_entrega'] = df_final_unido['Entrega'] + '_' + df_final_unido['Familia']
+            
+            # Filtrar registros que tengan "Cajas Equiv NE" con valores > 0
+            registros_con_no_entrega = df_final_unido[df_final_unido[columnas_cajas_equiv].sum(axis=1) > 0]
+            
+            if len(registros_con_no_entrega) > 0:
+                # Crear una máscara para las combinaciones que tienen "Cajas Equiv NE" > 0
+                mascara_cajas_equiv = df_final_unido[columnas_cajas_equiv].sum(axis=1) > 0
+                
+                # Marcar solo la primera ocurrencia de cada combinación que tenga "Cajas Equiv NE" > 0
+                df_final_unido['No Entrega'] = 0
+                
+                # Para cada combinación única que tenga "Cajas Equiv NE" > 0, marcar solo la primera ocurrencia
+                combinaciones_con_no_entrega = df_final_unido[mascara_cajas_equiv]['combinacion_no_entrega'].drop_duplicates()
+                
+                for combinacion in combinaciones_con_no_entrega:
+                    # Encontrar el primer índice donde aparece esta combinación con "Cajas Equiv NE" > 0
+                    indices = df_final_unido[(df_final_unido['combinacion_no_entrega'] == combinacion) & mascara_cajas_equiv].index
+                    if len(indices) > 0:
+                        primer_indice = indices[0]
+                        df_final_unido.loc[primer_indice, 'No Entrega'] = 1
+                
+                logger.info(f"✅ Columna 'No Entrega' creada: {len(combinaciones_con_no_entrega)} combinaciones únicas marcadas")
+            else:
+                logger.warning("⚠️ No se encontraron registros con 'Cajas Equiv NE' > 0")
+                df_final_unido['No Entrega'] = 0
+        else:
+            logger.warning("⚠️ No se encontraron columnas con 'Cajas Equiv NE'")
+            df_final_unido['No Entrega'] = 0
+        
+        # Limpiar columnas temporales
+        df_final_unido = df_final_unido.drop(['combinacion_entrega_familia', 'combinacion_no_entrega'], axis=1)
+        
+        # Mostrar estadísticas de las nuevas columnas
+        total_entregas = df_final_unido['Entregas'].sum()
+        total_no_entregas = df_final_unido['No Entrega'].sum()
+        
+        logger.info(f"📊 Estadísticas de las nuevas columnas:")
+        logger.info(f"  • Total 'Entregas': {total_entregas:,}")
+        logger.info(f"  • Total 'No Entrega': {total_no_entregas:,}")
+        
+        # Guardar archivo final unido con las nuevas columnas
         archivo_final_unido = carpeta_salida / "datos_completos_con_no_entregas.parquet"
         df_final_unido.to_parquet(archivo_final_unido, index=False)
-        logger.info(f"✅ Archivo final unido guardado: {archivo_final_unido}")
+        logger.info(f"✅ Archivo final unido guardado con nuevas columnas: {archivo_final_unido}")
         
         # Mostrar las columnas del archivo final unido
         logger.info("📋 Columnas del archivo final unido:")
@@ -178,7 +241,11 @@ def unificar_datos_completos():
         logger.info("  • no_entregas.parquet") 
         logger.info("  • vol_portafolio.parquet")
         logger.info("  • rep_plr_vol_portafolio_unido.parquet")
-        logger.info("  • datos_completos_con_no_entregas.parquet (NUEVO)")
+        logger.info("  • datos_completos_con_no_entregas.parquet (CON NUEVAS COLUMNAS)")
+        logger.info("")
+        logger.info("🆕 Nuevas columnas agregadas a datos_completos_con_no_entregas.parquet:")
+        logger.info("  • 'Entregas': Conta 1 solo para la primera ocurrencia de cada combinación única de Entrega + Familia")
+        logger.info("  • 'No Entrega': Conta 1 solo para la primera ocurrencia de cada combinación única con 'Cajas Equiv NE' > 0")
         
     except Exception as e:
         logger.error(f"❌ Error durante el procesamiento: {str(e)}")

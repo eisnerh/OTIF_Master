@@ -123,6 +123,8 @@ El sistema ejecuta los siguientes pasos en orden:
 - `vol_portafolio.parquet` - Datos Vol Portafolio procesados
 - `rep_plr_vol_portafolio_unido.parquet` - Datos Rep PLR unidos con Vol Portafolio por columna Entrega
 - `datos_completos_con_no_entregas.parquet` - Datos completos unidos con No Entregas por columnas Entrega y Familia
+  - **Nueva columna "Entregas"**: Conta 1 solo para la primera ocurrencia de cada combinación única de Entrega + Familia
+  - **Nueva columna "No Entrega"**: Conta 1 solo para la primera ocurrencia de cada combinación única con "Cajas Equiv NE" > 0
 
 ### **Archivos de Resumen**
 - `resumen_procesamiento.json` - Estadísticas del procesamiento
@@ -226,6 +228,7 @@ Data/
 ## 📞 Soporte
 
 Para problemas o preguntas:
+eisner.lopez@gmail.com
 1. Revisa los logs en `procesamiento_maestro.log`
 2. Verifica la estructura de carpetas
 3. Asegúrate de que las dependencias estén instaladas
