@@ -101,6 +101,9 @@ def agrupar_datos_vol_portafolio():
         # Guardar como archivo parquet con compresión optimizada
         archivo_parquet = carpeta_salida / "Vol_Portafolio_combinado.parquet"
         
+        # Verificar si el archivo ya existe
+        archivo_existe = archivo_parquet.exists()
+        
         try:
             df_combinado.to_parquet(
                 archivo_parquet, 
@@ -108,7 +111,12 @@ def agrupar_datos_vol_portafolio():
                 compression='snappy',  # Compresión rápida y eficiente
                 engine='pyarrow'
             )
-            logger.info(f"Archivo parquet guardado exitosamente en: {archivo_parquet}")
+            
+            if archivo_existe:
+                logger.info(f"Archivo parquet actualizado exitosamente en: {archivo_parquet}")
+            else:
+                logger.info(f"Archivo parquet creado exitosamente en: {archivo_parquet}")
+                
             logger.info(f"Tamaño del archivo: {archivo_parquet.stat().st_size / (1024*1024):.2f} MB")
             
             # Mostrar un resumen de los datos
@@ -141,8 +149,16 @@ def agrupar_datos_vol_portafolio():
             }).rename(columns={'hoja_origen': 'total_registros'})
             
             archivo_resumen = carpeta_salida / "resumen_vol_portafolio.parquet"
+            
+            # Verificar si el archivo de resumen ya existe
+            resumen_existe = archivo_resumen.exists()
+            
             resumen_hojas.to_parquet(archivo_resumen)
-            logger.info(f"Resumen guardado en: {archivo_resumen}")
+            
+            if resumen_existe:
+                logger.info(f"Resumen actualizado en: {archivo_resumen}")
+            else:
+                logger.info(f"Resumen creado en: {archivo_resumen}")
             
         except Exception as e:
             logger.error(f"Error al guardar el archivo parquet: {str(e)}")

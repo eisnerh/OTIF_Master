@@ -33,13 +33,21 @@ def unificar_datos_completos():
             
             # Guardar archivo Rep PLR con compresión optimizada
             archivo_rep_plr_final = carpeta_salida / "rep_plr.parquet"
+            
+            # Verificar si el archivo ya existe
+            archivo_existe = archivo_rep_plr_final.exists()
+            
             df_rep_plr.to_parquet(
                 archivo_rep_plr_final, 
                 index=False,
                 compression='snappy',
                 engine='pyarrow'
             )
-            logger.info(f"✅ Archivo REP_PLR guardado: {archivo_rep_plr_final}")
+            
+            if archivo_existe:
+                logger.info(f"✅ Archivo REP_PLR actualizado: {archivo_rep_plr_final}")
+            else:
+                logger.info(f"✅ Archivo REP_PLR creado: {archivo_rep_plr_final}")
         else:
             logger.error(f"❌ El archivo {archivo_rep_plr} no existe")
             return
@@ -52,13 +60,21 @@ def unificar_datos_completos():
             
             # Guardar archivo No Entregas con compresión optimizada
             archivo_no_entregas_final = carpeta_salida / "no_entregas.parquet"
+            
+            # Verificar si el archivo ya existe
+            archivo_existe = archivo_no_entregas_final.exists()
+            
             df_no_entregas.to_parquet(
                 archivo_no_entregas_final, 
                 index=False,
                 compression='snappy',
                 engine='pyarrow'
             )
-            logger.info(f"✅ Archivo NO_ENTREGAS guardado: {archivo_no_entregas_final}")
+            
+            if archivo_existe:
+                logger.info(f"✅ Archivo NO_ENTREGAS actualizado: {archivo_no_entregas_final}")
+            else:
+                logger.info(f"✅ Archivo NO_ENTREGAS creado: {archivo_no_entregas_final}")
             
             # Liberar memoria
             del df_no_entregas
@@ -74,13 +90,21 @@ def unificar_datos_completos():
             
             # Guardar archivo Vol Portafolio con compresión optimizada
             archivo_vol_portafolio_final = carpeta_salida / "vol_portafolio.parquet"
+            
+            # Verificar si el archivo ya existe
+            archivo_existe = archivo_vol_portafolio_final.exists()
+            
             df_vol_portafolio.to_parquet(
                 archivo_vol_portafolio_final, 
                 index=False,
                 compression='snappy',
                 engine='pyarrow'
             )
-            logger.info(f"✅ Archivo VOL_PORTAFOLIO guardado: {archivo_vol_portafolio_final}")
+            
+            if archivo_existe:
+                logger.info(f"✅ Archivo VOL_PORTAFOLIO actualizado: {archivo_vol_portafolio_final}")
+            else:
+                logger.info(f"✅ Archivo VOL_PORTAFOLIO creado: {archivo_vol_portafolio_final}")
         else:
             logger.error(f"❌ El archivo {archivo_vol_portafolio} no existe")
             return
@@ -131,13 +155,21 @@ def unificar_datos_completos():
         
         # Guardar archivo unido con compresión optimizada
         archivo_unido = carpeta_salida / "rep_plr_vol_portafolio_unido.parquet"
+        
+        # Verificar si el archivo ya existe
+        archivo_existe = archivo_unido.exists()
+        
         df_unido.to_parquet(
             archivo_unido, 
             index=False,
             compression='snappy',
             engine='pyarrow'
         )
-        logger.info(f"✅ Archivo unido guardado: {archivo_unido}")
+        
+        if archivo_existe:
+            logger.info(f"✅ Archivo unido actualizado: {archivo_unido}")
+        else:
+            logger.info(f"✅ Archivo unido creado: {archivo_unido}")
         
         # Mostrar las columnas del archivo unido
         logger.info("📋 Columnas del archivo unido:")
@@ -261,13 +293,21 @@ def unificar_datos_completos():
         
         # Guardar archivo final unido con las nuevas columnas y compresión optimizada
         archivo_final_unido = carpeta_salida / "datos_completos_con_no_entregas.parquet"
+        
+        # Verificar si el archivo ya existe
+        archivo_existe = archivo_final_unido.exists()
+        
         df_final_unido.to_parquet(
             archivo_final_unido, 
             index=False,
             compression='snappy',
             engine='pyarrow'
         )
-        logger.info(f"✅ Archivo final unido guardado con nuevas columnas: {archivo_final_unido}")
+        
+        if archivo_existe:
+            logger.info(f"✅ Archivo final unido actualizado con nuevas columnas: {archivo_final_unido}")
+        else:
+            logger.info(f"✅ Archivo final unido creado con nuevas columnas: {archivo_final_unido}")
         
         # Liberar memoria del dataframe final
         del df_final_unido

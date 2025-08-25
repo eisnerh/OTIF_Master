@@ -217,6 +217,13 @@ Data/
 
 ## 🔄 Actualizaciones
 
+### **Versión 2.1 - Actualización de Archivos Parquet**
+- ✅ **Actualización en lugar de creación**: Los archivos parquet ahora se actualizan en lugar de crear nuevos
+- ✅ **Consistencia de nombres**: Los archivos mantienen siempre el mismo nombre y ubicación
+- ✅ **Mejor gestión de espacio**: No se acumulan archivos duplicados
+- ✅ **Logs informativos**: Los mensajes indican claramente si se creó o actualizó un archivo
+- ✅ **Compatibilidad total**: Los cambios son transparentes para el resto del sistema
+
 ### **Versión 2.0 - Optimizaciones**
 - ✅ Script maestro optimizado
 - ✅ Manejo robusto de errores
@@ -224,6 +231,35 @@ Data/
 - ✅ Encoding mejorado para Windows
 - ✅ Logs detallados
 - ✅ Interfaz web mejorada
+
+## 📋 Gestión de Archivos Parquet
+
+### **Comportamiento Actualizado**
+El sistema ahora **actualiza los archivos parquet existentes** en lugar de crear nuevos archivos cada vez que se ejecuta el procesamiento.
+
+#### **Archivos que se Actualizan:**
+- `Data/Rep PLR/Output/REP_PLR_combinado.parquet`
+- `Data/No Entregas/Output/No_Entregas_combinado_mejorado.parquet`
+- `Data/Vol_Portafolio/Output/Vol_Portafolio_combinado.parquet`
+- `Data/Vol_Portafolio/Output/resumen_vol_portafolio.parquet`
+- `Data/Output_Unificado/rep_plr.parquet`
+- `Data/Output_Unificado/no_entregas.parquet`
+- `Data/Output_Unificado/vol_portafolio.parquet`
+- `Data/Output_Unificado/rep_plr_vol_portafolio_unido.parquet`
+- `Data/Output_Unificado/datos_completos_con_no_entregas.parquet`
+
+#### **Beneficios:**
+- **Consistencia**: Los archivos mantienen siempre el mismo nombre
+- **Preservación**: Los archivos permanecen en su ubicación original
+- **Eficiencia**: No se acumulan archivos duplicados
+- **Claridad**: Los logs indican si se creó o actualizó un archivo
+- **Compatibilidad**: Sin cambios en el resto del sistema
+
+#### **Logs Mejorados:**
+```
+✅ Archivo parquet actualizado exitosamente en: [ruta]
+✅ Archivo parquet creado exitosamente en: [ruta]
+```
 
 ## 📞 Soporte
 

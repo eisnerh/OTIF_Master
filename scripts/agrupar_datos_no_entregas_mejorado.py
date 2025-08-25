@@ -205,6 +205,9 @@ def agrupar_datos_no_entregas():
     # Guardar como archivo parquet con compresión optimizada
     archivo_parquet = carpeta_salida / "No_Entregas_combinado_mejorado.parquet"
     
+    # Verificar si el archivo ya existe
+    archivo_existe = archivo_parquet.exists()
+    
     try:
         df_combinado.to_parquet(
             archivo_parquet, 
@@ -212,7 +215,12 @@ def agrupar_datos_no_entregas():
             compression='snappy',  # Compresión rápida y eficiente
             engine='pyarrow'
         )
-        logger.info(f"Archivo parquet guardado exitosamente en: {archivo_parquet}")
+        
+        if archivo_existe:
+            logger.info(f"Archivo parquet actualizado exitosamente en: {archivo_parquet}")
+        else:
+            logger.info(f"Archivo parquet creado exitosamente en: {archivo_parquet}")
+            
         logger.info(f"Tamaño del archivo: {archivo_parquet.stat().st_size / (1024*1024):.2f} MB")
         
         # Mostrar un resumen de los datos
