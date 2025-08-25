@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }} - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        .header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+        .progress {
+            height: 25px;
+            border-radius: 15px;
+            background: #f8f9fa;
+        }
+        .progress-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-running {
+            background: #f39c12;
+            animation: pulse 1.5s infinite;
+        }
+        .status-completed {
+            background: #27ae60;
+        }
+        .status-error {
+            background: #e74c3c;
+        }
+        .file-item {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+        }
+        .file-item:hover {
+            background: #e9ecef;
+            transition: background 0.3s ease;
+        }
+        .list-unstyled li {
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .list-unstyled li:last-child {
+            border-bottom: none;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .file-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-chart-line"></i> {{ app_name }}</h1>
+                <p>Dashboard para el procesamiento y análisis de datos OTIF</p>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cogs"></i> Panel de Control
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button id="btnIniciar" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i class="fas fa-play"></i> Iniciar Procesamiento
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button id="btnActualizar" class="btn btn-info btn-lg w-100 mb-3">
+                                <i class="fas fa-sync-alt"></i> Actualizar Estado
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button id="btnConfiguracion" class="btn btn-warning btn-lg w-100 mb-3">
+                                <i class="fas fa-cog"></i> Configuración
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration Panel -->
+            <div class="card" id="configPanel" style="display: none;">
+                <div class="card-header">
+                    <i class="fas fa-folder-open"></i> Configuración de Rutas
+                </div>
+                <div class="card-body">
+                    <form id="configForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-database"></i> Rutas de Datos</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Rep PLR:</label>
+                                    <input type="text" class="form-control" id="rutaRepPLR" placeholder="Data/Rep PLR">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">No Entregas:</label>
+                                    <input type="text" class="form-control" id="rutaNoEntregas" placeholder="Data/No Entregas/2025">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Vol Portafolio:</label>
+                                    <input type="text" class="form-control" id="rutaVolPortafolio" placeholder="Data/Vol_Portafolio">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-folder"></i> Rutas de Salida</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Output Unificado:</label>
+                                    <input type="text" class="form-control" id="rutaOutputUnificado" placeholder="Data/Output_Unificado">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Output Final:</label>
+                                    <input type="text" class="form-control" id="rutaOutputFinal" placeholder="Data/Output/calculo_otif">
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" id="btnVerificarRutas" class="btn btn-info btn-sm">
+                                        <i class="fas fa-check"></i> Verificar Rutas
+                                    </button>
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-save"></i> Guardar Configuración
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="rutasStatus" class="mt-3"></div>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-tasks"></i> Estado del Procesamiento
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5 id="pasoActual">Esperando inicio...</h5>
+                            <div class="progress mb-3">
+                                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%">0%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <span id="statusIndicator" class="status-indicator status-error"></span>
+                                <span id="statusText">Inactivo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Log Messages -->
+                    <div class="mt-3">
+                        <h6><i class="fas fa-terminal"></i> Log de Procesamiento</h6>
+                        <div id="logContainer" class="log-container">
+                            <div class="text-muted">No hay mensajes disponibles...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-file-alt"></i> Archivos Generados
+                </div>
+                <div class="card-body">
+                    <div id="archivosContainer">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-folder-open fa-3x mb-3"></i>
+                            <p>No hay archivos generados aún</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar"></i> Estadísticas
+                </div>
+                <div class="card-body">
+                    <div id="statsContainer" class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalFiles">0</div>
+                            <div class="stat-label">Archivos Generados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalRows">0</div>
+                            <div class="stat-label">Total Registros</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalSize">0 MB</div>
+                            <div class="stat-label">Tamaño Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="processingTime">-</div>
+                            <div class="stat-label">Tiempo Procesamiento</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Join Information Section -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-link"></i> Información de Unión de Datos
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-database"></i> Archivo Unido Principal</h6>
+                            <p><strong>datos_completos_con_no_entregas.parquet</strong></p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Rep PLR + Vol Portafolio + No Entregas</li>
+                                <li><i class="fas fa-key text-info"></i> Claves de unión: Entrega + Familia</li>
+                                <li><i class="fas fa-table text-warning"></i> 34 columnas totales</li>
+                                <li><i class="fas fa-chart-line text-primary"></i> Análisis completo OTIF</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-info-circle"></i> Archivos Generados</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-file-alt"></i> rep_plr.parquet</li>
+                                <li><i class="fas fa-file-alt"></i> no_entregas.parquet</li>
+                                <li><i class="fas fa-file-alt"></i> vol_portafolio.parquet</li>
+                                <li><i class="fas fa-file-alt"></i> rep_plr_vol_portafolio_unido.parquet</li>
+                                <li><i class="fas fa-file-alt text-success"></i> <strong>datos_completos_con_no_entregas.parquet</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let processingInterval;
+        let startTime;
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            loadFiles();
+        });
+
+        // Botón iniciar procesamiento
+        document.getElementById('btnIniciar').addEventListener('click', function() {
+            if (confirm('¿Estás seguro de que quieres iniciar el procesamiento? Esto puede tomar varios minutos.')) {
+                startProcessing();
+            }
+        });
+
+        // Botón actualizar estado
+        document.getElementById('btnActualizar').addEventListener('click', function() {
+            updateStatus();
+            loadFiles();
+        });
+
+        // Botón configuración
+        document.getElementById('btnConfiguracion').addEventListener('click', function() {
+            toggleConfigPanel();
+            loadConfiguracion();
+        });
+
+        // Botón verificar rutas
+        document.getElementById('btnVerificarRutas').addEventListener('click', function() {
+            verificarRutas();
+        });
+
+        // Formulario de configuración
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            guardarConfiguracion();
+        });
+
+        function startProcessing() {
+            fetch('/iniciar_procesamiento', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    startTime = new Date();
+                    startMonitoring();
+                    alert('Procesamiento iniciado correctamente');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al iniciar el procesamiento');
+            });
+        }
+
+        function startMonitoring() {
+            if (processingInterval) {
+                clearInterval(processingInterval);
+            }
+            
+            processingInterval = setInterval(() => {
+                updateStatus();
+            }, 2000);
+        }
+
+        function updateStatus() {
+            fetch('/estado_procesamiento')
+            .then(response => response.json())
+            .then(data => {
+                updateProgressBar(data.progreso);
+                updateStatusIndicator(data);
+                updateCurrentStep(data.paso_actual);
+                updateLogMessages(data.mensajes);
+                
+                if (data.completado || data.error) {
+                    clearInterval(processingInterval);
+                    loadFiles();
+                    updateStatistics();
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener estado:', error);
+            });
+        }
+
+        function updateProgressBar(progress) {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+        }
+
+        function updateStatusIndicator(data) {
+            const indicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+            
+            indicator.className = 'status-indicator';
+            
+            if (data.error) {
+                indicator.classList.add('status-error');
+                statusText.textContent = 'Error';
+            } else if (data.completado) {
+                indicator.classList.add('status-completed');
+                statusText.textContent = 'Completado';
+            } else if (data.en_proceso) {
+                indicator.classList.add('status-running');
+                statusText.textContent = 'En Proceso';
+            } else {
+                indicator.classList.add('status-error');
+                statusText.textContent = 'Inactivo';
+            }
+        }
+
+        function updateCurrentStep(step) {
+            document.getElementById('pasoActual').textContent = step || 'Esperando inicio...';
+        }
+
+        function updateLogMessages(messages) {
+            const logContainer = document.getElementById('logContainer');
+            
+            if (messages && messages.length > 0) {
+                logContainer.innerHTML = messages.map(msg => 
+                    `<div class="mb-1">${msg}</div>`
+                ).join('');
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+        }
+
+        function loadFiles() {
+            fetch('/archivos_generados')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('archivosContainer');
+                
+                if (data.archivos && data.archivos.length > 0) {
+                    container.innerHTML = data.archivos.map(file => `
+                        <div class="file-item">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-file-alt"></i> ${file.nombre}</h6>
+                                    ${file.error ? 
+                                        `<span class="text-danger">Error: ${file.error}</span>` :
+                                        `<small class="text-muted">
+                                            ${file.filas ? file.filas.toLocaleString() : 'N/A'} filas, 
+                                            ${file.columnas || 'N/A'} columnas, 
+                                            ${file.tamaño_mb ? file.tamaño_mb.toFixed(2) : 'N/A'} MB
+                                        </small>`
+                                    }
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    ${!file.error ? 
+                                        `<a href="/descargar_archivo/${file.nombre}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-download"></i> Descargar
+                                        </a>` : ''
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center text-muted">
+                            <i class="fas fa-folder-open fa-3x mb-3"></i>
+                            <p>No hay archivos generados aún</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar archivos:', error);
+            });
+        }
+
+        function updateStatistics() {
+            fetch('/ver_resumen')
+            .then(response => response.json())
+            .then(data => {
+                if (data.archivos_generados) {
+                    const totalFiles = data.archivos_generados.length;
+                    const totalRows = data.archivos_generados.reduce((sum, file) => sum + (file.filas || 0), 0);
+                    const totalSize = data.archivos_generados.reduce((sum, file) => sum + (file.tamaño_mb || 0), 0);
+                    
+                    document.getElementById('totalFiles').textContent = totalFiles;
+                    document.getElementById('totalRows').textContent = totalRows.toLocaleString();
+                    document.getElementById('totalSize').textContent = totalSize.toFixed(2) + ' MB';
+                    
+                    if (startTime) {
+                        const endTime = new Date();
+                        const processingTime = Math.round((endTime - startTime) / 1000);
+                        document.getElementById('processingTime').textContent = processingTime + 's';
+                    }
+                }
+            })
+                         .catch(error => {
+                 console.error('Error al cargar estadísticas:', error);
+             });
+         }
+
+         function toggleConfigPanel() {
+             const panel = document.getElementById('configPanel');
+             if (panel.style.display === 'none') {
+                 panel.style.display = 'block';
+             } else {
+                 panel.style.display = 'none';
+             }
+         }
+
+         function loadConfiguracion() {
+             fetch('/configuracion')
+             .then(response => response.json())
+             .then(data => {
+                 document.getElementById('rutaRepPLR').value = data.rutas_archivos.rep_plr;
+                 document.getElementById('rutaNoEntregas').value = data.rutas_archivos.no_entregas;
+                 document.getElementById('rutaVolPortafolio').value = data.rutas_archivos.vol_portafolio;
+                 document.getElementById('rutaOutputUnificado').value = data.rutas_archivos.output_unificado;
+                 document.getElementById('rutaOutputFinal').value = data.rutas_archivos.output_final;
+             })
+             .catch(error => {
+                 console.error('Error al cargar configuración:', error);
+                 alert('Error al cargar la configuración');
+             });
+         }
+
+         function guardarConfiguracion() {
+             const config = {
+                 rutas_archivos: {
+                     rep_plr: document.getElementById('rutaRepPLR').value,
+                     no_entregas: document.getElementById('rutaNoEntregas').value,
+                     vol_portafolio: document.getElementById('rutaVolPortafolio').value,
+                     output_unificado: document.getElementById('rutaOutputUnificado').value,
+                     output_final: document.getElementById('rutaOutputFinal').value
+                 }
+             };
+
+             fetch('/configuracion', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(config)
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.error) {
+                     alert('Error: ' + data.error);
+                 } else {
+                     alert('Configuración guardada correctamente');
+                     toggleConfigPanel();
+                 }
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+                 alert('Error al guardar la configuración');
+             });
+         }
+
+         function verificarRutas() {
+             fetch('/verificar_rutas')
+             .then(response => response.json())
+             .then(data => {
+                 const statusDiv = document.getElementById('rutasStatus');
+                 let html = '<h6><i class="fas fa-info-circle"></i> Estado de las Rutas:</h6>';
+                 
+                 for (const [nombre, info] of Object.entries(data)) {
+                     const icon = info.existe ? 'fas fa-check text-success' : 'fas fa-times text-danger';
+                     const status = info.existe ? 'Existe' : 'No existe';
+                     html += `<div><i class="${icon}"></i> ${nombre}: ${status} (${info.ruta})</div>`;
+                 }
+                 
+                 statusDiv.innerHTML = html;
+             })
+             .catch(error => {
+                 console.error('Error al verificar rutas:', error);
+                 alert('Error al verificar las rutas');
+             });
+         }
+     </script>
+ </body>
+ </html>
