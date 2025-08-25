@@ -14,9 +14,11 @@ from datetime import datetime
 app = Flask(__name__)
 app.config['APP_NAME'] = 'OTIF Master'
 
-# Configurar logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configurar logging con nivel más alto para reducir operaciones innecesarias
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+# Solo configurar nivel INFO para el logger de la aplicación
+logger.setLevel(logging.INFO)
 
 # Variable global para el estado del procesamiento
 procesamiento_status = {

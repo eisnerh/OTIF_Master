@@ -2,10 +2,14 @@ import pandas as pd
 import os
 from pathlib import Path
 import logging
+import concurrent.futures
+import gc
 
-# Configurar logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configurar logging con nivel más alto para reducir operaciones innecesarias
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+# Solo configurar nivel INFO para el logger principal
+logger.setLevel(logging.INFO)
 
 def agrupar_datos_vol_portafolio():
     """
@@ -23,7 +27,7 @@ def agrupar_datos_vol_portafolio():
     
     try:
         # Leer el archivo Excel para ver las hojas disponibles
-        excel_file = pd.ExcelFile(archivo_excel)
+        excel_file = pd.ExcelFile(archivo_excel, engine='openpyxl')
         hojas_disponibles = excel_file.sheet_names
         
         logger.info(f"Archivo encontrado: {archivo_excel.name}")
@@ -33,13 +37,18 @@ def agrupar_datos_vol_portafolio():
         # Lista para almacenar todos los DataFrames
         dataframes = []
         
-        # Procesar cada hoja
-        for hoja in hojas_disponibles:
+        # Función para procesar una hoja
+        def procesar_hoja(hoja):
             try:
                 logger.info(f"Procesando hoja: {hoja}")
                 
-                # Leer la hoja
-                df = pd.read_excel(archivo_excel, sheet_name=hoja)
+                # Leer la hoja con parámetros optimizados
+                df = pd.read_excel(
+                    archivo_excel, 
+                    sheet_name=hoja,
+                    engine='openpyxl',
+                    dtype_backend='numpy_nullable'  # Usar backend optimizado
+                )
                 
                 # Agregar columna para identificar la hoja de origen
                 df['hoja_origen'] = hoja
@@ -47,25 +56,36 @@ def agrupar_datos_vol_portafolio():
                 # Agregar columna para identificar el archivo de origen
                 df['archivo_origen'] = archivo_excel.name
                 
-                dataframes.append(df)
                 logger.info(f"Se agregaron {len(df)} filas de la hoja {hoja}")
                 
                 # Mostrar información básica de la hoja
                 logger.info(f"  - Columnas: {len(df.columns)}")
                 logger.info(f"  - Filas: {len(df)}")
-                logger.info(f"  - Columnas: {list(df.columns)}")
+                
+                return df
                 
             except Exception as e:
                 logger.error(f"Error al procesar la hoja {hoja}: {str(e)}")
-                continue
+                return None
+        
+        # Usar procesamiento paralelo para procesar las hojas
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            resultados = list(executor.map(procesar_hoja, hojas_disponibles))
+        
+        # Filtrar los resultados None
+        dataframes = [df for df in resultados if df is not None]
         
         if not dataframes:
             logger.error("No se pudieron leer datos de ninguna hoja")
             return
         
-        # Combinar todos los DataFrames
+        # Combinar todos los DataFrames de manera eficiente
         logger.info("Combinando todos los DataFrames...")
         df_combinado = pd.concat(dataframes, ignore_index=True)
+        
+        # Liberar memoria
+        del dataframes
+        gc.collect()
         
         logger.info(f"DataFrame combinado: {len(df_combinado)} filas y {len(df_combinado.columns)} columnas")
         
@@ -78,11 +98,16 @@ def agrupar_datos_vol_portafolio():
         carpeta_salida = Path("Data/Vol_Portafolio/Output")
         carpeta_salida.mkdir(parents=True, exist_ok=True)
         
-        # Guardar como archivo parquet
+        # Guardar como archivo parquet con compresión optimizada
         archivo_parquet = carpeta_salida / "Vol_Portafolio_combinado.parquet"
         
         try:
-            df_combinado.to_parquet(archivo_parquet, index=False)
+            df_combinado.to_parquet(
+                archivo_parquet, 
+                index=False,
+                compression='snappy',  # Compresión rápida y eficiente
+                engine='pyarrow'
+            )
             logger.info(f"Archivo parquet guardado exitosamente en: {archivo_parquet}")
             logger.info(f"Tamaño del archivo: {archivo_parquet.stat().st_size / (1024*1024):.2f} MB")
             

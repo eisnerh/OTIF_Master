@@ -2,10 +2,14 @@ import pandas as pd
 import os
 from pathlib import Path
 import logging
+import concurrent.futures
+import gc
 
-# Configurar logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configurar logging con nivel más alto para reducir operaciones innecesarias
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+# Solo configurar nivel INFO para el logger principal
+logger.setLevel(logging.INFO)
 
 def agrupar_datos_rep_plr():
     """
@@ -33,40 +37,57 @@ def agrupar_datos_rep_plr():
     
     logger.info(f"Se encontraron {len(archivos_excel)} archivos Excel")
     
-    # Procesar cada archivo Excel
-    for archivo in archivos_excel:
+    def procesar_archivo(archivo):
+        """Procesa un archivo Excel y retorna el DataFrame resultante."""
         try:
             logger.info(f"Procesando archivo: {archivo.name}")
             
-            # Leer el archivo Excel
-            excel_file = pd.ExcelFile(archivo)
+            # Leer el archivo Excel con parámetros optimizados
+            excel_file = pd.ExcelFile(archivo, engine='openpyxl')
             
             # Verificar si existe la hoja REP PLR
             if "REP PLR" in excel_file.sheet_names:
-                # Leer la hoja REP PLR
-                df = pd.read_excel(archivo, sheet_name="REP PLR")
+                # Leer la hoja REP PLR con parámetros optimizados
+                df = pd.read_excel(
+                    archivo, 
+                    sheet_name="REP PLR",
+                    engine='openpyxl',
+                    dtype_backend='numpy_nullable',  # Usar backend optimizado
+                )
                 
                 # Agregar una columna para identificar el archivo de origen
                 df['archivo_origen'] = archivo.name
                 
-                dataframes.append(df)
                 logger.info(f"Se agregaron {len(df)} filas del archivo {archivo.name}")
+                return df
                 
             else:
                 logger.warning(f"La hoja REP PLR no existe en el archivo {archivo.name}")
                 logger.info(f"Hojas disponibles: {excel_file.sheet_names}")
+                return None
                 
         except Exception as e:
             logger.error(f"Error al procesar el archivo {archivo.name}: {str(e)}")
-            continue
+            return None
+    
+    # Usar procesamiento paralelo para leer los archivos Excel
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        resultados = list(executor.map(procesar_archivo, archivos_excel))
+    
+    # Filtrar los resultados None
+    dataframes = [df for df in resultados if df is not None]
     
     if not dataframes:
         logger.error("No se pudieron leer datos de ningún archivo")
         return
     
-    # Combinar todos los DataFrames
+    # Combinar todos los DataFrames de manera eficiente
     logger.info("Combinando todos los DataFrames...")
     df_combinado = pd.concat(dataframes, ignore_index=True)
+    
+    # Liberar memoria
+    del dataframes
+    gc.collect()
     
     logger.info(f"DataFrame combinado: {len(df_combinado)} filas y {len(df_combinado.columns)} columnas")
     
@@ -123,11 +144,16 @@ def agrupar_datos_rep_plr():
     carpeta_salida = Path("Data/Rep PLR/Output")
     carpeta_salida.mkdir(parents=True, exist_ok=True)
     
-    # Guardar como archivo parquet
+    # Guardar como archivo parquet con compresión optimizada
     archivo_parquet = carpeta_salida / "REP_PLR_combinado.parquet"
     
     try:
-        df_combinado.to_parquet(archivo_parquet, index=False)
+        df_combinado.to_parquet(
+            archivo_parquet, 
+            index=False,
+            compression='snappy',  # Compresión rápida y eficiente
+            engine='pyarrow'
+        )
         logger.info(f"Archivo parquet guardado exitosamente en: {archivo_parquet}")
         logger.info(f"Tamaño del archivo: {archivo_parquet.stat().st_size / (1024*1024):.2f} MB")
         
