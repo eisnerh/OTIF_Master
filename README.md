@@ -104,7 +104,6 @@ El sistema ejecuta los siguientes pasos en orden:
 4. **🔄 Crear archivos finales**
    - Crea `rep_plr.parquet`, `no_entregas.parquet`, y `vol_portafolio.parquet`
    - Une `rep_plr` con `vol_portafolio` por columna `Entrega`
-   - Genera `rep_plr_vol_portafolio_unido.parquet`
    - Une datos completos con `no_entregas` por columnas `Entrega` y `Familia`
    - Genera `datos_completos_con_no_entregas.parquet`
    - Archivos limpios y listos para análisis
@@ -121,7 +120,6 @@ El sistema ejecuta los siguientes pasos en orden:
 - `rep_plr.parquet` - Datos Rep PLR procesados y filtrados
 - `no_entregas.parquet` - Datos No Entregas procesados
 - `vol_portafolio.parquet` - Datos Vol Portafolio procesados
-- `rep_plr_vol_portafolio_unido.parquet` - Datos Rep PLR unidos con Vol Portafolio por columna Entrega
 - `datos_completos_con_no_entregas.parquet` - Datos completos unidos con No Entregas por columnas Entrega y Familia
   - **Nueva columna "Entregas"**: Conta 1 solo para la primera ocurrencia de cada combinación única de Entrega + Familia
   - **Nueva columna "No Entrega"**: Conta 1 solo para la primera ocurrencia de cada combinación única con "Cajas Equiv NE" > 0
@@ -158,7 +156,6 @@ El sistema ahora incluye configuración flexible de rutas:
     "rep_plr.parquet",
     "no_entregas.parquet",
     "vol_portafolio.parquet", 
-    "rep_plr_vol_portafolio_unido.parquet",
     "datos_completos_con_no_entregas.parquet"
   ]
 }
@@ -245,7 +242,6 @@ El sistema ahora **actualiza los archivos parquet existentes** en lugar de crear
 - `Data/Output_Unificado/rep_plr.parquet`
 - `Data/Output_Unificado/no_entregas.parquet`
 - `Data/Output_Unificado/vol_portafolio.parquet`
-- `Data/Output_Unificado/rep_plr_vol_portafolio_unido.parquet`
 - `Data/Output_Unificado/datos_completos_con_no_entregas.parquet`
 
 #### **Beneficios:**

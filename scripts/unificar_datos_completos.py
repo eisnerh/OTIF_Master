@@ -109,7 +109,7 @@ def unificar_datos_completos():
             logger.error(f"❌ El archivo {archivo_vol_portafolio} no existe")
             return
         
-        # 4. UNIR VOL_PORTAFOLIO CON REP_PLR POR ENTREGA
+        # 4. UNIR VOL_PORTAFOLIO CON REP_PLR POR ENTREGA Y LUEGO CON NO_ENTREGAS
         logger.info("🔗 Uniendo VOL_PORTAFOLIO con REP_PLR por columna Entrega...")
         
         # Verificar que ambas tablas tengan la columna Entrega
@@ -152,29 +152,6 @@ def unificar_datos_completos():
         registros_con_match = df_unido.dropna(subset=[col for col in df_unido.columns if 'vol_portafolio' in col]).shape[0]
         logger.info(f"📊 Registros con match en VOL_PORTAFOLIO: {registros_con_match:,}")
         logger.info(f"📊 Registros sin match: {len(df_unido) - registros_con_match:,}")
-        
-        # Guardar archivo unido con compresión optimizada
-        archivo_unido = carpeta_salida / "rep_plr_vol_portafolio_unido.parquet"
-        
-        # Verificar si el archivo ya existe
-        archivo_existe = archivo_unido.exists()
-        
-        df_unido.to_parquet(
-            archivo_unido, 
-            index=False,
-            compression='snappy',
-            engine='pyarrow'
-        )
-        
-        if archivo_existe:
-            logger.info(f"✅ Archivo unido actualizado: {archivo_unido}")
-        else:
-            logger.info(f"✅ Archivo unido creado: {archivo_unido}")
-        
-        # Mostrar las columnas del archivo unido
-        logger.info("📋 Columnas del archivo unido:")
-        for i, col in enumerate(df_unido.columns, 1):
-            logger.info(f"  {i}. {col}")
         
         # 5. UNIR DATOS COMPLETOS CON NO_ENTREGAS POR ENTREGA Y FAMILIA
         logger.info("🔗 Uniendo datos completos con NO_ENTREGAS por columnas Entrega y Familia...")
@@ -325,7 +302,6 @@ def unificar_datos_completos():
         logger.info("  • rep_plr.parquet")
         logger.info("  • no_entregas.parquet") 
         logger.info("  • vol_portafolio.parquet")
-        logger.info("  • rep_plr_vol_portafolio_unido.parquet")
         logger.info("  • datos_completos_con_no_entregas.parquet (CON NUEVAS COLUMNAS)")
         logger.info("")
         logger.info("🆕 Nuevas columnas agregadas a datos_completos_con_no_entregas.parquet:")

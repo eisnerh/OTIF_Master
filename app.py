@@ -49,7 +49,6 @@ def cargar_configuracion():
                 "rep_plr.parquet",
                 "no_entregas.parquet", 
                 "vol_portafolio.parquet",
-                "rep_plr_vol_portafolio_unido.parquet",
                 "datos_completos_con_no_entregas.parquet"
             ],
             "ultima_actualizacion": None
