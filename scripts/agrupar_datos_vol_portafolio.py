@@ -5,6 +5,31 @@ import logging
 import concurrent.futures
 import gc
 
+# Importar módulo de configuración
+try:
+    from configuracion_sistema import cargar_configuracion, obtener_carpeta_salida, verificar_configuracion
+except ImportError:
+    # Si no se puede importar, usar rutas por defecto
+    def cargar_configuracion():
+        return {
+            "rutas_archivos": {
+                "rep_plr": "Data/Rep PLR",
+                "no_entregas": "Data/No Entregas/2025",
+                "vol_portafolio": "Data/Vol_Portafolio",
+                "output_unificado": "Data/Output_Unificado",
+                "output_final": "Data/Output/calculo_otif"
+            }
+        }
+    
+    def obtener_carpeta_salida(tipo):
+        config = cargar_configuracion()
+        if tipo == "vol_portafolio_output":
+            return Path(config["rutas_archivos"]["vol_portafolio"]) / "Output"
+        return Path("Data/Vol_Portafolio/Output")
+    
+    def verificar_configuracion():
+        return True
+
 # Configurar logging con nivel más alto para reducir operaciones innecesarias
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -14,19 +39,31 @@ logger.setLevel(logging.INFO)
 def agrupar_datos_vol_portafolio():
     """
     Agrupa los datos de las 4 hojas del archivo Excel en la carpeta Vol_Portafolio
-    y los guarda como un archivo parquet.
+    y los guarda como un archivo parquet usando la configuración del sistema.
     """
     
-    # Definir la ruta del archivo
-    archivo_excel = Path("Data/Vol_Portafolio/VOL POR PORTAFOLIO ENE-2025.xlsx")
+    # Verificar configuración al inicio
+    logger.info("⚙️ Verificando configuración del sistema...")
+    if not verificar_configuracion():
+        logger.error("❌ Error en la configuración del sistema")
+        return
+    
+    # Cargar configuración
+    config = cargar_configuracion()
+    
+    # Definir la ruta del archivo desde la configuración
+    carpeta_vol_portafolio = Path(config["rutas_archivos"]["vol_portafolio"])
+    archivo_excel = carpeta_vol_portafolio / "VOL POR PORTAFOLIO ENE-2025.xlsx"
+    
+    logger.info(f"📁 Usando carpeta Vol Portafolio: {carpeta_vol_portafolio}")
+    logger.info(f"📄 Buscando archivo: {archivo_excel.name}")
     
     # Verificar que el archivo existe
     if not archivo_excel.exists():
         logger.warning(f"El archivo {archivo_excel} no existe. Creando archivo parquet vacío...")
         
-        # Crear carpeta de salida si no existe
-        carpeta_salida = Path("Data/Vol_Portafolio/Output")
-        carpeta_salida.mkdir(parents=True, exist_ok=True)
+        # Obtener carpeta de salida desde la configuración
+        carpeta_salida = obtener_carpeta_salida("vol_portafolio_output")
         
         # Crear DataFrame vacío con estructura básica
         df_combinado = pd.DataFrame({
@@ -131,9 +168,8 @@ def agrupar_datos_vol_portafolio():
             
             logger.info("✅ DataFrame vacío creado con estructura básica")
     
-    # Crear la carpeta de salida si no existe
-    carpeta_salida = Path("Data/Vol_Portafolio/Output")
-    carpeta_salida.mkdir(parents=True, exist_ok=True)
+    # Obtener carpeta de salida desde la configuración
+    carpeta_salida = obtener_carpeta_salida("vol_portafolio_output")
     
     # Guardar como archivo parquet con compresión optimizada
     archivo_parquet = carpeta_salida / "Vol_Portafolio_combinado.parquet"

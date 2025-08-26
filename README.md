@@ -26,6 +26,7 @@ El sistema OTIF Master ahora es **completamente robusto** y maneja automáticame
 2. **📄 Crea archivos parquet vacíos**: Si no encuentra archivos Excel de entrada, crea archivos parquet con estructura básica
 3. **✅ Continúa el procesamiento**: El sistema no se detiene, sino que continúa con archivos vacíos
 4. **📊 Genera todos los archivos finales**: Siempre produce los 4 archivos principales solicitados
+5. **⚙️ Usa configuración flexible**: Los archivos se guardan según la configuración del sistema
 
 ### **Archivos que se crean automáticamente:**
 
@@ -43,6 +44,55 @@ El sistema OTIF Master ahora es **completamente robusto** y maneja automáticame
 - **📈 Escalable**: Puedes agregar datos más tarde y ejecutar nuevamente
 - **🛡️ Robusto**: No falla por archivos faltantes
 - **📋 Estructura consistente**: Siempre genera la misma estructura de archivos
+- **⚙️ Configurable**: Las rutas se pueden modificar desde la interfaz web
+
+## ⚙️ Sistema de Configuración
+
+### **Configuración Centralizada**
+
+El sistema OTIF Master ahora utiliza un **sistema de configuración centralizado** que permite:
+
+- **📁 Rutas flexibles**: Todas las rutas de archivos son configurables
+- **🌐 Interfaz web**: Modificar configuración desde la aplicación web
+- **💾 Persistencia**: La configuración se guarda automáticamente
+- **🔄 Actualización en tiempo real**: Los cambios se aplican inmediatamente
+
+### **Archivo de Configuración**
+
+El sistema usa `configuracion_rutas.json` que contiene:
+
+```json
+{
+  "rutas_archivos": {
+    "rep_plr": "Data/Rep PLR",
+    "no_entregas": "Data/No Entregas/2025",
+    "vol_portafolio": "Data/Vol_Portafolio",
+    "output_unificado": "Data/Output_Unificado",
+    "output_final": "Data/Output/calculo_otif"
+  },
+  "archivos_principales": [
+    "rep_plr.parquet",
+    "no_entregas.parquet",
+    "vol_portafolio.parquet",
+    "datos_completos_con_no_entregas.parquet"
+  ]
+}
+```
+
+### **Cómo Funciona la Configuración**
+
+1. **📂 Rutas de entrada**: Define dónde buscar los archivos Excel de datos
+2. **📁 Rutas de salida**: Define dónde guardar los archivos parquet procesados
+3. **🔄 Actualización automática**: Los scripts leen la configuración en tiempo real
+4. **🛡️ Fallback**: Si no hay configuración, usa rutas por defecto
+
+### **Ventajas del Sistema de Configuración**
+
+- **🎯 Flexibilidad**: Cambiar rutas sin modificar código
+- **🔧 Mantenimiento**: Fácil actualización de rutas
+- **👥 Colaboración**: Diferentes usuarios pueden usar diferentes rutas
+- **📊 Trazabilidad**: Registro de cambios en la configuración
+- **🔄 Migración**: Fácil cambio de ubicaciones de archivos
 
 ## 📁 Estructura del Proyecto
 
@@ -351,6 +401,15 @@ Data/
 - **Disco**: Suficiente espacio para archivos temporales
 
 ## 🔄 Actualizaciones
+
+### **Versión 2.3 - Sistema de Configuración (Nueva)**
+- ✅ **Configuración centralizada**: Todos los scripts usan configuración desde `configuracion_rutas.json`
+- ✅ **Rutas flexibles**: Las rutas de archivos son completamente configurables
+- ✅ **Interfaz web integrada**: Modificar configuración desde la aplicación web
+- ✅ **Persistencia automática**: La configuración se guarda automáticamente
+- ✅ **Fallback robusto**: Si no hay configuración, usa rutas por defecto
+- ✅ **Módulo de configuración**: Nuevo módulo `configuracion_sistema.py` para manejo centralizado
+- ✅ **Logs informativos**: Muestra qué configuración se está usando
 
 ### **Versión 2.2 - Creación Automática de Archivos (Nueva)**
 - ✅ **Archivos parquet vacíos**: Crea automáticamente archivos con estructura básica cuando no encuentra datos

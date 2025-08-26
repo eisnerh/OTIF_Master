@@ -4,6 +4,41 @@ from pathlib import Path
 import logging
 import gc
 
+# Importar módulo de configuración
+try:
+    from configuracion_sistema import cargar_configuracion, obtener_ruta_archivo, obtener_carpeta_salida, verificar_configuracion
+except ImportError:
+    # Si no se puede importar, usar rutas por defecto
+    def cargar_configuracion():
+        return {
+            "rutas_archivos": {
+                "rep_plr": "Data/Rep PLR",
+                "no_entregas": "Data/No Entregas/2025",
+                "vol_portafolio": "Data/Vol_Portafolio",
+                "output_unificado": "Data/Output_Unificado",
+                "output_final": "Data/Output/calculo_otif"
+            }
+        }
+    
+    def obtener_ruta_archivo(tipo):
+        config = cargar_configuracion()
+        if tipo == "rep_plr_combinado":
+            return Path(config["rutas_archivos"]["rep_plr"]) / "Output" / "REP_PLR_combinado.parquet"
+        elif tipo == "no_entregas_combinado":
+            return Path(config["rutas_archivos"]["no_entregas"]) / "Output" / "No_Entregas_combinado_mejorado.parquet"
+        elif tipo == "vol_portafolio_combinado":
+            return Path(config["rutas_archivos"]["vol_portafolio"]) / "Output" / "Vol_Portafolio_combinado.parquet"
+        return Path("Data/Output_Unificado")
+    
+    def obtener_carpeta_salida(tipo):
+        config = cargar_configuracion()
+        if tipo == "output_unificado":
+            return Path(config["rutas_archivos"]["output_unificado"])
+        return Path("Data/Output_Unificado")
+    
+    def verificar_configuracion():
+        return True
+
 # Configurar logging con nivel más alto para reducir operaciones innecesarias
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -12,17 +47,31 @@ logger.setLevel(logging.INFO)
 
 def unificar_datos_completos():
     """
-    Crea los 3 archivos principales y une vol_portafolio con rep_plr por Entrega.
+    Crea los 3 archivos principales y une vol_portafolio con rep_plr por Entrega
+    usando la configuración del sistema.
     """
     
-    # Definir rutas de los archivos parquet
-    archivo_rep_plr = Path("Data/Rep PLR/Output/REP_PLR_combinado.parquet")
-    archivo_no_entregas = Path("Data/No Entregas/Output/No_Entregas_combinado_mejorado.parquet")
-    archivo_vol_portafolio = Path("Data/Vol_Portafolio/Output/Vol_Portafolio_combinado.parquet")
+    # Verificar configuración al inicio
+    logger.info("⚙️ Verificando configuración del sistema...")
+    if not verificar_configuracion():
+        logger.error("❌ Error en la configuración del sistema")
+        return
     
-    # Crear carpeta de salida si no existe
-    carpeta_salida = Path("Data/Output_Unificado")
-    carpeta_salida.mkdir(parents=True, exist_ok=True)
+    # Cargar configuración
+    config = cargar_configuracion()
+    
+    # Obtener rutas de los archivos parquet desde la configuración
+    archivo_rep_plr = obtener_ruta_archivo("rep_plr_combinado")
+    archivo_no_entregas = obtener_ruta_archivo("no_entregas_combinado")
+    archivo_vol_portafolio = obtener_ruta_archivo("vol_portafolio_combinado")
+    
+    logger.info(f"📁 Rutas configuradas:")
+    logger.info(f"  • REP PLR: {archivo_rep_plr}")
+    logger.info(f"  • No Entregas: {archivo_no_entregas}")
+    logger.info(f"  • Vol Portafolio: {archivo_vol_portafolio}")
+    
+    # Obtener carpeta de salida desde la configuración
+    carpeta_salida = obtener_carpeta_salida("output_unificado")
     
     try:
         # 1. ARCHIVO REP_PLR
@@ -331,11 +380,11 @@ def unificar_datos_completos():
         # Resumen final
         logger.info("\n🎉 ¡PROCESO COMPLETADO!")
         logger.info("=" * 50)
-        logger.info("📁 Archivos generados en Data/Output_Unificado/:")
-        logger.info("  • rep_plr.parquet")
-        logger.info("  • no_entregas.parquet") 
-        logger.info("  • vol_portafolio.parquet")
-        logger.info("  • datos_completos_con_no_entregas.parquet (CON NUEVAS COLUMNAS)")
+        logger.info("📁 Archivos generados en carpeta configurada:")
+        logger.info(f"  • {carpeta_salida}/rep_plr.parquet")
+        logger.info(f"  • {carpeta_salida}/no_entregas.parquet") 
+        logger.info(f"  • {carpeta_salida}/vol_portafolio.parquet")
+        logger.info(f"  • {carpeta_salida}/datos_completos_con_no_entregas.parquet (CON NUEVAS COLUMNAS)")
         logger.info("")
         logger.info("🆕 Nuevas columnas agregadas a datos_completos_con_no_entregas.parquet:")
         logger.info("  • 'Entregas': Conta 1 solo para la primera ocurrencia de cada combinación única de Entrega + Familia")

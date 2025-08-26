@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 🔍 VERIFICADOR DE ESTRUCTURA - OTIF MASTER
-==========================================
+=========================================
 
 Este script verifica y crea la estructura de carpetas necesaria para el sistema OTIF.
-Si las carpetas no existen, las crea automáticamente.
+Si las carpetas no existen, las crea automáticamente usando la configuración del sistema.
 
 Autor: OTIF Master
 Fecha: 2025
@@ -13,6 +13,25 @@ Fecha: 2025
 import os
 import logging
 from pathlib import Path
+
+# Importar módulo de configuración
+try:
+    from configuracion_sistema import cargar_configuracion, verificar_configuracion
+except ImportError:
+    # Si no se puede importar, usar configuración por defecto
+    def cargar_configuracion():
+        return {
+            "rutas_archivos": {
+                "rep_plr": "Data/Rep PLR",
+                "no_entregas": "Data/No Entregas/2025",
+                "vol_portafolio": "Data/Vol_Portafolio",
+                "output_unificado": "Data/Output_Unificado",
+                "output_final": "Data/Output/calculo_otif"
+            }
+        }
+    
+    def verificar_configuracion():
+        return True
 
 # Configurar logging
 logging.basicConfig(
@@ -23,24 +42,26 @@ logger = logging.getLogger(__name__)
 
 def verificar_y_crear_estructura():
     """
-    Verifica y crea la estructura de carpetas necesaria para el sistema OTIF.
+    Verifica y crea la estructura de carpetas necesaria para el sistema OTIF
+    usando la configuración del sistema.
     """
     
     logger.info("🔍 Verificando estructura de carpetas del sistema OTIF...")
     
-    # Definir la estructura de carpetas necesaria
+    # Cargar configuración
+    config = cargar_configuracion()
+    
+    # Definir la estructura de carpetas necesaria basada en la configuración
     estructura_carpetas = [
         "Data",
-        "Data/Rep PLR",
-        "Data/Rep PLR/Output",
-        "Data/No Entregas",
-        "Data/No Entregas/2025",
-        "Data/No Entregas/Output",
-        "Data/Vol_Portafolio",
-        "Data/Vol_Portafolio/Output",
-        "Data/Output_Unificado",
-        "Data/Output",
-        "Data/Output/calculo_otif"
+        config["rutas_archivos"]["rep_plr"],
+        f"{config['rutas_archivos']['rep_plr']}/Output",
+        config["rutas_archivos"]["no_entregas"],
+        f"{config['rutas_archivos']['no_entregas']}/Output",
+        config["rutas_archivos"]["vol_portafolio"],
+        f"{config['rutas_archivos']['vol_portafolio']}/Output",
+        config["rutas_archivos"]["output_unificado"],
+        config["rutas_archivos"]["output_final"]
     ]
     
     carpetas_creadas = []
@@ -78,15 +99,19 @@ def verificar_y_crear_estructura():
 
 def verificar_archivos_ejemplo():
     """
-    Verifica si existen archivos de ejemplo y proporciona información sobre la estructura esperada.
+    Verifica si existen archivos de ejemplo y proporciona información sobre la estructura esperada
+    usando la configuración del sistema.
     """
     
     logger.info("\n📋 Verificando archivos de ejemplo...")
     
+    # Cargar configuración
+    config = cargar_configuracion()
+    
     archivos_esperados = {
-        "Data/Rep PLR": "Archivos Excel con hoja 'REP PLR'",
-        "Data/No Entregas/2025": "Archivos Excel con formato '*-2025-Devoluciones.xlsx' y hoja 'Z_DEVO_ALV'",
-        "Data/Vol_Portafolio": "Archivo 'VOL POR PORTAFOLIO ENE-2025.xlsx'"
+        config["rutas_archivos"]["rep_plr"]: "Archivos Excel con hoja 'REP PLR'",
+        config["rutas_archivos"]["no_entregas"]: "Archivos Excel con formato '*-2025-Devoluciones.xlsx' y hoja 'Z_DEVO_ALV'",
+        config["rutas_archivos"]["vol_portafolio"]: "Archivo 'VOL POR PORTAFOLIO ENE-2025.xlsx'"
     }
     
     archivos_faltantes = []
@@ -94,7 +119,7 @@ def verificar_archivos_ejemplo():
     for ruta, descripcion in archivos_esperados.items():
         path_ruta = Path(ruta)
         
-        if ruta == "Data/Vol_Portafolio":
+        if ruta == config["rutas_archivos"]["vol_portafolio"]:
             # Buscar archivo específico de Vol Portafolio
             archivo_vol = path_ruta / "VOL POR PORTAFOLIO ENE-2025.xlsx"
             if archivo_vol.exists():
@@ -129,8 +154,33 @@ def verificar_archivos_ejemplo():
     
     return len(archivos_faltantes) == 0
 
+def mostrar_configuracion_actual():
+    """
+    Muestra la configuración actual del sistema.
+    """
+    try:
+        config = cargar_configuracion()
+        logger.info("\n⚙️ CONFIGURACIÓN ACTUAL DEL SISTEMA:")
+        logger.info("="*50)
+        
+        for ruta, path in config["rutas_archivos"].items():
+            logger.info(f"  {ruta}: {path}")
+        
+        logger.info("\n📄 ARCHIVOS PRINCIPALES:")
+        for archivo in config.get("archivos_principales", []):
+            logger.info(f"  • {archivo}")
+        
+        if config.get("ultima_actualizacion"):
+            logger.info(f"\n🕒 Última actualización: {config['ultima_actualizacion']}")
+        
+    except Exception as e:
+        logger.error(f"❌ Error al mostrar configuración: {str(e)}")
+
 if __name__ == "__main__":
     logger.info("🚀 Iniciando verificación de estructura del sistema OTIF...")
+    
+    # Mostrar configuración actual
+    mostrar_configuracion_actual()
     
     # Verificar y crear estructura de carpetas
     estructura_creada = verificar_y_crear_estructura()

@@ -4,7 +4,7 @@
 ==================================
 
 Este script prueba que el sistema OTIF Master funciona correctamente
-incluso sin archivos de datos de entrada.
+incluso sin archivos de datos de entrada, usando la configuración del sistema.
 
 Autor: OTIF Master
 Fecha: 2025
@@ -15,6 +15,43 @@ import sys
 import logging
 from pathlib import Path
 
+# Importar módulo de configuración
+try:
+    from scripts.configuracion_sistema import cargar_configuracion, obtener_ruta_archivo, verificar_configuracion
+except ImportError:
+    # Si no se puede importar, usar configuración por defecto
+    def cargar_configuracion():
+        return {
+            "rutas_archivos": {
+                "rep_plr": "Data/Rep PLR",
+                "no_entregas": "Data/No Entregas/2025",
+                "vol_portafolio": "Data/Vol_Portafolio",
+                "output_unificado": "Data/Output_Unificado",
+                "output_final": "Data/Output/calculo_otif"
+            }
+        }
+    
+    def obtener_ruta_archivo(tipo):
+        config = cargar_configuracion()
+        if tipo == "rep_plr_combinado":
+            return Path(config["rutas_archivos"]["rep_plr"]) / "Output" / "REP_PLR_combinado.parquet"
+        elif tipo == "no_entregas_combinado":
+            return Path(config["rutas_archivos"]["no_entregas"]) / "Output" / "No_Entregas_combinado_mejorado.parquet"
+        elif tipo == "vol_portafolio_combinado":
+            return Path(config["rutas_archivos"]["vol_portafolio"]) / "Output" / "Vol_Portafolio_combinado.parquet"
+        elif tipo == "rep_plr_final":
+            return Path(config["rutas_archivos"]["output_unificado"]) / "rep_plr.parquet"
+        elif tipo == "no_entregas_final":
+            return Path(config["rutas_archivos"]["output_unificado"]) / "no_entregas.parquet"
+        elif tipo == "vol_portafolio_final":
+            return Path(config["rutas_archivos"]["output_unificado"]) / "vol_portafolio.parquet"
+        elif tipo == "datos_completos":
+            return Path(config["rutas_archivos"]["output_unificado"]) / "datos_completos_con_no_entregas.parquet"
+        return Path("Data/Output_Unificado")
+    
+    def verificar_configuracion():
+        return True
+
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
@@ -24,14 +61,21 @@ logger = logging.getLogger(__name__)
 
 def probar_sistema():
     """
-    Prueba que el sistema funciona correctamente sin archivos de datos.
+    Prueba que el sistema funciona correctamente sin archivos de datos
+    usando la configuración del sistema.
     """
     
     logger.info("🧪 Iniciando prueba del sistema OTIF Master...")
     logger.info("="*60)
     
+    # Mostrar configuración actual
+    logger.info("⚙️ Configuración actual del sistema:")
+    config = cargar_configuracion()
+    for ruta, path in config["rutas_archivos"].items():
+        logger.info(f"  • {ruta}: {path}")
+    
     # 1. Verificar estructura
-    logger.info("📁 Paso 1: Verificando estructura de carpetas...")
+    logger.info("\n📁 Paso 1: Verificando estructura de carpetas...")
     try:
         from scripts.verificar_estructura import verificar_y_crear_estructura
         estructura_creada = verificar_y_crear_estructura()
@@ -74,24 +118,24 @@ def probar_sistema():
             logger.error(f"❌ Error en {descripcion}: {str(e)}")
             return False
     
-    # 3. Verificar archivos generados
+    # 3. Verificar archivos generados usando configuración
     logger.info("\n📋 Paso 3: Verificando archivos generados...")
     
     archivos_esperados = [
-        "Data/Rep PLR/Output/REP_PLR_combinado.parquet",
-        "Data/No Entregas/Output/No_Entregas_combinado_mejorado.parquet",
-        "Data/Vol_Portafolio/Output/Vol_Portafolio_combinado.parquet",
-        "Data/Output_Unificado/rep_plr.parquet",
-        "Data/Output_Unificado/no_entregas.parquet",
-        "Data/Output_Unificado/vol_portafolio.parquet",
-        "Data/Output_Unificado/datos_completos_con_no_entregas.parquet"
+        obtener_ruta_archivo("rep_plr_combinado"),
+        obtener_ruta_archivo("no_entregas_combinado"),
+        obtener_ruta_archivo("vol_portafolio_combinado"),
+        obtener_ruta_archivo("rep_plr_final"),
+        obtener_ruta_archivo("no_entregas_final"),
+        obtener_ruta_archivo("vol_portafolio_final"),
+        obtener_ruta_archivo("datos_completos")
     ]
     
     archivos_encontrados = []
     archivos_faltantes = []
     
     for archivo in archivos_esperados:
-        if Path(archivo).exists():
+        if archivo.exists():
             archivos_encontrados.append(archivo)
             logger.info(f"✅ Archivo encontrado: {archivo}")
         else:
@@ -135,11 +179,13 @@ def probar_sistema():
         logger.info("✅ El sistema OTIF Master funciona correctamente")
         logger.info("✅ Todos los archivos fueron generados exitosamente")
         logger.info("✅ El sistema puede funcionar sin archivos de datos de entrada")
+        logger.info("✅ El sistema usa correctamente la configuración")
         
         logger.info("\n💡 Próximos pasos:")
         logger.info("• Agrega archivos Excel de datos en las carpetas correspondientes")
         logger.info("• Ejecuta el procesamiento nuevamente para procesar datos reales")
         logger.info("• Usa la interfaz web: python app.py")
+        logger.info("• Modifica la configuración desde la interfaz web si es necesario")
         
         return True
 

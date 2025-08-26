@@ -5,6 +5,31 @@ import logging
 import concurrent.futures
 import gc
 
+# Importar módulo de configuración
+try:
+    from configuracion_sistema import cargar_configuracion, obtener_carpeta_salida, verificar_configuracion
+except ImportError:
+    # Si no se puede importar, usar rutas por defecto
+    def cargar_configuracion():
+        return {
+            "rutas_archivos": {
+                "rep_plr": "Data/Rep PLR",
+                "no_entregas": "Data/No Entregas/2025",
+                "vol_portafolio": "Data/Vol_Portafolio",
+                "output_unificado": "Data/Output_Unificado",
+                "output_final": "Data/Output/calculo_otif"
+            }
+        }
+    
+    def obtener_carpeta_salida(tipo):
+        config = cargar_configuracion()
+        if tipo == "rep_plr_output":
+            return Path(config["rutas_archivos"]["rep_plr"]) / "Output"
+        return Path("Data/Rep PLR/Output")
+    
+    def verificar_configuracion():
+        return True
+
 # Configurar logging con nivel más alto para reducir operaciones innecesarias
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -14,11 +39,22 @@ logger.setLevel(logging.INFO)
 def agrupar_datos_rep_plr():
     """
     Agrupa los datos de la hoja REP_PLR de todos los archivos Excel en la carpeta Rep PLR
-    y los guarda como un archivo parquet.
+    y los guarda como un archivo parquet usando la configuración del sistema.
     """
     
-    # Definir la ruta de la carpeta Rep PLR
-    carpeta_rep_plr = Path("Data/Rep PLR")
+    # Verificar configuración al inicio
+    logger.info("⚙️ Verificando configuración del sistema...")
+    if not verificar_configuracion():
+        logger.error("❌ Error en la configuración del sistema")
+        return
+    
+    # Cargar configuración
+    config = cargar_configuracion()
+    
+    # Definir la ruta de la carpeta Rep PLR desde la configuración
+    carpeta_rep_plr = Path(config["rutas_archivos"]["rep_plr"])
+    
+    logger.info(f"📁 Usando carpeta Rep PLR: {carpeta_rep_plr}")
     
     # Verificar que la carpeta existe
     if not carpeta_rep_plr.exists():
@@ -34,9 +70,8 @@ def agrupar_datos_rep_plr():
     if not archivos_excel:
         logger.warning("No se encontraron archivos Excel en la carpeta Rep PLR. Creando archivo parquet vacío...")
         
-        # Crear carpeta de salida si no existe
-        carpeta_salida = Path("Data/Rep PLR/Output")
-        carpeta_salida.mkdir(parents=True, exist_ok=True)
+        # Obtener carpeta de salida desde la configuración
+        carpeta_salida = obtener_carpeta_salida("rep_plr_output")
         
         # Crear DataFrame vacío con estructura básica
         df_combinado = pd.DataFrame({
@@ -194,9 +229,8 @@ def agrupar_datos_rep_plr():
             for i, col in enumerate(df_combinado.columns, 1):
                 logger.info(f"{i}. {col}")
     
-    # Crear la carpeta de salida si no existe
-    carpeta_salida = Path("Data/Rep PLR/Output")
-    carpeta_salida.mkdir(parents=True, exist_ok=True)
+    # Obtener carpeta de salida desde la configuración
+    carpeta_salida = obtener_carpeta_salida("rep_plr_output")
     
     # Guardar como archivo parquet con compresión optimizada
     archivo_parquet = carpeta_salida / "REP_PLR_combinado.parquet"
