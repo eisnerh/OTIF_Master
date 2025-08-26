@@ -13,6 +13,36 @@ Sistema de procesamiento y análisis de datos OTIF con interfaz web y scripts op
 - **📂 Selección Visual de Carpetas**: Explorador de archivos integrado para configurar rutas
 - **🔄 Actualización de Archivos**: Los archivos parquet se actualizan en lugar de crear nuevos
 - **📊 4 Archivos Principales**: Generación de exactamente los archivos solicitados
+- **🆕 Creación Automática**: Crea archivos parquet vacíos si no encuentra archivos de entrada
+- **📁 Estructura Automática**: Crea carpetas necesarias automáticamente
+
+## 🆕 Nueva Funcionalidad: Creación Automática de Archivos
+
+### **¿Qué hace el sistema cuando no encuentra archivos?**
+
+El sistema OTIF Master ahora es **completamente robusto** y maneja automáticamente los casos donde no encuentra archivos de entrada:
+
+1. **📁 Crea estructura de carpetas**: Si las carpetas necesarias no existen, las crea automáticamente
+2. **📄 Crea archivos parquet vacíos**: Si no encuentra archivos Excel de entrada, crea archivos parquet con estructura básica
+3. **✅ Continúa el procesamiento**: El sistema no se detiene, sino que continúa con archivos vacíos
+4. **📊 Genera todos los archivos finales**: Siempre produce los 4 archivos principales solicitados
+
+### **Archivos que se crean automáticamente:**
+
+- `Data/Rep PLR/Output/REP_PLR_combinado.parquet` - Con columnas: Centro, Entrega, Cliente, etc.
+- `Data/No Entregas/Output/No_Entregas_combinado_mejorado.parquet` - Con columnas: Entrega, Familia, Cajas Equiv NE
+- `Data/Vol_Portafolio/Output/Vol_Portafolio_combinado.parquet` - Con columnas: Entrega, Familia, Zona
+- `Data/Output_Unificado/rep_plr.parquet`
+- `Data/Output_Unificado/no_entregas.parquet`
+- `Data/Output_Unificado/vol_portafolio.parquet`
+- `Data/Output_Unificado/datos_completos_con_no_entregas.parquet`
+
+### **Beneficios:**
+
+- **🚀 Funciona inmediatamente**: No necesitas archivos de datos para probar el sistema
+- **📈 Escalable**: Puedes agregar datos más tarde y ejecutar nuevamente
+- **🛡️ Robusto**: No falla por archivos faltantes
+- **📋 Estructura consistente**: Siempre genera la misma estructura de archivos
 
 ## 📁 Estructura del Proyecto
 
@@ -22,7 +52,8 @@ Procesamiento_Portafolio_No_Entregas/
 │   ├── agrupar_datos_rep_plr.py         # Procesa datos Rep PLR
 │   ├── agrupar_datos_no_entregas_mejorado.py  # Procesa datos No Entregas
 │   ├── agrupar_datos_vol_portafolio.py  # Procesa datos Vol Portafolio
-│   └── unificar_datos_completos.py      # Unifica todos los datos
+│   ├── unificar_datos_completos.py      # Unifica todos los datos
+│   └── verificar_estructura.py          # Verifica y crea estructura
 ├── 📁 templates/                         # Interfaz web
 │   └── index.html                       # Dashboard principal
 ├── 📁 Data/                             # Datos de entrada y salida
@@ -100,6 +131,26 @@ Luego selecciona la opción 2 o 3 para la aplicación web.
 - **📂 Explorador de archivos integrado**: Botones para seleccionar carpetas visualmente
 - Verificación automática de rutas
 - Guardado persistente de configuración
+
+### **Opción 4: Verificación de Estructura (Nuevo)**
+```bash
+python scripts/verificar_estructura.py
+```
+
+Este script verifica y crea automáticamente toda la estructura de carpetas necesaria para el sistema OTIF.
+
+#### **¿Qué hace?**
+- ✅ Verifica que existan todas las carpetas necesarias
+- 📁 Crea automáticamente las carpetas faltantes
+- 📋 Verifica si existen archivos de datos de ejemplo
+- 💡 Proporciona consejos sobre la estructura esperada
+- 🎯 Prepara el sistema para funcionar inmediatamente
+
+#### **Cuándo usarlo:**
+- 🔧 **Primera vez**: Al configurar el sistema por primera vez
+- 🆕 **Nuevo entorno**: Al mover el sistema a otra computadora
+- 🛠️ **Solución de problemas**: Si hay errores de carpetas faltantes
+- 📋 **Verificación**: Para confirmar que todo está listo
 
 ## 📂 Configuración Visual de Rutas
 
@@ -300,6 +351,15 @@ Data/
 - **Disco**: Suficiente espacio para archivos temporales
 
 ## 🔄 Actualizaciones
+
+### **Versión 2.2 - Creación Automática de Archivos (Nueva)**
+- ✅ **Archivos parquet vacíos**: Crea automáticamente archivos con estructura básica cuando no encuentra datos
+- ✅ **Estructura automática**: Crea todas las carpetas necesarias automáticamente
+- ✅ **Sistema robusto**: No falla por archivos o carpetas faltantes
+- ✅ **Funcionamiento inmediato**: El sistema funciona sin necesidad de archivos de datos
+- ✅ **Escalabilidad**: Permite agregar datos más tarde y reprocesar
+- ✅ **Script de verificación**: Nuevo script `verificar_estructura.py` para preparar el sistema
+- ✅ **Logs informativos**: Mensajes claros sobre archivos creados vs. encontrados
 
 ### **Versión 2.1 - Actualización de Archivos Parquet**
 - ✅ **Actualización en lugar de creación**: Los archivos parquet ahora se actualizan en lugar de crear nuevos

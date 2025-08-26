@@ -30,81 +30,102 @@ def unificar_datos_completos():
         if archivo_rep_plr.exists():
             df_rep_plr = pd.read_parquet(archivo_rep_plr, engine='pyarrow')
             logger.info(f"Rep PLR: {len(df_rep_plr)} filas y {len(df_rep_plr.columns)} columnas")
-            
-            # Guardar archivo Rep PLR con compresión optimizada
-            archivo_rep_plr_final = carpeta_salida / "rep_plr.parquet"
-            
-            # Verificar si el archivo ya existe
-            archivo_existe = archivo_rep_plr_final.exists()
-            
-            df_rep_plr.to_parquet(
-                archivo_rep_plr_final, 
-                index=False,
-                compression='snappy',
-                engine='pyarrow'
-            )
-            
-            if archivo_existe:
-                logger.info(f"✅ Archivo REP_PLR actualizado: {archivo_rep_plr_final}")
-            else:
-                logger.info(f"✅ Archivo REP_PLR creado: {archivo_rep_plr_final}")
         else:
-            logger.error(f"❌ El archivo {archivo_rep_plr} no existe")
-            return
+            logger.warning(f"⚠️ El archivo {archivo_rep_plr} no existe. Creando archivo vacío...")
+            # Crear DataFrame vacío con estructura básica
+            df_rep_plr = pd.DataFrame({
+                'Entrega': [],
+                'Centro': [],
+                'Familia': [],
+                'archivo_origen': []
+            })
+            logger.info("✅ Archivo REP_PLR vacío creado con estructura básica")
+        
+        # Guardar archivo Rep PLR con compresión optimizada
+        archivo_rep_plr_final = carpeta_salida / "rep_plr.parquet"
+        
+        # Verificar si el archivo ya existe
+        archivo_existe = archivo_rep_plr_final.exists()
+        
+        df_rep_plr.to_parquet(
+            archivo_rep_plr_final, 
+            index=False,
+            compression='snappy',
+            engine='pyarrow'
+        )
+        
+        if archivo_existe:
+            logger.info(f"✅ Archivo REP_PLR actualizado: {archivo_rep_plr_final}")
+        else:
+            logger.info(f"✅ Archivo REP_PLR creado: {archivo_rep_plr_final}")
         
         # 2. ARCHIVO NO_ENTREGAS
         logger.info("📦 Procesando archivo NO_ENTREGAS...")
         if archivo_no_entregas.exists():
             df_no_entregas = pd.read_parquet(archivo_no_entregas, engine='pyarrow')
             logger.info(f"No Entregas: {len(df_no_entregas)} filas y {len(df_no_entregas.columns)} columnas")
-            
-            # Guardar archivo No Entregas con compresión optimizada
-            archivo_no_entregas_final = carpeta_salida / "no_entregas.parquet"
-            
-            # Verificar si el archivo ya existe
-            archivo_existe = archivo_no_entregas_final.exists()
-            
-            df_no_entregas.to_parquet(
-                archivo_no_entregas_final, 
-                index=False,
-                compression='snappy',
-                engine='pyarrow'
-            )
-            
-            if archivo_existe:
-                logger.info(f"✅ Archivo NO_ENTREGAS actualizado: {archivo_no_entregas_final}")
-            else:
-                logger.info(f"✅ Archivo NO_ENTREGAS creado: {archivo_no_entregas_final}")
         else:
-            logger.error(f"❌ El archivo {archivo_no_entregas} no existe")
-            return
+            logger.warning(f"⚠️ El archivo {archivo_no_entregas} no existe. Creando archivo vacío...")
+            # Crear DataFrame vacío con estructura básica
+            df_no_entregas = pd.DataFrame({
+                'Entrega': [],
+                'Familia': [],
+                'Cajas Equiv NE': [],
+                'archivo_origen': []
+            })
+            logger.info("✅ Archivo NO_ENTREGAS vacío creado con estructura básica")
+        
+        # Guardar archivo No Entregas con compresión optimizada
+        archivo_no_entregas_final = carpeta_salida / "no_entregas.parquet"
+        
+        # Verificar si el archivo ya existe
+        archivo_existe = archivo_no_entregas_final.exists()
+        
+        df_no_entregas.to_parquet(
+            archivo_no_entregas_final, 
+            index=False,
+            compression='snappy',
+            engine='pyarrow'
+        )
+        
+        if archivo_existe:
+            logger.info(f"✅ Archivo NO_ENTREGAS actualizado: {archivo_no_entregas_final}")
+        else:
+            logger.info(f"✅ Archivo NO_ENTREGAS creado: {archivo_no_entregas_final}")
         
         # 3. ARCHIVO VOL_PORTAFOLIO
         logger.info("📈 Procesando archivo VOL_PORTAFOLIO...")
         if archivo_vol_portafolio.exists():
             df_vol_portafolio = pd.read_parquet(archivo_vol_portafolio, engine='pyarrow')
             logger.info(f"Vol Portafolio: {len(df_vol_portafolio)} filas y {len(df_vol_portafolio.columns)} columnas")
-            
-            # Guardar archivo Vol Portafolio con compresión optimizada
-            archivo_vol_portafolio_final = carpeta_salida / "vol_portafolio.parquet"
-            
-            # Verificar si el archivo ya existe
-            archivo_existe = archivo_vol_portafolio_final.exists()
-            
-            df_vol_portafolio.to_parquet(
-                archivo_vol_portafolio_final, 
-                index=False,
-                compression='snappy',
-                engine='pyarrow'
-            )
-            
-            if archivo_existe:
-                logger.info(f"✅ Archivo VOL_PORTAFOLIO actualizado: {archivo_vol_portafolio_final}")
-            else:
-                logger.info(f"✅ Archivo VOL_PORTAFOLIO creado: {archivo_vol_portafolio_final}")
         else:
-            logger.error(f"❌ El archivo {archivo_vol_portafolio} no existe")
-            return
+            logger.warning(f"⚠️ El archivo {archivo_vol_portafolio} no existe. Creando archivo vacío...")
+            # Crear DataFrame vacío con estructura básica
+            df_vol_portafolio = pd.DataFrame({
+                'Entrega': [],
+                'Familia': [],
+                'Zona': [],
+                'archivo_origen': []
+            })
+            logger.info("✅ Archivo VOL_PORTAFOLIO vacío creado con estructura básica")
+        
+        # Guardar archivo Vol Portafolio con compresión optimizada
+        archivo_vol_portafolio_final = carpeta_salida / "vol_portafolio.parquet"
+        
+        # Verificar si el archivo ya existe
+        archivo_existe = archivo_vol_portafolio_final.exists()
+        
+        df_vol_portafolio.to_parquet(
+            archivo_vol_portafolio_final, 
+            index=False,
+            compression='snappy',
+            engine='pyarrow'
+        )
+        
+        if archivo_existe:
+            logger.info(f"✅ Archivo VOL_PORTAFOLIO actualizado: {archivo_vol_portafolio_final}")
+        else:
+            logger.info(f"✅ Archivo VOL_PORTAFOLIO creado: {archivo_vol_portafolio_final}")
         
         # 4. UNIR VOL_PORTAFOLIO CON REP_PLR POR ENTREGA Y LUEGO CON NO_ENTREGAS
         logger.info("🔗 Uniendo VOL_PORTAFOLIO con REP_PLR por columna Entrega...")

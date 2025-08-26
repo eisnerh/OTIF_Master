@@ -150,53 +150,75 @@ def agrupar_datos_no_entregas():
     archivos_excel = list(carpeta_no_entregas.glob("*-2025-Devoluciones.xlsx"))
     
     if not archivos_excel:
-        logger.warning("No se encontraron archivos de devoluciones en la carpeta")
-        return
-    
-    logger.info(f"Se encontraron {len(archivos_excel)} archivos de devoluciones")
-    
-    # Función para verificar y procesar un archivo
-    def verificar_y_procesar(archivo):
-        try:
-            # Verificar si existe la hoja Z_DEVO_ALV
-            excel_file = pd.ExcelFile(archivo, engine='openpyxl')
-            
-            if "Z_DEVO_ALV" in excel_file.sheet_names:
-                return procesar_archivo_devoluciones(archivo)
-            else:
-                logger.warning(f"La hoja Z_DEVO_ALV no existe en el archivo {archivo.name}")
-                logger.info(f"Hojas disponibles: {excel_file.sheet_names}")
-                return None
+        logger.warning("No se encontraron archivos de devoluciones en la carpeta. Creando archivo parquet vacío...")
+        
+        # Crear carpeta de salida si no existe
+        carpeta_salida = Path("Data/No Entregas/Output")
+        carpeta_salida.mkdir(parents=True, exist_ok=True)
+        
+        # Crear DataFrame vacío con estructura básica
+        df_combinado = pd.DataFrame({
+            'Entrega': [],
+            'Familia': [],
+            'Cajas Equiv NE': [],
+            'archivo_origen': []
+        })
+        
+        logger.info("✅ DataFrame vacío creado con estructura básica")
+    else:
+        logger.info(f"Se encontraron {len(archivos_excel)} archivos de devoluciones")
+        
+        # Función para verificar y procesar un archivo
+        def verificar_y_procesar(archivo):
+            try:
+                # Verificar si existe la hoja Z_DEVO_ALV
+                excel_file = pd.ExcelFile(archivo, engine='openpyxl')
                 
-        except Exception as e:
-            logger.error(f"Error al procesar el archivo {archivo.name}: {str(e)}")
-            return None
-    
-    # Usar procesamiento paralelo para procesar los archivos
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        resultados = list(executor.map(verificar_y_procesar, archivos_excel))
-    
-    # Filtrar los resultados None
-    dataframes = [df for df in resultados if df is not None]
-    
-    if not dataframes:
-        logger.error("No se pudieron leer datos de ningún archivo")
-        return
-    
-    # Combinar todos los DataFrames de manera eficiente
-    logger.info("Combinando todos los DataFrames...")
-    df_combinado = pd.concat(dataframes, ignore_index=True)
-    
-    # Liberar memoria
-    del dataframes
-    gc.collect()
-    
-    logger.info(f"DataFrame combinado: {len(df_combinado)} filas y {len(df_combinado.columns)} columnas")
-    
-    # Mostrar información sobre las columnas
-    logger.info("Columnas del DataFrame combinado:")
-    for i, col in enumerate(df_combinado.columns, 1):
-        logger.info(f"{i}. {col}")
+                if "Z_DEVO_ALV" in excel_file.sheet_names:
+                    return procesar_archivo_devoluciones(archivo)
+                else:
+                    logger.warning(f"La hoja Z_DEVO_ALV no existe en el archivo {archivo.name}")
+                    logger.info(f"Hojas disponibles: {excel_file.sheet_names}")
+                    return None
+                    
+            except Exception as e:
+                logger.error(f"Error al procesar el archivo {archivo.name}: {str(e)}")
+                return None
+        
+        # Usar procesamiento paralelo para procesar los archivos
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            resultados = list(executor.map(verificar_y_procesar, archivos_excel))
+        
+        # Filtrar los resultados None
+        dataframes = [df for df in resultados if df is not None]
+        
+        if not dataframes:
+            logger.warning("No se pudieron leer datos de ningún archivo. Creando archivo parquet vacío...")
+            
+            # Crear DataFrame vacío con estructura básica
+            df_combinado = pd.DataFrame({
+                'Entrega': [],
+                'Familia': [],
+                'Cajas Equiv NE': [],
+                'archivo_origen': []
+            })
+            
+            logger.info("✅ DataFrame vacío creado con estructura básica")
+        else:
+            # Combinar todos los DataFrames de manera eficiente
+            logger.info("Combinando todos los DataFrames...")
+            df_combinado = pd.concat(dataframes, ignore_index=True)
+            
+            # Liberar memoria
+            del dataframes
+            gc.collect()
+            
+            logger.info(f"DataFrame combinado: {len(df_combinado)} filas y {len(df_combinado.columns)} columnas")
+            
+            # Mostrar información sobre las columnas
+            logger.info("Columnas del DataFrame combinado:")
+            for i, col in enumerate(df_combinado.columns, 1):
+                logger.info(f"{i}. {col}")
     
     # Crear la carpeta de salida si no existe
     carpeta_salida = Path("Data/No Entregas/Output")
@@ -227,15 +249,19 @@ def agrupar_datos_no_entregas():
         logger.info("\n=== RESUMEN DE DATOS ===")
         logger.info(f"Total de filas: {len(df_combinado)}")
         logger.info(f"Total de columnas: {len(df_combinado.columns)}")
-        logger.info(f"Archivos procesados: {df_combinado['archivo_origen'].nunique()}")
-        logger.info(f"Archivos de origen: {df_combinado['archivo_origen'].unique()}")
         
-        # Mostrar estadísticas de Familia
-        if 'Familia' in df_combinado.columns:
-            logger.info("\n=== DISTRIBUCIÓN POR FAMILIA ===")
-            distribucion = df_combinado['Familia'].value_counts()
-            for familia, cantidad in distribucion.items():
-                logger.info(f"{familia}: {cantidad} registros")
+        if len(df_combinado) > 0:
+            logger.info(f"Archivos procesados: {df_combinado['archivo_origen'].nunique()}")
+            logger.info(f"Archivos de origen: {df_combinado['archivo_origen'].unique()}")
+            
+            # Mostrar estadísticas de Familia
+            if 'Familia' in df_combinado.columns:
+                logger.info("\n=== DISTRIBUCIÓN POR FAMILIA ===")
+                distribucion = df_combinado['Familia'].value_counts()
+                for familia, cantidad in distribucion.items():
+                    logger.info(f"{familia}: {cantidad} registros")
+        else:
+            logger.info("Archivo vacío creado - no hay datos para procesar")
         
         # Mostrar las primeras filas
         logger.info("\n=== PRIMERAS 5 FILAS ===")

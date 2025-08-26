@@ -46,26 +46,42 @@ class ProcesamientoMaestro:
         self.inicio_tiempo = None
         
     def verificar_estructura(self):
-        """Verifica que la estructura de carpetas esté correcta."""
+        """Verifica que la estructura de carpetas esté correcta y la crea si es necesario."""
         logger.info("🔍 Verificando estructura de carpetas...")
         
         carpetas_requeridas = [
             self.scripts_dir,
+            self.data_dir,
             self.data_dir / "Rep PLR",
+            self.data_dir / "Rep PLR" / "Output",
+            self.data_dir / "No Entregas",
             self.data_dir / "No Entregas" / "2025",
-            self.data_dir / "Vol_Portafolio"
+            self.data_dir / "No Entregas" / "Output",
+            self.data_dir / "Vol_Portafolio",
+            self.data_dir / "Vol_Portafolio" / "Output",
+            self.data_dir / "Output_Unificado",
+            self.output_dir
         ]
+        
+        carpetas_creadas = []
+        carpetas_existentes = []
         
         for carpeta in carpetas_requeridas:
             if not carpeta.exists():
-                logger.error(f"❌ Carpeta no encontrada: {carpeta}")
-                return False
+                try:
+                    carpeta.mkdir(parents=True, exist_ok=True)
+                    carpetas_creadas.append(str(carpeta))
+                    logger.info(f"📁 Carpeta creada: {carpeta}")
+                except Exception as e:
+                    logger.error(f"❌ Error al crear carpeta {carpeta}: {str(e)}")
+                    return False
             else:
-                logger.info(f"✅ Carpeta encontrada: {carpeta}")
+                carpetas_existentes.append(str(carpeta))
+                logger.info(f"✅ Carpeta existente: {carpeta}")
         
-        # Crear carpeta de salida si no existe
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"✅ Carpeta de salida: {self.output_dir}")
+        if carpetas_creadas:
+            logger.info(f"\n📁 Se crearon {len(carpetas_creadas)} carpetas nuevas")
+            logger.info("✅ Estructura de carpetas lista")
         
         return True
     

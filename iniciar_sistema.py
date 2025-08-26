@@ -78,8 +78,9 @@ def mostrar_menu():
     print("1. 🚀 Ejecutar OTIF Master (Optimizado)")
     print("2. 🌐 Iniciar Aplicación Web (Modo Producción)")
     print("3. 🌐 Iniciar Aplicación Web (Servidor Simple)")
-    print("4. 📊 Ver Información del Sistema")
-    print("5. ❌ Salir")
+    print("4. 🧪 Probar Sistema (Sin archivos de datos)")
+    print("5. 📊 Ver Información del Sistema")
+    print("6. ❌ Salir")
     print("-" * 60)
 
 def ejecutar_procesamiento_maestro():
@@ -257,7 +258,7 @@ def main():
         mostrar_menu()
         
         try:
-            opcion = input("\nSelecciona una opción (1-5): ").strip()
+            opcion = input("\nSelecciona una opción (1-6): ").strip()
             
             if opcion == "1":
                 if ejecutar_procesamiento_maestro():
@@ -275,10 +276,35 @@ def main():
                 break  # Salir después de cerrar la aplicación web
                 
             elif opcion == "4":
-                mostrar_informacion_sistema()
+                # Opción para probar el sistema sin archivos de datos
+                print("\n🧪 PROBANDO SISTEMA (SIN ARCHIVOS DE DATOS)")
+                print("=" * 60)
+                print("Esta opción ejecuta una prueba completa del sistema")
+                print("creando archivos parquet vacíos si no encuentra datos.")
+                print("Ideal para verificar que todo funciona correctamente.")
+                
+                if not Path("probar_sistema.py").exists():
+                    print("❌ Error: No se encontró probar_sistema.py")
+                    input("\nPresiona Enter para continuar...")
+                    continue
+                
+                try:
+                    import subprocess
+                    resultado = subprocess.run([sys.executable, "probar_sistema.py"])
+                    if resultado.returncode == 0:
+                        print("\n✅ Prueba del sistema completada exitosamente")
+                    else:
+                        print("\n❌ La prueba del sistema falló")
+                except Exception as e:
+                    print(f"\n❌ Error al ejecutar la prueba: {e}")
+                
                 input("\nPresiona Enter para continuar...")
                 
             elif opcion == "5":
+                mostrar_informacion_sistema()
+                input("\nPresiona Enter para continuar...")
+                
+            elif opcion == "6":
                 print("\n👋 ¡Hasta luego!")
                 break
                 
