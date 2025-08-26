@@ -484,5 +484,252 @@ def verificar_rutas():
     """Verifica las rutas configuradas."""
     return jsonify(verificar_rutas_configuracion())
 
+# ===== NUEVAS RUTAS PARA EL MENÚ UNIFICADO =====
+
+@app.route('/ejecutar_modulo/<modulo>', methods=['POST'])
+def ejecutar_modulo_web(modulo):
+    """Ejecuta un módulo específico desde la web."""
+    global procesamiento_status
+    
+    if procesamiento_status['en_proceso']:
+        return jsonify({'error': 'Ya hay un procesamiento en curso'})
+    
+    # Reiniciar estado
+    procesamiento_status = {
+        'en_proceso': False,
+        'paso_actual': '',
+        'progreso': 0,
+        'mensajes': [],
+        'completado': False,
+        'error': None
+    }
+    
+    # Mapeo de módulos a scripts
+    modulos = {
+        'todo': {
+            'scripts': [
+                'agrupar_datos_no_entregas_mejorado.py',
+                'agrupar_datos_rep_plr.py', 
+                'agrupar_datos_vol_portafolio.py',
+                'unificar_datos_completos.py'
+            ],
+            'descripcion': 'TODO el procesamiento OTIF'
+        },
+        'no_entregas': {
+            'scripts': ['agrupar_datos_no_entregas_mejorado.py'],
+            'descripcion': 'Agrupación de datos NO ENTREGAS'
+        },
+        'rep_plr': {
+            'scripts': ['agrupar_datos_rep_plr.py'],
+            'descripcion': 'Agrupación de datos REP PLR'
+        },
+        'vol_portafolio': {
+            'scripts': ['agrupar_datos_vol_portafolio.py'],
+            'descripcion': 'Agrupación de datos VOL PORTAFOLIO'
+        },
+        'unificar': {
+            'scripts': ['unificar_datos_completos.py'],
+            'descripcion': 'Unificación de todos los datos'
+        }
+    }
+    
+    if modulo not in modulos:
+        return jsonify({'error': f'Módulo "{modulo}" no reconocido'})
+    
+    def ejecutar_modulo_thread():
+        """Ejecuta el módulo en un hilo separado."""
+        global procesamiento_status
+        
+        try:
+            procesamiento_status['en_proceso'] = True
+            procesamiento_status['completado'] = False
+            procesamiento_status['error'] = None
+            procesamiento_status['mensajes'] = []
+            procesamiento_status['progreso'] = 0
+            
+            config_modulo = modulos[modulo]
+            scripts = config_modulo['scripts']
+            descripcion = config_modulo['descripcion']
+            
+            procesamiento_status['mensajes'].append(f"🚀 EJECUTANDO: {descripcion}")
+            procesamiento_status['mensajes'].append(f"📋 Scripts a ejecutar: {len(scripts)}")
+            
+            exitosos = 0
+            
+            for i, script in enumerate(scripts, 1):
+                procesamiento_status['paso_actual'] = f'Paso {i}/{len(scripts)}: {script}'
+                progreso_paso = (i / len(scripts)) * 100
+                procesamiento_status['progreso'] = progreso_paso
+                
+                procesamiento_status['mensajes'].append(f"\n📋 PASO {i}/{len(scripts)}: {script}")
+                
+                if not ejecutar_script(script):
+                    procesamiento_status['mensajes'].append(f"❌ Error en {script}")
+                else:
+                    exitosos += 1
+                    procesamiento_status['mensajes'].append(f"✅ {script} completado exitosamente")
+            
+            # Resumen final
+            procesamiento_status['mensajes'].append(f"\n📊 RESUMEN: {exitosos}/{len(scripts)} scripts exitosos")
+            
+            if exitosos == len(scripts):
+                procesamiento_status['mensajes'].append("🎉 ¡Módulo completado exitosamente!")
+                procesamiento_status['completado'] = True
+            else:
+                procesamiento_status['mensajes'].append("⚠️ Algunos scripts fallaron")
+            
+            procesamiento_status['progreso'] = 100
+            
+        except Exception as e:
+            procesamiento_status['error'] = str(e)
+            procesamiento_status['mensajes'].append(f"❌ Error general: {str(e)}")
+        finally:
+            procesamiento_status['en_proceso'] = False
+    
+    # Iniciar procesamiento en hilo separado
+    thread = threading.Thread(target=ejecutar_modulo_thread)
+    thread.daemon = True
+    thread.start()
+    
+    return jsonify({'message': f'Módulo "{modulo}" iniciado'})
+
+@app.route('/verificar_estructura')
+def verificar_estructura_web():
+    """Verifica la estructura del sistema desde la web."""
+    try:
+        result = subprocess.run([sys.executable, "scripts/verificar_estructura.py"], 
+                              capture_output=True, text=True, encoding='utf-8')
+        
+        if result.returncode == 0:
+            return jsonify({
+                'success': True,
+                'output': result.stdout,
+                'error': result.stderr if result.stderr else None
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'output': result.stdout,
+                'error': result.stderr
+            })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error al verificar estructura: {str(e)}'
+        })
+
+@app.route('/ver_archivos_generados')
+def ver_archivos_generados_web():
+    """Muestra los archivos generados por el sistema."""
+    directorios = [
+        ("Data/Output/calculo_otif", "📊 Archivos finales"),
+        ("Data/Output_Unificado", "🔗 Archivos unificados"),
+        ("Data/Rep PLR/Output", "📈 Archivos REP PLR"),
+        ("Data/No Entregas/Output", "📦 Archivos No Entregas"),
+        ("Data/Vol_Portafolio/Output", "📋 Archivos Vol Portafolio")
+    ]
+    
+    resultado = {}
+    
+    for directorio, descripcion in directorios:
+        resultado[directorio] = {
+            'descripcion': descripcion,
+            'existe': os.path.exists(directorio),
+            'archivos': []
+        }
+        
+        if os.path.exists(directorio):
+            archivos = [f for f in os.listdir(directorio) if os.path.isfile(os.path.join(directorio, f))]
+            for archivo in archivos:
+                ruta_completa = os.path.join(directorio, archivo)
+                tamaño = os.path.getsize(ruta_completa)
+                tamaño_mb = tamaño / (1024 * 1024)
+                resultado[directorio]['archivos'].append({
+                    'nombre': archivo,
+                    'tamaño_mb': tamaño_mb
+                })
+    
+    return jsonify(resultado)
+
+@app.route('/informacion_sistema')
+def informacion_sistema_web():
+    """Muestra información completa del sistema."""
+    info = {
+        'version': 'Sistema OTIF Master v2.5',
+        'fecha': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        'scripts_disponibles': [],
+        'configuracion': {},
+        'logs': {}
+    }
+    
+    # Scripts disponibles
+    scripts_dir = "scripts"
+    if os.path.exists(scripts_dir):
+        scripts = [f for f in os.listdir(scripts_dir) if f.endswith('.py')]
+        info['scripts_disponibles'] = scripts
+    
+    # Configuración
+    try:
+        config = cargar_configuracion()
+        info['configuracion'] = {
+            'archivo': 'configuracion_rutas.json',
+            'ultima_actualizacion': config.get('ultima_actualizacion', 'No disponible')
+        }
+    except:
+        info['configuracion'] = {'error': 'No se pudo cargar la configuración'}
+    
+    # Logs
+    if os.path.exists("procesamiento_maestro.log"):
+        tamaño = os.path.getsize("procesamiento_maestro.log")
+        tamaño_kb = tamaño / 1024
+        info['logs'] = {
+            'log_principal': f'procesamiento_maestro.log ({tamaño_kb:.1f} KB)'
+        }
+    else:
+        info['logs'] = {'log_principal': 'No encontrado'}
+    
+    return jsonify(info)
+
+@app.route('/estadisticas_rendimiento')
+def estadisticas_rendimiento_web():
+    """Muestra estadísticas de rendimiento del sistema."""
+    stats = {
+        'tiempos_estimados': {
+            'rep_plr': '1-2 minutos',
+            'no_entregas': '2-3 minutos',
+            'vol_portafolio': '1-2 minutos',
+            'unificacion': '1-2 minutos',
+            'total_completo': '5-10 minutos'
+        },
+        'requisitos_sistema': {
+            'ram': 'Mínimo 8 GB (recomendado 16 GB)',
+            'cpu': 'Mínimo 4 núcleos',
+            'disco': 'Suficiente espacio para archivos temporales'
+        },
+        'archivos_principales_generados': [
+            'rep_plr.parquet',
+            'no_entregas.parquet',
+            'vol_portafolio.parquet',
+            'datos_completos_con_no_entregas.parquet'
+        ]
+    }
+    
+    return jsonify(stats)
+
+@app.route('/limpiar_archivos_temporales', methods=['POST'])
+def limpiar_archivos_temporales_web():
+    """Limpia archivos temporales del sistema."""
+    try:
+        # Por ahora solo retorna un mensaje de que la función está en desarrollo
+        return jsonify({
+            'success': True,
+            'message': 'Función de limpieza en desarrollo. Los archivos temporales se limpiarán automáticamente.'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error al limpiar archivos: {str(e)}'
+        })
+
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5000)

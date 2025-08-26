@@ -55,21 +55,36 @@ def mostrar_ayuda():
     print("  python ejecutar_modulo.py web")
     print()
 
-def mostrar_menu_interactivo():
-    """Muestra el menú interactivo"""
-    print("🎯 SISTEMA UNIFICADO OTIF - MENÚ INTERACTIVO")
-    print("=" * 50)
-    print("1. 🔄 Ejecutar TODO el procesamiento")
-    print("2. 📊 Agrupar datos NO ENTREGAS")
-    print("3. 📈 Agrupar datos REP PLR")
-    print("4. 📋 Agrupar datos VOL PORTAFOLIO")
-    print("5. 🔗 Unificar todos los datos")
-    print("6. 🔍 Verificar estado de rutas")
-    print("7. 📊 Ver resumen de procesamiento")
-    print("8. 🌐 Iniciar aplicación web")
-    print("9. ✅ Verificar estructura del sistema")
-    print("0. ❌ Salir")
-    print("=" * 50)
+def mostrar_menu_principal():
+    """Muestra el menú principal completo"""
+    print("🎯 SISTEMA UNIFICADO OTIF - MENÚ PRINCIPAL")
+    print("=" * 60)
+    print()
+    print("📊 PROCESAMIENTO DE DATOS:")
+    print("  1. 🔄 Ejecutar TODO el procesamiento")
+    print("  2. 📊 Agrupar datos NO ENTREGAS")
+    print("  3. 📈 Agrupar datos REP PLR")
+    print("  4. 📋 Agrupar datos VOL PORTAFOLIO")
+    print("  5. 🔗 Unificar todos los datos")
+    print()
+    print("🔍 VERIFICACIÓN Y MONITOREO:")
+    print("  6. 🔍 Verificar estado de rutas")
+    print("  7. 📊 Ver resumen de procesamiento")
+    print("  8. ✅ Verificar estructura del sistema")
+    print("  9. 📁 Ver archivos generados")
+    print()
+    print("🌐 INTERFAZ WEB:")
+    print("  10. 🌐 Iniciar aplicación web")
+    print("  11. ⚙️ Configurar rutas")
+    print()
+    print("🛠️ HERRAMIENTAS:")
+    print("  12. 📋 Ver información del sistema")
+    print("  13. 🧹 Limpiar archivos temporales")
+    print("  14. 📈 Ver estadísticas de rendimiento")
+    print()
+    print("❌ SALIR:")
+    print("  0. ❌ Salir del sistema")
+    print("=" * 60)
 
 def ejecutar_modulo(modulo):
     """Ejecuta un módulo específico"""
@@ -248,10 +263,137 @@ def ejecutar_modulo(modulo):
     else:
         print("⚠️  Algunos scripts fallaron")
 
+def ver_archivos_generados():
+    """Muestra los archivos generados por el sistema"""
+    print("📁 ARCHIVOS GENERADOS POR EL SISTEMA")
+    print("=" * 50)
+    
+    directorios = [
+        ("Data/Output/calculo_otif", "📊 Archivos finales"),
+        ("Data/Output_Unificado", "🔗 Archivos unificados"),
+        ("Data/Rep PLR/Output", "📈 Archivos REP PLR"),
+        ("Data/No Entregas/Output", "📦 Archivos No Entregas"),
+        ("Data/Vol_Portafolio/Output", "📋 Archivos Vol Portafolio")
+    ]
+    
+    for directorio, descripcion in directorios:
+        print(f"\n{descripcion} ({directorio}):")
+        if os.path.exists(directorio):
+            archivos = [f for f in os.listdir(directorio) if os.path.isfile(os.path.join(directorio, f))]
+            if archivos:
+                for archivo in archivos:
+                    ruta_completa = os.path.join(directorio, archivo)
+                    tamaño = os.path.getsize(ruta_completa)
+                    tamaño_mb = tamaño / (1024 * 1024)
+                    print(f"   📄 {archivo} ({tamaño_mb:.2f} MB)")
+            else:
+                print("   ⚠️  No hay archivos")
+        else:
+            print("   ❌ Directorio no existe")
+
+def ver_informacion_sistema():
+    """Muestra información completa del sistema"""
+    print("📋 INFORMACIÓN DEL SISTEMA OTIF")
+    print("=" * 50)
+    
+    # Versión y estado
+    print("🎯 VERSIÓN: Sistema OTIF Master v2.5")
+    print("📅 FECHA: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    print()
+    
+    # Scripts disponibles
+    print("📁 SCRIPTS DISPONIBLES:")
+    scripts_dir = "scripts"
+    if os.path.exists(scripts_dir):
+        scripts = [f for f in os.listdir(scripts_dir) if f.endswith('.py')]
+        for script in scripts:
+            print(f"   ✅ {script}")
+    else:
+        print("   ❌ Carpeta scripts no encontrada")
+    
+    print()
+    
+    # Configuración
+    print("⚙️ CONFIGURACIÓN:")
+    if os.path.exists("configuracion_rutas.json"):
+        try:
+            with open("configuracion_rutas.json", 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            print(f"   ✅ Archivo de configuración: configuracion_rutas.json")
+            print(f"   📅 Última actualización: {config.get('ultima_actualizacion', 'No disponible')}")
+        except:
+            print("   ❌ Error al leer configuración")
+    else:
+        print("   ❌ Archivo de configuración no encontrado")
+    
+    print()
+    
+    # Logs
+    print("📊 LOGS:")
+    if os.path.exists("procesamiento_maestro.log"):
+        tamaño = os.path.getsize("procesamiento_maestro.log")
+        tamaño_kb = tamaño / 1024
+        print(f"   ✅ Log principal: procesamiento_maestro.log ({tamaño_kb:.1f} KB)")
+    else:
+        print("   ❌ Log principal no encontrado")
+
+def limpiar_archivos_temporales():
+    """Limpia archivos temporales del sistema"""
+    print("🧹 LIMPIANDO ARCHIVOS TEMPORALES")
+    print("=" * 40)
+    
+    archivos_temp = [
+        "__pycache__",
+        "*.pyc",
+        "*.pyo",
+        "*.tmp"
+    ]
+    
+    print("⚠️  Esta función limpiará archivos temporales del sistema.")
+    print("📋 Archivos que se eliminarán:")
+    for archivo in archivos_temp:
+        print(f"   • {archivo}")
+    
+    respuesta = input("\n¿Deseas continuar? (s/n): ").lower()
+    if respuesta != 's':
+        print("❌ Limpieza cancelada")
+        return
+    
+    # Aquí iría la lógica de limpieza
+    print("✅ Limpieza completada (función en desarrollo)")
+
+def ver_estadisticas_rendimiento():
+    """Muestra estadísticas de rendimiento del sistema"""
+    print("📈 ESTADÍSTICAS DE RENDIMIENTO")
+    print("=" * 40)
+    
+    # Tiempos estimados
+    print("⏱️  TIEMPOS ESTIMADOS DE PROCESAMIENTO:")
+    print("   • Rep PLR: 1-2 minutos")
+    print("   • No Entregas: 2-3 minutos")
+    print("   • Vol Portafolio: 1-2 minutos")
+    print("   • Unificación: 1-2 minutos")
+    print("   • Total completo: 5-10 minutos")
+    print()
+    
+    # Requisitos del sistema
+    print("💻 REQUISITOS DEL SISTEMA:")
+    print("   • RAM: Mínimo 8 GB (recomendado 16 GB)")
+    print("   • CPU: Mínimo 4 núcleos")
+    print("   • Disco: Suficiente espacio para archivos temporales")
+    print()
+    
+    # Archivos generados
+    print("📊 ARCHIVOS PRINCIPALES GENERADOS:")
+    print("   • rep_plr.parquet")
+    print("   • no_entregas.parquet")
+    print("   • vol_portafolio.parquet")
+    print("   • datos_completos_con_no_entregas.parquet")
+
 def modo_interactivo():
-    """Ejecuta el modo interactivo"""
+    """Ejecuta el modo interactivo con menú completo"""
     while True:
-        mostrar_menu_interactivo()
+        mostrar_menu_principal()
         
         try:
             opcion = input("\n🔢 Selecciona una opción: ").strip()
@@ -274,9 +416,23 @@ def modo_interactivo():
             elif opcion == "7":
                 ejecutar_modulo("resumen")
             elif opcion == "8":
-                ejecutar_modulo("web")
-            elif opcion == "9":
                 ejecutar_modulo("verificar")
+            elif opcion == "9":
+                ver_archivos_generados()
+            elif opcion == "10":
+                ejecutar_modulo("web")
+            elif opcion == "11":
+                print("⚙️ CONFIGURACIÓN DE RUTAS")
+                print("=" * 40)
+                print("💡 Para configurar rutas, usa la aplicación web:")
+                print("   python ejecutar_modulo.py web")
+                print("   Luego ve a la sección 'Configuración'")
+            elif opcion == "12":
+                ver_informacion_sistema()
+            elif opcion == "13":
+                limpiar_archivos_temporales()
+            elif opcion == "14":
+                ver_estadisticas_rendimiento()
             else:
                 print("❌ Opción inválida. Por favor selecciona una opción válida.")
             

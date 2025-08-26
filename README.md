@@ -156,11 +156,18 @@ python procesar_todo.py
 python ejecutar_modulo.py
 ```
 **Características:**
-- ✅ Menú interactivo con opciones numeradas
-- ✅ Ejecución directa de módulos específicos
-- ✅ Verificación de rutas y estructura
-- ✅ Inicio de aplicación web integrado
-- ✅ Manejo automático de errores
+- ✅ **Menú interactivo completo** con 14 opciones organizadas
+- ✅ **Procesamiento de datos**: Ejecutar todo o módulos específicos
+- ✅ **Verificación y monitoreo**: Estado de rutas, resumen, estructura
+- ✅ **Interfaz web integrada**: Inicio directo de la aplicación web
+- ✅ **Herramientas adicionales**: Información del sistema, limpieza, estadísticas
+- ✅ **Manejo automático de errores** y confirmaciones
+
+**Menú principal incluye:**
+- 📊 **Procesamiento de datos** (opciones 1-5)
+- 🔍 **Verificación y monitoreo** (opciones 6-9)
+- 🌐 **Interfaz web** (opciones 10-11)
+- 🛠️ **Herramientas** (opciones 12-14)
 
 **Ejemplos de uso directo:**
 ```bash
@@ -186,10 +193,20 @@ python ejecutar_modulo.py resumen
 ```bash
 python app.py
 ```
-**Inicia la interfaz web completa**
+**Inicia la interfaz web completa con menú unificado**
+
+**Características de la web:**
+- ✅ **Menú unificado completo** con todas las funciones del sistema
+- ✅ **Procesamiento de datos** desde la interfaz web
+- ✅ **Verificación y monitoreo** en tiempo real
+- ✅ **Configuración visual** con explorador de archivos
+- ✅ **Herramientas integradas** para gestión del sistema
+- ✅ **Progreso en tiempo real** con barras de progreso
+- ✅ **Descarga de archivos** directamente desde la web
 
 ## 📊 MÓDULOS DISPONIBLES
 
+### **Comandos directos:**
 | Módulo | Descripción | Script |
 |--------|-------------|--------|
 | **todo** | Ejecutar todo el procesamiento | Todos los scripts en secuencia |
@@ -199,6 +216,40 @@ python app.py
 | **unificar** | Unificar todos los datos | `unificar_datos_completos.py` |
 | **rutas** | Verificar estado de rutas | `verificar_estado_rutas.py` |
 | **resumen** | Ver resumen de procesamiento | Muestra archivos JSON de resumen |
+| **web** | Iniciar aplicación web | `app.py` |
+| **verificar** | Verificar estructura del sistema | `verificar_estructura.py` |
+
+### **Menú interactivo completo:**
+```
+🎯 SISTEMA UNIFICADO OTIF - MENÚ PRINCIPAL
+============================================================
+
+📊 PROCESAMIENTO DE DATOS:
+  1. 🔄 Ejecutar TODO el procesamiento
+  2. 📊 Agrupar datos NO ENTREGAS
+  3. 📈 Agrupar datos REP PLR
+  4. 📋 Agrupar datos VOL PORTAFOLIO
+  5. 🔗 Unificar todos los datos
+
+🔍 VERIFICACIÓN Y MONITOREO:
+  6. 🔍 Verificar estado de rutas
+  7. 📊 Ver resumen de procesamiento
+  8. ✅ Verificar estructura del sistema
+  9. 📁 Ver archivos generados
+
+🌐 INTERFAZ WEB:
+  10. 🌐 Iniciar aplicación web
+  11. ⚙️ Configurar rutas
+
+🛠️ HERRAMIENTAS:
+  12. 📋 Ver información del sistema
+  13. 🧹 Limpiar archivos temporales
+  14. 📈 Ver estadísticas de rendimiento
+
+❌ SALIR:
+  0. ❌ Salir del sistema
+============================================================
+```
 
 ## 🔄 FLUJO DE PROCESAMIENTO COMPLETO
 
@@ -505,13 +556,36 @@ El sistema ejecuta los siguientes pasos en orden:
 
 ## 🌐 Interfaz Web
 
-La aplicación web incluye:
-- **🎮 Panel de control**: Iniciar/detener procesamiento
-- **⚙️ Configuración**: Modificar rutas de archivos y verificar existencias
-- **📊 Progreso en tiempo real**: Barra de progreso y logs
-- **📁 Gestión de archivos**: Lista y descarga de archivos principales
-- **📈 Estadísticas**: Información detallada del procesamiento
-- **🔗 Información de unión**: Detalles sobre archivos unidos
+La aplicación web incluye **menú unificado completo** con todas las funciones del sistema:
+
+### **🎮 Panel de Control**
+- Iniciar/detener procesamiento completo
+- Actualizar estado en tiempo real
+- Configuración de rutas
+
+### **📊 Menú Unificado Web**
+- **Procesamiento de datos**: Ejecutar todo o módulos específicos
+- **Verificación y monitoreo**: Estado de rutas, resumen, estructura
+- **Interfaz web**: Configuración y actualización
+- **Herramientas**: Información del sistema, limpieza, estadísticas
+
+### **⚙️ Configuración Visual**
+- **Explorador de archivos integrado**: Selección visual de carpetas
+- **Configuración en tiempo real**: Cambios aplicados inmediatamente
+- **Verificación automática**: Validación de rutas configuradas
+
+### **📊 Monitoreo Avanzado**
+- **Progreso en tiempo real**: Barras de progreso y logs detallados
+- **Gestión de archivos**: Lista y descarga de archivos principales
+- **Estadísticas detalladas**: Información completa del procesamiento
+- **Información de unión**: Detalles sobre archivos unidos
+
+### **🎯 Funciones Específicas del Menú Web**
+- **Ejecutar módulos**: Todo, no_entregas, rep_plr, vol_portafolio, unificar
+- **Verificar sistema**: Rutas, estructura, archivos generados
+- **Información del sistema**: Versión, scripts, configuración, logs
+- **Estadísticas de rendimiento**: Tiempos estimados y requisitos
+- **Limpieza**: Archivos temporales (en desarrollo)
 
 ## 🔧 Configuración
 
@@ -590,7 +664,16 @@ Data/
 
 ## 🔄 Actualizaciones
 
-### **Versión 2.5 - Sistema Simplificado (Nueva)**
+### **Versión 2.6 - Menú Unificado en Web (Nueva)**
+- ✅ **Menú unificado web**: Todas las funciones del sistema disponibles en la interfaz web
+- ✅ **Procesamiento desde web**: Ejecutar módulos específicos directamente desde la web
+- ✅ **Verificación integrada**: Verificar rutas, estructura y archivos desde la web
+- ✅ **Herramientas web**: Información del sistema, estadísticas y limpieza
+- ✅ **Interfaz mejorada**: Diseño organizado por categorías con iconos descriptivos
+- ✅ **Funciones JavaScript**: Todas las opciones del menú funcionan desde la web
+- ✅ **API REST completa**: Nuevas rutas para todas las funciones del menú
+
+### **Versión 2.5 - Sistema Simplificado**
 - ✅ **Sistema unificado**: Un solo script principal `ejecutar_modulo.py` para todo
 - ✅ **Procesamiento rápido**: Nuevo script `procesar_todo.py` para ejecución directa
 - ✅ **Eliminación de redundancias**: Removidos scripts duplicados y archivos innecesarios
@@ -676,7 +759,7 @@ El sistema ahora **actualiza los archivos parquet existentes** en lugar de crear
 python procesar_todo.py
 ```
 
-### **Para el sistema unificado:**
+### **Para el menú unificado (Recomendado):**
 ```bash
 python ejecutar_modulo.py
 ```
@@ -686,7 +769,17 @@ python ejecutar_modulo.py
 python app.py
 ```
 
-**¡Estos comandos ejecutarán todo el procesamiento OTIF de forma automática!**
+### **Para verificar rutas:**
+```bash
+python ejecutar_modulo.py rutas
+```
+
+### **Para ver ayuda:**
+```bash
+python ejecutar_modulo.py help
+```
+
+**¡Estos comandos te darán acceso completo a todas las funciones del sistema OTIF!**
 
 ## 📞 Soporte
 

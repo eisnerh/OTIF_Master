@@ -199,6 +199,86 @@
                 </div>
             </div>
 
+            <!-- Menú Unificado -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-bars"></i> Menú Unificado - Todas las Funciones
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Procesamiento de Datos -->
+                        <div class="col-md-6 mb-4">
+                            <h5><i class="fas fa-database"></i> 📊 Procesamiento de Datos</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success" onclick="ejecutarModulo('todo')">
+                                    <i class="fas fa-play-circle"></i> 🔄 Ejecutar TODO el procesamiento
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="ejecutarModulo('no_entregas')">
+                                    <i class="fas fa-box"></i> 📊 Agrupar datos NO ENTREGAS
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="ejecutarModulo('rep_plr')">
+                                    <i class="fas fa-chart-bar"></i> 📈 Agrupar datos REP PLR
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="ejecutarModulo('vol_portafolio')">
+                                    <i class="fas fa-folder"></i> 📋 Agrupar datos VOL PORTAFOLIO
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="ejecutarModulo('unificar')">
+                                    <i class="fas fa-link"></i> 🔗 Unificar todos los datos
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Verificación y Monitoreo -->
+                        <div class="col-md-6 mb-4">
+                            <h5><i class="fas fa-search"></i> 🔍 Verificación y Monitoreo</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-info" onclick="verificarRutas()">
+                                    <i class="fas fa-map-marker-alt"></i> 🔍 Verificar estado de rutas
+                                </button>
+                                <button class="btn btn-outline-info" onclick="verResumen()">
+                                    <i class="fas fa-chart-pie"></i> 📊 Ver resumen de procesamiento
+                                </button>
+                                <button class="btn btn-outline-info" onclick="verificarEstructura()">
+                                    <i class="fas fa-check-circle"></i> ✅ Verificar estructura del sistema
+                                </button>
+                                <button class="btn btn-outline-info" onclick="verArchivosGenerados()">
+                                    <i class="fas fa-folder-open"></i> 📁 Ver archivos generados
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Interfaz Web -->
+                        <div class="col-md-6 mb-4">
+                            <h5><i class="fas fa-globe"></i> 🌐 Interfaz Web</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-warning" onclick="mostrarConfiguracion()">
+                                    <i class="fas fa-cog"></i> ⚙️ Configurar rutas
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="actualizarEstado()">
+                                    <i class="fas fa-sync-alt"></i> 🔄 Actualizar estado
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Herramientas -->
+                        <div class="col-md-6 mb-4">
+                            <h5><i class="fas fa-tools"></i> 🛠️ Herramientas</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-dark" onclick="informacionSistema()">
+                                    <i class="fas fa-info-circle"></i> 📋 Ver información del sistema
+                                </button>
+                                <button class="btn btn-outline-dark" onclick="limpiarArchivosTemporales()">
+                                    <i class="fas fa-broom"></i> 🧹 Limpiar archivos temporales
+                                </button>
+                                <button class="btn btn-outline-dark" onclick="estadisticasRendimiento()">
+                                    <i class="fas fa-chart-line"></i> 📈 Ver estadísticas de rendimiento
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Configuration Panel -->
             <div class="card" id="configPanel" style="display: none;">
                 <div class="card-header">
@@ -633,6 +713,190 @@
                      alert('Error: ' + data.error);
                  } else {
                      alert('Configuración guardada correctamente');
+
+         // ===== FUNCIONES DEL MENÚ UNIFICADO =====
+
+         function ejecutarModulo(modulo) {
+             if (confirm(`¿Estás seguro de que quieres ejecutar el módulo "${modulo}"?`)) {
+                 fetch(`/ejecutar_modulo/${modulo}`, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     }
+                 })
+                 .then(response => response.json())
+                 .then(data => {
+                     if (data.error) {
+                         alert('Error: ' + data.error);
+                     } else {
+                         alert('Módulo iniciado correctamente. Revisa el progreso en el panel de control.');
+                         startTime = new Date();
+                         updateProgress();
+                     }
+                 })
+                 .catch(error => {
+                     console.error('Error:', error);
+                     alert('Error al ejecutar el módulo');
+                 });
+             }
+         }
+
+         function verificarEstructura() {
+             fetch('/verificar_estructura')
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     alert('Verificación completada. Revisa la consola para más detalles.');
+                     console.log('Verificación de estructura:', data.output);
+                     if (data.error) {
+                         console.warn('Advertencias:', data.error);
+                     }
+                 } else {
+                     alert('Error en la verificación: ' + (data.error || 'Error desconocido'));
+                     console.error('Error de verificación:', data);
+                 }
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+                 alert('Error al verificar estructura');
+             });
+         }
+
+         function verArchivosGenerados() {
+             fetch('/ver_archivos_generados')
+             .then(response => response.json())
+             .then(data => {
+                 let mensaje = '📁 ARCHIVOS GENERADOS POR EL SISTEMA:\n\n';
+                 
+                 for (const [directorio, info] of Object.entries(data)) {
+                     mensaje += `${info.descripcion} (${directorio}):\n`;
+                     if (info.existe) {
+                         if (info.archivos.length > 0) {
+                             info.archivos.forEach(archivo => {
+                                 mensaje += `   📄 ${archivo.nombre} (${archivo.tamaño_mb.toFixed(2)} MB)\n`;
+                             });
+                         } else {
+                             mensaje += `   ⚠️ No hay archivos\n`;
+                         }
+                     } else {
+                         mensaje += `   ❌ Directorio no existe\n`;
+                     }
+                     mensaje += '\n';
+                 }
+                 
+                 alert(mensaje);
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+                 alert('Error al obtener archivos generados');
+             });
+         }
+
+         function informacionSistema() {
+             fetch('/informacion_sistema')
+             .then(response => response.json())
+             .then(data => {
+                 let mensaje = `📋 INFORMACIÓN DEL SISTEMA OTIF\n\n`;
+                 mensaje += `🎯 VERSIÓN: ${data.version}\n`;
+                 mensaje += `📅 FECHA: ${data.fecha}\n\n`;
+                 
+                 mensaje += `📁 SCRIPTS DISPONIBLES:\n`;
+                 if (data.scripts_disponibles.length > 0) {
+                     data.scripts_disponibles.forEach(script => {
+                         mensaje += `   ✅ ${script}\n`;
+                     });
+                 } else {
+                     mensaje += `   ❌ Carpeta scripts no encontrada\n`;
+                 }
+                 mensaje += '\n';
+                 
+                 mensaje += `⚙️ CONFIGURACIÓN:\n`;
+                 if (data.configuracion.archivo) {
+                     mensaje += `   ✅ Archivo: ${data.configuracion.archivo}\n`;
+                     mensaje += `   📅 Última actualización: ${data.configuracion.ultima_actualizacion}\n`;
+                 } else {
+                     mensaje += `   ❌ Error al leer configuración\n`;
+                 }
+                 mensaje += '\n';
+                 
+                 mensaje += `📊 LOGS:\n`;
+                 if (data.logs.log_principal) {
+                     mensaje += `   ✅ ${data.logs.log_principal}\n`;
+                 } else {
+                     mensaje += `   ❌ Log principal no encontrado\n`;
+                 }
+                 
+                 alert(mensaje);
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+                 alert('Error al obtener información del sistema');
+             });
+         }
+
+         function estadisticasRendimiento() {
+             fetch('/estadisticas_rendimiento')
+             .then(response => response.json())
+             .then(data => {
+                 let mensaje = `📈 ESTADÍSTICAS DE RENDIMIENTO\n\n`;
+                 
+                 mensaje += `⏱️ TIEMPOS ESTIMADOS DE PROCESAMIENTO:\n`;
+                 for (const [modulo, tiempo] of Object.entries(data.tiempos_estimados)) {
+                     mensaje += `   • ${modulo}: ${tiempo}\n`;
+                 }
+                 mensaje += '\n';
+                 
+                 mensaje += `💻 REQUISITOS DEL SISTEMA:\n`;
+                 for (const [requisito, descripcion] of Object.entries(data.requisitos_sistema)) {
+                     mensaje += `   • ${requisito}: ${descripcion}\n`;
+                 }
+                 mensaje += '\n';
+                 
+                 mensaje += `📊 ARCHIVOS PRINCIPALES GENERADOS:\n`;
+                 data.archivos_principales_generados.forEach(archivo => {
+                     mensaje += `   • ${archivo}\n`;
+                 });
+                 
+                 alert(mensaje);
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+                 alert('Error al obtener estadísticas de rendimiento');
+             });
+         }
+
+         function limpiarArchivosTemporales() {
+             if (confirm('¿Estás seguro de que quieres limpiar los archivos temporales?')) {
+                 fetch('/limpiar_archivos_temporales', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     }
+                 })
+                 .then(response => response.json())
+                 .then(data => {
+                     if (data.success) {
+                         alert(data.message);
+                     } else {
+                         alert('Error: ' + data.error);
+                     }
+                 })
+                 .catch(error => {
+                     console.error('Error:', error);
+                     alert('Error al limpiar archivos temporales');
+                 });
+             }
+         }
+
+         function mostrarConfiguracion() {
+             toggleConfigPanel();
+         }
+
+         function actualizarEstado() {
+             updateProgress();
+             loadArchivos();
+             updateStatistics();
+         }
                      toggleConfigPanel();
                  }
              })
