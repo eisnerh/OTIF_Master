@@ -141,66 +141,254 @@ Procesamiento_Portafolio_No_Entregas/
    pip install -r requirements.txt
    ```
 
-## 🚀 Uso
+## 🚀 OPCIONES DE EJECUCIÓN SIMPLIFICADAS
 
-### **Opción 1: Sistema de Inicio (Recomendado)**
+Tienes **3 formas simples** de ejecutar el procesamiento OTIF:
+
+### 1. 🚀 **PROCESAMIENTO RÁPIDO** (Más Simple)
 ```bash
-python iniciar_sistema.py
+python procesar_todo.py
 ```
-Selecciona la opción deseada del menú.
+**Ejecuta todo el procesamiento de forma automática**
 
-### **Opción 2: OTIF Master Script Directo**
+### 2. 🎯 **SISTEMA UNIFICADO** (Recomendado)
 ```bash
-python procesamiento_maestro.py
+python ejecutar_modulo.py
+```
+**Características:**
+- ✅ Menú interactivo con opciones numeradas
+- ✅ Ejecución directa de módulos específicos
+- ✅ Verificación de rutas y estructura
+- ✅ Inicio de aplicación web integrado
+- ✅ Manejo automático de errores
+
+**Ejemplos de uso directo:**
+```bash
+# Ejecutar todo el procesamiento
+python ejecutar_modulo.py todo
+
+# Ejecutar módulo específico
+python ejecutar_modulo.py no_entregas
+python ejecutar_modulo.py rep_plr
+python ejecutar_modulo.py vol_portafolio
+
+# Verificar estado de rutas
+python ejecutar_modulo.py rutas
+
+# Iniciar aplicación web
+python ejecutar_modulo.py web
+
+# Ver resumen de procesamiento
+python ejecutar_modulo.py resumen
 ```
 
-### **Opción 3: Aplicación Web (Múltiples Modos)**
-
-#### **Modo Producción (Recomendado para otras computadoras):**
+### 3. 🌐 **APLICACIÓN WEB**
 ```bash
 python app.py
 ```
-o
+**Inicia la interfaz web completa**
+
+## 📊 MÓDULOS DISPONIBLES
+
+| Módulo | Descripción | Script |
+|--------|-------------|--------|
+| **todo** | Ejecutar todo el procesamiento | Todos los scripts en secuencia |
+| **no_entregas** | Agrupar datos NO ENTREGAS | `agrupar_datos_no_entregas_mejorado.py` |
+| **rep_plr** | Agrupar datos REP PLR | `agrupar_datos_rep_plr.py` |
+| **vol_portafolio** | Agrupar datos VOL PORTAFOLIO | `agrupar_datos_vol_portafolio.py` |
+| **unificar** | Unificar todos los datos | `unificar_datos_completos.py` |
+| **rutas** | Verificar estado de rutas | `verificar_estado_rutas.py` |
+| **resumen** | Ver resumen de procesamiento | Muestra archivos JSON de resumen |
+
+## 🔄 FLUJO DE PROCESAMIENTO COMPLETO
+
+Cuando ejecutes **"todo"**, el sistema procesará en este orden:
+
+1. **📊 Agrupación NO ENTREGAS**
+   - Procesa archivos de devoluciones mensuales
+   - Genera: `No_Entregas_combinado_mejorado.parquet`
+
+2. **📈 Agrupación REP PLR**
+   - Procesa reportes de estatus de entregas
+   - Genera: `REP_PLR_combinado.parquet`
+
+3. **📋 Agrupación VOL PORTAFOLIO**
+   - Procesa archivos de volumen de portafolio
+   - Genera: `Vol_Portafolio_combinado.parquet`
+
+4. **🔗 Unificación de datos**
+   - Combina todos los datos procesados
+   - Genera: `datos_completos_con_no_entregas.parquet`
+
+## 📁 ARCHIVOS DE SALIDA
+
+### Directorio: `Data/Output/calculo_otif/`
+- `resumen_procesamiento.json` - Resumen del procesamiento
+- `datos_completos_con_no_entregas.parquet` - Datos finales unificados
+- `no_entregas.parquet` - Datos de no entregas
+- `rep_plr.parquet` - Datos de reportes PLR
+- `vol_portafolio.parquet` - Datos de volumen de portafolio
+- `No_Entregas_combinado_mejorado.parquet` - No entregas procesadas
+- `REP_PLR_combinado.parquet` - REP PLR procesado
+- `Vol_Portafolio_combinado.parquet` - Volumen portafolio procesado
+- `Vol_Portafolio_combinado_replicado.parquet` - Copia de respaldo
+
+## 📊 REPORTE DE ESTADO DE RUTAS Y CONTEO DE ARCHIVOS
+
+### 🔍 RESUMEN EJECUTIVO
+
+| Categoría | Cantidad | Estado |
+|-----------|----------|--------|
+| **Rutas configuradas** | 5 | ✅ Todas accesibles |
+| **Archivos en fuentes** | 53 | 📁 Distribuidos en 3 directorios |
+| **Archivos procesados** | 9 | 📊 En Data/Output/calculo_otif |
+| **Archivos unificados** | 4 | 🔗 En output_unificado |
+| **Archivos finales** | 5 | 🎯 En output_final |
+
+### 📁 DETALLE POR RUTA
+
+#### 1. **REP_PLR** (Reportes PLR)
+- **📂 Directorio:** `..\..\..\..\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025`
+- **✅ Estado:** EXISTE
+- **📊 Total archivos:** 2
+- **📋 Archivos:**
+  - REP PLR ESTATUS ENTREGAS v25 - 1 Semestre.xlsx
+  - REP PLR ESTATUS ENTREGAS v25.xlsx
+
+#### 2. **NO_ENTREGAS** (Reportes de Devoluciones)
+- **📂 Directorio:** `..\..\..\..\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\3-Reporte de Tipificación de Devoluciones\País\2025`
+- **✅ Estado:** EXISTE
+- **📊 Total archivos:** 12
+- **📋 Archivos:** Archivos mensuales de devoluciones (1-2025 a 12-2025)
+
+#### 3. **VOL_PORTAFOLIO** (Volumen de Portafolio)
+- **📂 Directorio:** `..\..\..\..\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025`
+- **✅ Estado:** EXISTE
+- **📊 Total archivos:** 39
+- **📋 Archivos:** Archivos mensuales de entregas PLR (1-Entregas ENE PLR.xlsx a 12-Entregas DIC PLR.xlsx)
+
+#### 4. **OUTPUT_UNIFICADO** (Datos Unificados)
+- **📂 Directorio:** `..\..\..\..\..\..\data\OTIF_Unificado`
+- **✅ Estado:** EXISTE
+- **📊 Total archivos:** 4
+- **📋 Archivos:**
+  - datos_completos_con_no_entregas.parquet
+  - no_entregas.parquet
+  - rep_plr.parquet
+  - vol_portafolio.parquet
+
+#### 5. **OUTPUT_FINAL** (Datos Finales)
+- **📂 Directorio:** `..\..\..\..\..\..\data\OTIF_Final`
+- **✅ Estado:** EXISTE
+- **📊 Total archivos:** 5
+- **📋 Archivos:**
+  - datos_completos_con_no_entregas.parquet
+  - no_entregas.parquet
+  - rep_plr.parquet
+  - resumen_procesamiento.json
+  - vol_portafolio.parquet
+
+### 📊 ARCHIVOS EN DIRECTORIO LOCAL
+
+#### Data/Output/calculo_otif
+**📊 Total archivos:** 9
+
+| Archivo | Tamaño | Líneas |
+|---------|--------|--------|
+| resumen_procesamiento.json | 1.9KB | 82 |
+| datos_completos_con_no_entregas.parquet | 13KB | 55 |
+| vol_portafolio.parquet | 2.7KB | 13 |
+| no_entregas.parquet | 2.3KB | 10 |
+| rep_plr.parquet | 9.3KB | 45 |
+| Vol_Portafolio_combinado.parquet | 2.7KB | 13 |
+| Vol_Portafolio_combinado_replicado.parquet | 2.7KB | 13 |
+| No_Entregas_combinado_mejorado.parquet | 2.3KB | 10 |
+| REP_PLR_combinado.parquet | 9.3KB | 45 |
+
+### ⚠️ ARCHIVOS PRINCIPALES FALTANTES
+
+Los siguientes archivos principales **NO** se encontraron en el directorio actual:
+- ❌ rep_plr.parquet
+- ❌ no_entregas.parquet  
+- ❌ vol_portafolio.parquet
+
+**Nota:** Estos archivos sí existen en los directorios de salida procesados.
+
+### 🎯 CONCLUSIONES
+
+1. **✅ Todas las rutas están accesibles** y contienen archivos
+2. **📊 Se procesaron 53 archivos fuente** en total
+3. **🔗 Los datos están correctamente unificados** en los directorios de salida
+4. **📋 El sistema tiene 9 archivos procesados** listos para análisis
+5. **⚠️ Los archivos principales no están en el directorio raíz** pero sí en las carpetas de procesamiento
+
+### 📈 RECOMENDACIONES
+
+1. **Verificar la ubicación de los archivos principales** según la configuración
+2. **Considerar mover los archivos procesados** al directorio raíz si es necesario
+3. **Revisar la configuración de rutas** para asegurar consistencia
+4. **Mantener respaldos** de los archivos procesados
+
+## ⚠️ CONSIDERACIONES IMPORTANTES
+
+### ✅ **Antes de ejecutar:**
+1. Verificar que todas las rutas estén accesibles
+2. Asegurar que los archivos fuente existan
+3. Tener suficiente espacio en disco
+
+### 🔍 **Verificación de rutas:**
 ```bash
-python run_production.py
+python ejecutar_modulo.py rutas
 ```
 
-#### **Modo Servidor Simple (Más compatible):**
+### 📊 **Monitoreo del progreso:**
+- Cada módulo muestra su progreso en tiempo real
+- Se registran errores y advertencias
+- Se calcula el tiempo de ejecución
+
+### 🛑 **En caso de errores:**
+- El sistema muestra detalles del error
+- Permite continuar con el siguiente módulo
+- Mantiene los archivos procesados exitosamente
+
+## 🎯 EJEMPLOS DE USO
+
+### Ejecutar solo un módulo específico:
 ```bash
-python run_simple.py
+# Solo procesar no entregas
+python ejecutar_modulo.py no_entregas
 ```
 
-#### **Sistema de Inicio (Recomendado):**
+### Ejecutar múltiples módulos:
 ```bash
-python iniciar_sistema.py
-```
-Luego selecciona la opción 2 o 3 para la aplicación web.
-
-**Nueva funcionalidad**: Configuración de rutas desde la interfaz web
-- Botón "Configuración" para modificar rutas de archivos
-- **📂 Explorador de archivos integrado**: Botones para seleccionar carpetas visualmente
-- Verificación automática de rutas
-- Guardado persistente de configuración
-
-### **Opción 4: Verificación de Estructura (Nuevo)**
-```bash
-python scripts/verificar_estructura.py
+# Procesar no entregas y rep PLR
+python ejecutar_modulo.py no_entregas rep_plr
 ```
 
-Este script verifica y crea automáticamente toda la estructura de carpetas necesaria para el sistema OTIF.
+### Verificar estado antes de procesar:
+```bash
+# Verificar rutas
+python ejecutar_modulo.py rutas
 
-#### **¿Qué hace?**
-- ✅ Verifica que existan todas las carpetas necesarias
-- 📁 Crea automáticamente las carpetas faltantes
-- 📋 Verifica si existen archivos de datos de ejemplo
-- 💡 Proporciona consejos sobre la estructura esperada
-- 🎯 Prepara el sistema para funcionar inmediatamente
+# Ver resumen anterior
+python ejecutar_modulo.py resumen
 
-#### **Cuándo usarlo:**
-- 🔧 **Primera vez**: Al configurar el sistema por primera vez
-- 🆕 **Nuevo entorno**: Al mover el sistema a otra computadora
-- 🛠️ **Solución de problemas**: Si hay errores de carpetas faltantes
-- 📋 **Verificación**: Para confirmar que todo está listo
+# Luego ejecutar procesamiento
+python ejecutar_modulo.py todo
+```
+
+## 📈 MONITOREO Y LOGS
+
+### Archivos de log:
+- `procesamiento_maestro.log` - Log principal del sistema
+- `resumen_procesamiento.json` - Resumen detallado del procesamiento
+
+### Información disponible:
+- ✅ Tiempo de ejecución por módulo
+- ✅ Número de archivos procesados
+- ✅ Estadísticas de datos
+- ✅ Errores y advertencias
+- ✅ Estado de archivos de salida
 
 ## 📂 Configuración Visual de Rutas
 
@@ -402,6 +590,24 @@ Data/
 
 ## 🔄 Actualizaciones
 
+### **Versión 2.5 - Sistema Simplificado (Nueva)**
+- ✅ **Sistema unificado**: Un solo script principal `ejecutar_modulo.py` para todo
+- ✅ **Procesamiento rápido**: Nuevo script `procesar_todo.py` para ejecución directa
+- ✅ **Eliminación de redundancias**: Removidos scripts duplicados y archivos innecesarios
+- ✅ **Interfaz simplificada**: Menú interactivo mejorado con todas las opciones
+- ✅ **Inicio de aplicación web integrado**: Opción para iniciar la web desde el menú
+- ✅ **Verificación de estructura**: Comando para verificar el sistema completo
+- ✅ **Documentación unificada**: Todo en un solo README.md completo
+
+### **Versión 2.4 - Sistema de Ejecución Modular**
+- ✅ **Ejecución modular**: Scripts `ejecutar_modulo.py` con múltiples opciones
+- ✅ **Interfaz interactiva**: Menú con opciones numeradas para ejecutar módulos
+- ✅ **Línea de comandos**: Ejecución directa de módulos específicos
+- ✅ **Múltiples módulos**: Posibilidad de ejecutar varios módulos en secuencia
+- ✅ **Verificación de rutas**: Comando dedicado para verificar estado de rutas
+- ✅ **Resumen de procesamiento**: Visualización de archivos de resumen
+- ✅ **Manejo de errores**: Continuación automática en caso de fallos
+
 ### **Versión 2.3 - Sistema de Configuración (Nueva)**
 - ✅ **Configuración centralizada**: Todos los scripts usan configuración desde `configuracion_rutas.json`
 - ✅ **Rutas flexibles**: Las rutas de archivos son completamente configurables
@@ -462,6 +668,25 @@ El sistema ahora **actualiza los archivos parquet existentes** en lugar de crear
 ✅ Archivo parquet actualizado exitosamente en: [ruta]
 ✅ Archivo parquet creado exitosamente en: [ruta]
 ```
+
+## 🚀 COMANDOS RÁPIDOS
+
+### **Para todo el procesamiento:**
+```bash
+python procesar_todo.py
+```
+
+### **Para el sistema unificado:**
+```bash
+python ejecutar_modulo.py
+```
+
+### **Para la aplicación web:**
+```bash
+python app.py
+```
+
+**¡Estos comandos ejecutarán todo el procesamiento OTIF de forma automática!**
 
 ## 📞 Soporte
 
