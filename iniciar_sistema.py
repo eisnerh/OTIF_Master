@@ -76,9 +76,10 @@ def mostrar_menu():
     """Muestra el menú principal."""
     print("\n📋 OPCIONES DISPONIBLES:")
     print("1. 🚀 Ejecutar OTIF Master (Optimizado)")
-    print("2. 🌐 Iniciar Aplicación Web")
-    print("3. 📊 Ver Información del Sistema")
-    print("4. ❌ Salir")
+    print("2. 🌐 Iniciar Aplicación Web (Modo Producción)")
+    print("3. 🌐 Iniciar Aplicación Web (Servidor Simple)")
+    print("4. 📊 Ver Información del Sistema")
+    print("5. ❌ Salir")
     print("-" * 60)
 
 def ejecutar_procesamiento_maestro():
@@ -101,8 +102,8 @@ def ejecutar_procesamiento_maestro():
 
 
 def iniciar_aplicacion_web():
-    """Inicia la aplicación web."""
-    print("\n🌐 INICIANDO APLICACIÓN WEB")
+    """Inicia la aplicación web en modo producción."""
+    print("\n🌐 INICIANDO APLICACIÓN WEB (MODO PRODUCCIÓN)")
     print("=" * 60)
     
     if not Path("app.py").exists():
@@ -112,6 +113,7 @@ def iniciar_aplicacion_web():
     print("📋 Información de la aplicación:")
     print("  • URL: http://localhost:5000")
     print("  • Puerto: 5000")
+    print("  • Modo: Producción (sin debug)")
     print("  • Para detener: Ctrl+C")
     
     print("\n🌐 Abriendo navegador automáticamente...")
@@ -129,7 +131,52 @@ def iniciar_aplicacion_web():
         from app import app
         print("\n✅ Aplicación iniciada correctamente!")
         print("Presiona Ctrl+C para detener la aplicación")
-        app.run(debug=False, host='0.0.0.0', port=5000)
+        app.run(debug=False, host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
+        return True
+    except KeyboardInterrupt:
+        print("\n\n👋 Aplicación detenida por el usuario")
+        return True
+    except Exception as e:
+        print(f"\n❌ Error al iniciar la aplicación: {e}")
+        return False
+
+def iniciar_aplicacion_web_simple():
+    """Inicia la aplicación web con servidor WSGI simple."""
+    print("\n🌐 INICIANDO APLICACIÓN WEB (SERVIDOR SIMPLE)")
+    print("=" * 60)
+    
+    if not Path("app.py").exists():
+        print("❌ Error: No se encontró app.py")
+        return False
+    
+    print("📋 Información de la aplicación:")
+    print("  • URL: http://localhost:5000")
+    print("  • Puerto: 5000")
+    print("  • Servidor: WSGI Simple Server")
+    print("  • Para detener: Ctrl+C")
+    
+    print("\n🌐 Abriendo navegador automáticamente...")
+    
+    # Abrir navegador después de un pequeño delay
+    def abrir_navegador():
+        time.sleep(3)
+        webbrowser.open('http://localhost:5000')
+    
+    thread = threading.Thread(target=abrir_navegador)
+    thread.daemon = True
+    thread.start()
+    
+    try:
+        from wsgiref.simple_server import make_server
+        from app import app
+        
+        print("\n✅ Aplicación iniciada correctamente!")
+        print("Presiona Ctrl+C para detener la aplicación")
+        
+        # Crear servidor WSGI
+        httpd = make_server('0.0.0.0', 5000, app)
+        httpd.serve_forever()
+        
         return True
     except KeyboardInterrupt:
         print("\n\n👋 Aplicación detenida por el usuario")
@@ -210,7 +257,7 @@ def main():
         mostrar_menu()
         
         try:
-            opcion = input("\nSelecciona una opción (1-4): ").strip()
+            opcion = input("\nSelecciona una opción (1-5): ").strip()
             
             if opcion == "1":
                 if ejecutar_procesamiento_maestro():
@@ -224,10 +271,14 @@ def main():
                 break  # Salir después de cerrar la aplicación web
                 
             elif opcion == "3":
+                iniciar_aplicacion_web_simple()
+                break  # Salir después de cerrar la aplicación web
+                
+            elif opcion == "4":
                 mostrar_informacion_sistema()
                 input("\nPresiona Enter para continuar...")
                 
-            elif opcion == "4":
+            elif opcion == "5":
                 print("\n👋 ¡Hasta luego!")
                 break
                 

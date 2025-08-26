@@ -10,6 +10,9 @@ import json
 import threading
 import time
 from datetime import datetime
+import tkinter as tk
+from tkinter import filedialog
+import tempfile
 
 app = Flask(__name__)
 app.config['APP_NAME'] = 'OTIF Master'
@@ -29,6 +32,40 @@ procesamiento_status = {
     'completado': False,
     'error': None
 }
+
+def seleccionar_carpeta(titulo="Seleccionar carpeta"):
+    """
+    Abre un explorador de archivos para seleccionar una carpeta.
+    Retorna la ruta seleccionada o None si se cancela.
+    """
+    try:
+        # Crear una ventana temporal de tkinter (oculta)
+        root = tk.Tk()
+        root.withdraw()  # Ocultar la ventana principal
+        root.attributes('-topmost', True)  # Mantener en primer plano
+        
+        # Abrir el explorador de carpetas
+        carpeta_seleccionada = filedialog.askdirectory(
+            title=titulo,
+            initialdir=os.getcwd()
+        )
+        
+        root.destroy()  # Cerrar la ventana de tkinter
+        
+        if carpeta_seleccionada:
+            # Convertir a ruta relativa si es posible
+            try:
+                carpeta_relativa = os.path.relpath(carpeta_seleccionada, os.getcwd())
+                return carpeta_relativa
+            except ValueError:
+                # Si no se puede hacer relativa, usar la ruta absoluta
+                return carpeta_seleccionada
+        else:
+            return None
+            
+    except Exception as e:
+        logger.error(f"Error al abrir explorador de carpetas: {str(e)}")
+        return None
 
 def cargar_configuracion():
     """Carga la configuración de rutas desde el archivo JSON."""
@@ -401,10 +438,51 @@ def actualizar_configuracion():
     except Exception as e:
         return jsonify({'error': f'Error al actualizar configuración: {str(e)}'}), 400
 
+@app.route('/seleccionar_carpeta/<tipo_ruta>', methods=['POST'])
+def seleccionar_carpeta_ruta(tipo_ruta):
+    """Permite seleccionar una carpeta usando el explorador de archivos."""
+    try:
+        # Mapear tipos de ruta a títulos descriptivos
+        titulos = {
+            'rep_plr': 'Seleccionar carpeta de datos Rep PLR',
+            'no_entregas': 'Seleccionar carpeta de datos No Entregas',
+            'vol_portafolio': 'Seleccionar carpeta de datos Vol Portafolio',
+            'output_unificado': 'Seleccionar carpeta de salida unificada',
+            'output_final': 'Seleccionar carpeta de salida final'
+        }
+        
+        titulo = titulos.get(tipo_ruta, f'Seleccionar carpeta para {tipo_ruta}')
+        
+        # Abrir explorador de carpetas
+        carpeta_seleccionada = seleccionar_carpeta(titulo)
+        
+        if carpeta_seleccionada:
+            # Actualizar configuración
+            config_actual = cargar_configuracion()
+            config_actual['rutas_archivos'][tipo_ruta] = carpeta_seleccionada
+            guardar_configuracion(config_actual)
+            
+            return jsonify({
+                'success': True,
+                'ruta': carpeta_seleccionada,
+                'message': f'Carpeta seleccionada: {carpeta_seleccionada}'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'No se seleccionó ninguna carpeta'
+            })
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error al seleccionar carpeta: {str(e)}'
+        }), 400
+
 @app.route('/verificar_rutas')
 def verificar_rutas():
     """Verifica las rutas configuradas."""
     return jsonify(verificar_rutas_configuracion())
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)

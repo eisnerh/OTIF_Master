@@ -10,6 +10,9 @@ Sistema de procesamiento y análisis de datos OTIF con interfaz web y scripts op
 - **🌐 Interfaz Web**: Dashboard moderno y fácil de usar
 - **📋 Sistema de Inicio**: Menú interactivo para elegir opciones
 - **📈 Logging Completo**: Seguimiento detallado de todos los procesos
+- **📂 Selección Visual de Carpetas**: Explorador de archivos integrado para configurar rutas
+- **🔄 Actualización de Archivos**: Los archivos parquet se actualizan en lugar de crear nuevos
+- **📊 4 Archivos Principales**: Generación de exactamente los archivos solicitados
 
 ## 📁 Estructura del Proyecto
 
@@ -70,16 +73,100 @@ Selecciona la opción deseada del menú.
 python procesamiento_maestro.py
 ```
 
-### **Opción 3: Aplicación Web**
+### **Opción 3: Aplicación Web (Múltiples Modos)**
+
+#### **Modo Producción (Recomendado para otras computadoras):**
 ```bash
 python app.py
 ```
-Luego abre http://localhost:5000 en tu navegador.
+o
+```bash
+python run_production.py
+```
+
+#### **Modo Servidor Simple (Más compatible):**
+```bash
+python run_simple.py
+```
+
+#### **Sistema de Inicio (Recomendado):**
+```bash
+python iniciar_sistema.py
+```
+Luego selecciona la opción 2 o 3 para la aplicación web.
 
 **Nueva funcionalidad**: Configuración de rutas desde la interfaz web
 - Botón "Configuración" para modificar rutas de archivos
+- **📂 Explorador de archivos integrado**: Botones para seleccionar carpetas visualmente
 - Verificación automática de rutas
 - Guardado persistente de configuración
+
+## 📂 Configuración Visual de Rutas
+
+### **Nueva Funcionalidad: Explorador de Archivos Integrado**
+
+El sistema ahora incluye una funcionalidad avanzada para seleccionar carpetas usando el explorador de archivos nativo de Windows:
+
+#### **🎯 Características:**
+- **📁 Botones de selección**: Cada campo de ruta tiene un botón con icono de carpeta
+- **🖱️ Clic y seleccionar**: Simplemente haz clic en el botón para abrir el explorador
+- **📂 Navegación intuitiva**: Usa el explorador de Windows para navegar por las carpetas
+- **🔄 Actualización automática**: La ruta seleccionada se actualiza automáticamente en el campo
+- **💾 Guardado automático**: La configuración se guarda automáticamente al seleccionar
+
+#### **📋 Rutas Configurables:**
+- **Rep PLR**: Carpeta con datos de Rep PLR
+- **No Entregas**: Carpeta con datos de No Entregas
+- **Vol Portafolio**: Carpeta con datos de Vol Portafolio
+- **Output Unificado**: Carpeta de salida para archivos unificados
+- **Output Final**: Carpeta de salida para archivos finales
+
+#### **🔧 Cómo usar:**
+1. Abre la aplicación web: `python app.py`
+2. Haz clic en "Configuración"
+3. Para cada ruta, haz clic en el botón 📁 junto al campo
+4. Navega y selecciona la carpeta deseada en el explorador
+5. La ruta se actualizará automáticamente
+6. Haz clic en "Guardar Configuración"
+
+#### **✅ Ventajas:**
+- **🚀 Más rápido**: No necesitas escribir rutas manualmente
+- **🔍 Menos errores**: Evitas errores de tipeo en las rutas
+- **👁️ Visual**: Puedes ver exactamente qué carpeta estás seleccionando
+- **📂 Navegación familiar**: Usa el explorador de Windows que ya conoces
+
+## 🔧 Compatibilidad con Otras Computadoras
+
+### **Problema del Servidor de Desarrollo**
+El servidor de desarrollo de Flask (`debug=True`) puede causar problemas en otras computadoras o entornos de producción. Por eso hemos implementado múltiples opciones de ejecución.
+
+### **Soluciones Implementadas:**
+
+#### **1. Modo Producción (app.py modificado)**
+- ✅ **Sin debug**: `debug=False`
+- ✅ **Sin reloader**: `use_reloader=False`
+- ✅ **Threading**: `threaded=True`
+- ✅ **Más estable**: Menos problemas de compatibilidad
+
+#### **2. Servidor WSGI Simple (run_simple.py)**
+- ✅ **Servidor nativo**: Usa `wsgiref.simple_server`
+- ✅ **Sin Flask**: No depende del servidor de Flask
+- ✅ **Máxima compatibilidad**: Funciona en cualquier entorno Python
+- ✅ **Sin dependencias adicionales**: Solo usa librerías estándar
+
+#### **3. Sistema de Inicio Mejorado**
+- ✅ **Múltiples opciones**: Elige el modo que funcione mejor
+- ✅ **Detección automática**: Abre el navegador automáticamente
+- ✅ **Información clara**: Muestra qué servidor se está usando
+
+### **Recomendaciones por Entorno:**
+
+| Entorno | Opción Recomendada | Comando |
+|---------|-------------------|---------|
+| **Desarrollo local** | Modo Producción | `python app.py` |
+| **Otras computadoras** | Servidor Simple | `python run_simple.py` |
+| **Entornos restrictivos** | Sistema de Inicio | `python iniciar_sistema.py` |
+| **Producción** | Servidor Simple | `python run_simple.py` |
 
 ## 📋 Proceso de Procesamiento
 

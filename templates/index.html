@@ -211,26 +211,51 @@
                                 <h6><i class="fas fa-database"></i> Rutas de Datos</h6>
                                 <div class="mb-3">
                                     <label class="form-label">Rep PLR:</label>
-                                    <input type="text" class="form-control" id="rutaRepPLR" placeholder="Data/Rep PLR">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="rutaRepPLR" placeholder="Data/Rep PLR">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="seleccionarCarpeta('rep_plr')">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">No Entregas:</label>
-                                    <input type="text" class="form-control" id="rutaNoEntregas" placeholder="Data/No Entregas/2025">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="rutaNoEntregas" placeholder="Data/No Entregas/2025">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="seleccionarCarpeta('no_entregas')">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Vol Portafolio:</label>
-                                    <input type="text" class="form-control" id="rutaVolPortafolio" placeholder="Data/Vol_Portafolio">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="rutaVolPortafolio" placeholder="Data/Vol_Portafolio">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="seleccionarCarpeta('vol_portafolio')">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <h6><i class="fas fa-folder"></i> Rutas de Salida</h6>
                                 <div class="mb-3">
                                     <label class="form-label">Output Unificado:</label>
-                                    <input type="text" class="form-control" id="rutaOutputUnificado" placeholder="Data/Output_Unificado">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="rutaOutputUnificado" placeholder="Data/Output_Unificado">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="seleccionarCarpeta('output_unificado')">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Output Final:</label>
-                                    <input type="text" class="form-control" id="rutaOutputFinal" placeholder="Data/Output/calculo_otif">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="rutaOutputFinal" placeholder="Data/Output/calculo_otif">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="seleccionarCarpeta('output_final')">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <button type="button" id="btnVerificarRutas" class="btn btn-info btn-sm">
@@ -344,7 +369,6 @@
                                 <li><i class="fas fa-file-alt"></i> rep_plr.parquet</li>
                                 <li><i class="fas fa-file-alt"></i> no_entregas.parquet</li>
                                 <li><i class="fas fa-file-alt"></i> vol_portafolio.parquet</li>
-                                <li><i class="fas fa-file-alt"></i> rep_plr_vol_portafolio_unido.parquet</li>
                                 <li><i class="fas fa-file-alt text-success"></i> <strong>datos_completos_con_no_entregas.parquet</strong></li>
                             </ul>
                         </div>
@@ -637,6 +661,53 @@
                  console.error('Error al verificar rutas:', error);
                  alert('Error al verificar las rutas');
              });
+         }
+
+         function seleccionarCarpeta(tipoRuta) {
+             fetch(`/seleccionar_carpeta/${tipoRuta}`, {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 }
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     // Actualizar el campo correspondiente
+                     const campoId = getCampoId(tipoRuta);
+                     if (campoId) {
+                         document.getElementById(campoId).value = data.ruta;
+                     }
+                     
+                     // Mostrar mensaje de éxito
+                     const statusDiv = document.getElementById('rutasStatus');
+                     statusDiv.innerHTML = `<div class="alert alert-success">
+                         <i class="fas fa-check"></i> ${data.message}
+                     </div>`;
+                     
+                     // Limpiar el mensaje después de 3 segundos
+                     setTimeout(() => {
+                         statusDiv.innerHTML = '';
+                     }, 3000);
+                 } else {
+                     alert(data.message || 'No se seleccionó ninguna carpeta');
+                 }
+             })
+             .catch(error => {
+                 console.error('Error al seleccionar carpeta:', error);
+                 alert('Error al seleccionar la carpeta');
+             });
+         }
+
+         function getCampoId(tipoRuta) {
+             const mapeo = {
+                 'rep_plr': 'rutaRepPLR',
+                 'no_entregas': 'rutaNoEntregas',
+                 'vol_portafolio': 'rutaVolPortafolio',
+                 'output_unificado': 'rutaOutputUnificado',
+                 'output_final': 'rutaOutputFinal'
+             };
+             return mapeo[tipoRuta];
          }
      </script>
  </body>
