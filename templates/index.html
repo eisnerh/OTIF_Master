@@ -43,89 +43,115 @@
                 </div>
             </div>
 
-            <!-- Menú Unificado Mejorado -->
+            <!-- Menú Organizado por Categorías -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-bars"></i> 🎯 Menú Unificado - Control Central del Sistema
+                    <i class="fas fa-bars"></i> 🎯 Menú Organizado - Control Central del Sistema
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <!-- Procesamiento de Datos -->
+                        <!-- 🚀 PROCESAMIENTO PRINCIPAL -->
                         <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-database"></i> 📊 Procesamiento de Datos</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-success btn-action" onclick="confirmarAccion('todo', '¿Ejecutar TODO el procesamiento OTIF?')">
-                                    <i class="fas fa-rocket"></i> 🚀 Ejecutar TODO el procesamiento
-                                </button>
-                                <button class="btn btn-primary btn-action" onclick="ejecutarModulo('no_entregas')">
-                                    <i class="fas fa-box"></i> 📦 Agrupar NO ENTREGAS
-                                </button>
-                                <button class="btn btn-primary btn-action" onclick="ejecutarModulo('rep_plr')">
-                                    <i class="fas fa-chart-bar"></i> 📈 Agrupar REP PLR
-                                </button>
-                                <button class="btn btn-primary btn-action" onclick="ejecutarModulo('vol_portafolio')">
-                                    <i class="fas fa-folder"></i> 📋 Agrupar VOL PORTAFOLIO
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="ejecutarModulo('unificar')">
-                                    <i class="fas fa-link"></i> 🔗 Unificar todos los datos
-                                </button>
+                            <div class="menu-category">
+                                <h5><i class="fas fa-rocket"></i> 🚀 Procesamiento Principal</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-action btn-lg" onclick="confirmarAccion('todo', '¿Ejecutar TODO el procesamiento OTIF?')">
+                                        <i class="fas fa-rocket"></i> 🚀 Ejecutar TODO el procesamiento
+                                    </button>
+                                    <button class="btn btn-info btn-action" onclick="ejecutarModulo('unificar')">
+                                        <i class="fas fa-link"></i> 🔗 Unificar todos los datos
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Verificación y Monitoreo -->
+                        <!-- 📊 MÓDULOS INDIVIDUALES -->
                         <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-search"></i> 🔍 Verificación y Monitoreo</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-info btn-action" onclick="verificarRutas()">
-                                    <i class="fas fa-map-marker-alt"></i> 🗺️ Verificar rutas
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="verResumen()">
-                                    <i class="fas fa-chart-pie"></i> 📊 Ver resumen
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="verificarEstructura()">
-                                    <i class="fas fa-check-circle"></i> ✅ Verificar sistema
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="verArchivosGenerados()">
-                                    <i class="fas fa-folder-open"></i> 📁 Ver archivos
-                                </button>
+                            <div class="menu-category">
+                                <h5><i class="fas fa-puzzle-piece"></i> 📊 Módulos Individuales</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-action" onclick="ejecutarModulo('no_entregas')">
+                                        <i class="fas fa-box"></i> 📦 Agrupar NO ENTREGAS
+                                    </button>
+                                    <button class="btn btn-primary btn-action" onclick="ejecutarModulo('rep_plr')">
+                                        <i class="fas fa-chart-bar"></i> 📈 Agrupar REP PLR
+                                    </button>
+                                    <button class="btn btn-primary btn-action" onclick="ejecutarModulo('vol_portafolio')">
+                                        <i class="fas fa-folder"></i> 📋 Agrupar VOL PORTAFOLIO
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Acciones Rápidas -->
+                        <!-- 🔍 VERIFICACIÓN Y MONITOREO -->
                         <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-bolt"></i> ⚡ Acciones Rápidas</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-warning btn-action" onclick="mostrarConfiguracion()">
-                                    <i class="fas fa-cog"></i> ⚙️ Configurar rutas
-                                </button>
-                                <button class="btn btn-secondary btn-action" onclick="actualizarEstado()">
-                                    <i class="fas fa-sync-alt"></i> 🔄 Actualizar estado
-                                </button>
-                                <button class="btn btn-danger btn-action" onclick="confirmarLimpiar()">
-                                    <i class="fas fa-broom"></i> 🧹 LIMPIAR archivos
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="informacionSistema()">
-                                    <i class="fas fa-info-circle"></i> ℹ️ Información sistema
-                                </button>
+                            <div class="menu-category">
+                                <h5><i class="fas fa-search"></i> 🔍 Verificación y Monitoreo</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-info btn-action" onclick="verificarRutas()">
+                                        <i class="fas fa-map-marker-alt"></i> 🗺️ Verificar rutas
+                                    </button>
+                                    <button class="btn btn-info btn-action" onclick="verResumen()">
+                                        <i class="fas fa-chart-pie"></i> 📊 Ver resumen
+                                    </button>
+                                    <button class="btn btn-info btn-action" onclick="verificarEstructura()">
+                                        <i class="fas fa-check-circle"></i> ✅ Verificar sistema
+                                    </button>
+                                    <button class="btn btn-info btn-action" onclick="verArchivosGenerados()">
+                                        <i class="fas fa-folder-open"></i> 📁 Ver archivos
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Herramientas Avanzadas -->
+                        <!-- ⚙️ CONFIGURACIÓN Y MANTENIMIENTO -->
                         <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-tools"></i> 🛠️ Herramientas Avanzadas</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-outline-dark btn-action" onclick="estadisticasRendimiento()">
-                                    <i class="fas fa-chart-line"></i> 📈 Estadísticas rendimiento
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="verificarLogs()">
-                                    <i class="fas fa-file-alt"></i> 📄 Ver logs del sistema
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="exportarReporte()">
-                                    <i class="fas fa-download"></i> 💾 Exportar reporte
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="reiniciarSistema()">
-                                    <i class="fas fa-redo"></i> 🔄 Reiniciar sistema
-                                </button>
+                            <div class="menu-category">
+                                <h5><i class="fas fa-cog"></i> ⚙️ Configuración y Mantenimiento</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-warning btn-action" onclick="mostrarConfiguracion()">
+                                        <i class="fas fa-cog"></i> ⚙️ Configurar rutas
+                                    </button>
+                                    <button class="btn btn-secondary btn-action" onclick="actualizarEstado()">
+                                        <i class="fas fa-sync-alt"></i> 🔄 Actualizar estado
+                                    </button>
+                                    <button class="btn btn-danger btn-action" onclick="confirmarLimpiar()">
+                                        <i class="fas fa-broom"></i> 🧹 LIMPIAR archivos
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 📈 ANÁLISIS Y REPORTES -->
+                        <div class="col-md-6 mb-4 menu-section">
+                            <div class="menu-category">
+                                <h5><i class="fas fa-chart-line"></i> 📈 Análisis y Reportes</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary btn-action" onclick="estadisticasRendimiento()">
+                                        <i class="fas fa-chart-line"></i> 📈 Estadísticas rendimiento
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-action" onclick="exportarReporte()">
+                                        <i class="fas fa-download"></i> 💾 Exportar reporte
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-action" onclick="informacionSistema()">
+                                        <i class="fas fa-info-circle"></i> ℹ️ Información sistema
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 🛠️ HERRAMIENTAS AVANZADAS -->
+                        <div class="col-md-6 mb-4 menu-section">
+                            <div class="menu-category">
+                                <h5><i class="fas fa-tools"></i> 🛠️ Herramientas Avanzadas</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-dark btn-action" onclick="verificarLogs()">
+                                        <i class="fas fa-file-alt"></i> 📄 Ver logs del sistema
+                                    </button>
+                                    <button class="btn btn-outline-dark btn-action" onclick="reiniciarSistema()">
+                                        <i class="fas fa-redo"></i> 🔄 Reiniciar sistema
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
