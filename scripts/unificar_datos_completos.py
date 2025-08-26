@@ -75,12 +75,9 @@ def unificar_datos_completos():
                 logger.info(f"✅ Archivo NO_ENTREGAS actualizado: {archivo_no_entregas_final}")
             else:
                 logger.info(f"✅ Archivo NO_ENTREGAS creado: {archivo_no_entregas_final}")
-            
-            # Liberar memoria
-            del df_no_entregas
-            gc.collect()
         else:
             logger.error(f"❌ El archivo {archivo_no_entregas} no existe")
+            return
         
         # 3. ARCHIVO VOL_PORTAFOLIO
         logger.info("📈 Procesando archivo VOL_PORTAFOLIO...")
@@ -160,10 +157,23 @@ def unificar_datos_completos():
         columnas_requeridas_rep_plr = ['Entrega', 'Familia']
         columnas_requeridas_no_entregas = ['Entrega', 'Familia']
         
-        for col in columnas_requeridas_rep_plr:
-            if col not in df_unido.columns:
-                logger.error(f"❌ La columna '{col}' no existe en datos completos")
-                return
+        # Verificar columnas en df_unido (después del primer merge)
+        if 'Entrega' not in df_unido.columns:
+            logger.error(f"❌ La columna 'Entrega' no existe en datos completos")
+            return
+        
+        # Buscar la columna Familia en df_unido (puede tener sufijos)
+        columna_familia_unido = None
+        for col in df_unido.columns:
+            if 'Familia' in col:
+                columna_familia_unido = col
+                break
+        
+        if columna_familia_unido is None:
+            logger.error(f"❌ No se encontró columna 'Familia' en datos completos")
+            return
+        
+        logger.info(f"📋 Usando columna '{columna_familia_unido}' para el join")
         
         for col in columnas_requeridas_no_entregas:
             if col not in df_no_entregas.columns:
@@ -177,25 +187,27 @@ def unificar_datos_completos():
         # Verificar tipos de datos de las columnas de unión
         logger.info(f"Tipo de datos Entrega en datos completos: {df_unido['Entrega'].dtype}")
         logger.info(f"Tipo de datos Entrega en NO_ENTREGAS: {df_no_entregas['Entrega'].dtype}")
-        logger.info(f"Tipo de datos Familia en datos completos: {df_unido['Familia'].dtype}")
+        logger.info(f"Tipo de datos Familia en datos completos: {df_unido[columna_familia_unido].dtype}")
         logger.info(f"Tipo de datos Familia en NO_ENTREGAS: {df_no_entregas['Familia'].dtype}")
         
         # Convertir a string para asegurar compatibilidad
         df_unido['Entrega'] = df_unido['Entrega'].astype(str)
         df_no_entregas['Entrega'] = df_no_entregas['Entrega'].astype(str)
-        df_unido['Familia'] = df_unido['Familia'].astype(str)
+        df_unido[columna_familia_unido] = df_unido[columna_familia_unido].astype(str)
         df_no_entregas['Familia'] = df_no_entregas['Familia'].astype(str)
         
         # Realizar el join (left join para mantener todos los registros de datos completos)
         df_final_unido = df_unido.merge(
             df_no_entregas, 
-            on=['Entrega', 'Familia'], 
+            left_on=['Entrega', columna_familia_unido],
+            right_on=['Entrega', 'Familia'],
             how='left', 
             suffixes=('_completos', '_no_entregas')
         )
         
         # Liberar memoria del dataframe intermedio
         del df_unido
+        del df_no_entregas
         gc.collect()
         
         logger.info(f"✅ Join completado: {len(df_final_unido)} filas y {len(df_final_unido.columns)} columnas")
@@ -286,14 +298,14 @@ def unificar_datos_completos():
         else:
             logger.info(f"✅ Archivo final unido creado con nuevas columnas: {archivo_final_unido}")
         
-        # Liberar memoria del dataframe final
-        del df_final_unido
-        gc.collect()
-        
         # Mostrar las columnas del archivo final unido
         logger.info("📋 Columnas del archivo final unido:")
         for i, col in enumerate(df_final_unido.columns, 1):
             logger.info(f"  {i}. {col}")
+        
+        # Liberar memoria del dataframe final
+        del df_final_unido
+        gc.collect()
         
         # Resumen final
         logger.info("\n🎉 ¡PROCESO COMPLETADO!")
