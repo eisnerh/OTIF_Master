@@ -30,7 +30,10 @@ procesamiento_status = {
     'progreso': 0,
     'mensajes': [],
     'completado': False,
-    'error': None
+    'error': None,
+    'archivo_actual': '',
+    'lineas_procesadas': 0,
+    'total_lineas': 0
 }
 
 def seleccionar_carpeta(titulo="Seleccionar carpeta"):
@@ -348,6 +351,25 @@ def iniciar_procesamiento():
 def estado_procesamiento():
     """Retorna el estado actual del procesamiento."""
     return jsonify(procesamiento_status)
+
+@app.route('/actualizar_progreso_archivo', methods=['POST'])
+def actualizar_progreso_archivo():
+    """Actualiza el progreso de lectura de un archivo específico."""
+    datos = request.json
+    if datos:
+        procesamiento_status['archivo_actual'] = datos.get('archivo', '')
+        procesamiento_status['lineas_procesadas'] = datos.get('lineas_procesadas', 0)
+        procesamiento_status['total_lineas'] = datos.get('total_lineas', 0)
+        
+        # Agregar mensaje al log
+        if datos.get('mensaje'):
+            procesamiento_status['mensajes'].append(datos.get('mensaje'))
+        
+        # Calcular progreso general si es posible
+        if procesamiento_status['total_lineas'] > 0:
+            procesamiento_status['progreso'] = min(99, int((procesamiento_status['lineas_procesadas'] / procesamiento_status['total_lineas']) * 100))
+    
+    return jsonify({'success': True})
 
 @app.route('/archivos_generados')
 def archivos_generados():

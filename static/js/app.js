@@ -11,11 +11,114 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStatus();
     loadFiles();
     
-    // Agregar efectos de hover a las categorías del menú
-    addMenuHoverEffects();
+    // Inicializar el menú hamburguesa
+    initializeHamburgerMenu();
+    
+    // Agregar event listeners para los botones principales
+    document.getElementById('btnIniciar').addEventListener('click', ejecutarProcesamientoCompleto);
+    document.getElementById('btnActualizar').addEventListener('click', actualizarEstado);
+    document.getElementById('btnConfiguracion').addEventListener('click', mostrarConfiguracion);
 });
 
-// Función para agregar efectos de hover a las categorías
+// ===== FUNCIONES DEL MENÚ HAMBURGUESA =====
+
+function initializeHamburgerMenu() {
+    const hamburgerToggle = document.getElementById('hamburgerToggle');
+    const hamburgerContent = document.getElementById('hamburgerContent');
+    
+    if (hamburgerToggle && hamburgerContent) {
+        hamburgerToggle.addEventListener('click', function() {
+            toggleHamburgerMenu();
+        });
+        
+        // Expandir el menú por defecto en pantallas grandes
+        if (window.innerWidth > 768) {
+            hamburgerContent.classList.add('expanded');
+            hamburgerToggle.classList.add('active');
+        }
+    }
+}
+
+function toggleHamburgerMenu() {
+    const hamburgerToggle = document.getElementById('hamburgerToggle');
+    const hamburgerContent = document.getElementById('hamburgerContent');
+    
+    if (hamburgerToggle && hamburgerContent) {
+        hamburgerToggle.classList.toggle('active');
+        hamburgerContent.classList.toggle('expanded');
+        
+        // Agregar efecto de sonido (opcional)
+        if (hamburgerContent.classList.contains('expanded')) {
+            console.log('🍔 Menú expandido');
+        } else {
+            console.log('🍔 Menú contraído');
+        }
+    }
+}
+
+function toggleCategory(categoryName) {
+    const content = document.getElementById(`content-${categoryName}`);
+    const icon = document.getElementById(`icon-${categoryName}`);
+    const header = content.previousElementSibling;
+    
+    if (content && icon) {
+        // Toggle la clase expanded
+        content.classList.toggle('expanded');
+        icon.classList.toggle('rotated');
+        header.classList.toggle('active');
+        
+        // Efecto visual adicional
+        if (content.classList.contains('expanded')) {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            console.log(`📂 Categoría ${categoryName} expandida`);
+        } else {
+            content.style.maxHeight = '0';
+            console.log(`📂 Categoría ${categoryName} contraída`);
+        }
+    }
+}
+
+// Función para expandir todas las categorías
+function expandAllCategories() {
+    const categories = ['procesamiento', 'modulos', 'verificacion', 'configuracion', 'analisis', 'herramientas'];
+    
+    categories.forEach(category => {
+        const content = document.getElementById(`content-${category}`);
+        const icon = document.getElementById(`icon-${category}`);
+        const header = content?.previousElementSibling;
+        
+        if (content && icon && header) {
+            content.classList.add('expanded');
+            icon.classList.add('rotated');
+            header.classList.add('active');
+            content.style.maxHeight = content.scrollHeight + 'px';
+        }
+    });
+    
+    console.log('📂 Todas las categorías expandidas');
+}
+
+// Función para contraer todas las categorías
+function collapseAllCategories() {
+    const categories = ['procesamiento', 'modulos', 'verificacion', 'configuracion', 'analisis', 'herramientas'];
+    
+    categories.forEach(category => {
+        const content = document.getElementById(`content-${category}`);
+        const icon = document.getElementById(`icon-${category}`);
+        const header = content?.previousElementSibling;
+        
+        if (content && icon && header) {
+            content.classList.remove('expanded');
+            icon.classList.remove('rotated');
+            header.classList.remove('active');
+            content.style.maxHeight = '0';
+        }
+    });
+    
+    console.log('📂 Todas las categorías contraídas');
+}
+
+// Función para agregar efectos de hover a las categorías del menú
 function addMenuHoverEffects() {
     const menuCategories = document.querySelectorAll('.menu-category');
     menuCategories.forEach(category => {
@@ -139,7 +242,8 @@ function verArchivosGenerados() {
 // ⚙️ CONFIGURACIÓN Y MANTENIMIENTO
 function mostrarConfiguracion() {
     const panel = document.getElementById('configPanel');
-    if (panel.style.display === 'none') {
+    // Verificar si el panel está oculto (puede ser por CSS o por style)
+    if (panel.style.display === 'none' || getComputedStyle(panel).display === 'none') {
         panel.style.display = 'block';
         loadConfiguracion();
     } else {
@@ -365,7 +469,51 @@ function updateStatus() {
     .then(data => {
         updateProgressBar(data.progreso);
         updateStatusIndicator(data);
-        updateCurrentStep(data.paso_actual);
+        
+        // Actualizar paso actual y mostrar información detallada del archivo en proceso
+        if (data.archivo_actual && data.total_lineas > 0) {
+            const porcentajeArchivo = data.total_lineas > 0 ? Math.round((data.lineas_procesadas / data.total_lineas) * 100) : 0;
+            
+            // Actualizar paso actual
+            const pasoActual = document.getElementById('pasoActual');
+            if (pasoActual) {
+                pasoActual.innerHTML = `${data.paso_actual || 'Procesando...'}`;
+            }
+            
+            // Mostrar sección de detalle de archivo
+            const detalleArchivo = document.getElementById('detalleArchivo');
+            if (detalleArchivo) {
+                detalleArchivo.style.display = 'block';
+                
+                // Actualizar nombre del archivo
+                const nombreArchivo = document.getElementById('nombreArchivo');
+                if (nombreArchivo) {
+                    nombreArchivo.textContent = data.archivo_actual;
+                }
+                
+                // Actualizar progreso del archivo
+                const progresoArchivo = document.getElementById('progresoArchivo');
+                if (progresoArchivo) {
+                    progresoArchivo.textContent = `${data.lineas_procesadas.toLocaleString()} de ${data.total_lineas.toLocaleString()} líneas (${porcentajeArchivo}%)`;
+                }
+                
+                // Actualizar barra de progreso del archivo
+                const progressBarArchivo = document.getElementById('progressBarArchivo');
+                if (progressBarArchivo) {
+                    progressBarArchivo.style.width = porcentajeArchivo + '%';
+                    progressBarArchivo.setAttribute('aria-valuenow', porcentajeArchivo);
+                }
+            }
+        } else {
+            // Ocultar sección de detalle de archivo si no hay archivo en proceso
+            const detalleArchivo = document.getElementById('detalleArchivo');
+            if (detalleArchivo) {
+                detalleArchivo.style.display = 'none';
+            }
+            
+            updateCurrentStep(data.paso_actual);
+        }
+        
         updateLogMessages(data.mensajes);
         
         if (data.completado || data.error) {
@@ -421,9 +569,27 @@ function updateLogMessages(messages) {
     const logContainer = document.getElementById('logContainer');
     
     if (logContainer && messages && messages.length > 0) {
-        logContainer.innerHTML = messages.map(msg => 
-            `<div class="mb-1">${msg}</div>`
-        ).join('');
+        logContainer.innerHTML = messages.map(msg => {
+            // Determinar el tipo de mensaje para aplicar la clase CSS adecuada
+            let messageClass = 'log-message';
+            
+            if (msg.includes('ERROR') || msg.includes('Error')) {
+                messageClass = 'log-error';
+            } else if (msg.includes('ADVERTENCIA') || msg.includes('Advertencia')) {
+                messageClass = 'log-warning';
+            } else if (msg.includes('ÉXITO') || msg.includes('Completado')) {
+                messageClass = 'log-success';
+            } else if (msg.includes('Leyendo archivo') || msg.includes('Iniciando lectura')) {
+                messageClass = 'log-reading';
+            } else if (msg.includes('Progreso') || msg.includes('líneas procesadas')) {
+                messageClass = 'log-progress';
+            } else if (msg.includes('INFO')) {
+                messageClass = 'log-info';
+            }
+            
+            return `<div class="mb-1 ${messageClass}">${msg}</div>`;
+        }).join('');
+        
         logContainer.scrollTop = logContainer.scrollHeight;
     }
 }
