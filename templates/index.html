@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/hamburger-menu.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -43,107 +44,21 @@
                 </div>
             </div>
 
-            <!-- Menú Unificado Mejorado -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-bars"></i> 🎯 Menú Unificado - Control Central del Sistema
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Procesamiento de Datos -->
-                        <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-database"></i> 📊 Procesamiento de Datos</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-success btn-action" onclick="confirmarAccion('todo', '¿Ejecutar TODO el procesamiento OTIF?')">
-                                    <i class="fas fa-rocket"></i> 🚀 Ejecutar TODO el procesamiento
-                                </button>
-                                <button class="btn btn-primary btn-action" onclick="ejecutarModulo('no_entregas')">
-                                    <i class="fas fa-box"></i> 📦 Agrupar NO ENTREGAS
-                                </button>
-                                <button class="btn btn-primary btn-action" onclick="ejecutarModulo('rep_plr')">
-                                    <i class="fas fa-chart-bar"></i> 📈 Agrupar REP PLR
-                                </button>
-                                <button class="btn btn-primary btn-action" onclick="ejecutarModulo('vol_portafolio')">
-                                    <i class="fas fa-folder"></i> 📋 Agrupar VOL PORTAFOLIO
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="ejecutarModulo('unificar')">
-                                    <i class="fas fa-link"></i> 🔗 Unificar todos los datos
-                                </button>
-                            </div>
-                        </div>
+            <!-- Menú Hamburguesa Recursivo -->
+            {% include 'hamburger-menu.html' %}
 
-                        <!-- Verificación y Monitoreo -->
-                        <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-search"></i> 🔍 Verificación y Monitoreo</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-info btn-action" onclick="verificarRutas()">
-                                    <i class="fas fa-map-marker-alt"></i> 🗺️ Verificar rutas
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="verResumen()">
-                                    <i class="fas fa-chart-pie"></i> 📊 Ver resumen
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="verificarEstructura()">
-                                    <i class="fas fa-check-circle"></i> ✅ Verificar sistema
-                                </button>
-                                <button class="btn btn-info btn-action" onclick="verArchivosGenerados()">
-                                    <i class="fas fa-folder-open"></i> 📁 Ver archivos
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Acciones Rápidas -->
-                        <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-bolt"></i> ⚡ Acciones Rápidas</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-warning btn-action" onclick="mostrarConfiguracion()">
-                                    <i class="fas fa-cog"></i> ⚙️ Configurar rutas
-                                </button>
-                                <button class="btn btn-secondary btn-action" onclick="actualizarEstado()">
-                                    <i class="fas fa-sync-alt"></i> 🔄 Actualizar estado
-                                </button>
-                                <button class="btn btn-danger btn-action" onclick="confirmarLimpiar()">
-                                    <i class="fas fa-broom"></i> 🧹 LIMPIAR archivos
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="informacionSistema()">
-                                    <i class="fas fa-info-circle"></i> ℹ️ Información sistema
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Herramientas Avanzadas -->
-                        <div class="col-md-6 mb-4 menu-section">
-                            <h5><i class="fas fa-tools"></i> 🛠️ Herramientas Avanzadas</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-outline-dark btn-action" onclick="estadisticasRendimiento()">
-                                    <i class="fas fa-chart-line"></i> 📈 Estadísticas rendimiento
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="verificarLogs()">
-                                    <i class="fas fa-file-alt"></i> 📄 Ver logs del sistema
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="exportarReporte()">
-                                    <i class="fas fa-download"></i> 💾 Exportar reporte
-                                </button>
-                                <button class="btn btn-outline-dark btn-action" onclick="reiniciarSistema()">
-                                    <i class="fas fa-redo"></i> 🔄 Reiniciar sistema
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Panel de Confirmación -->
-                    <div id="confirmacionPanel" class="mt-4" style="display: none;">
-                        <div class="alert alert-warning">
-                            <h6><i class="fas fa-exclamation-triangle"></i> Confirmar Acción</h6>
-                            <p id="mensajeConfirmacion"></p>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-confirm" onclick="confirmarAccionConfirmada()">
-                                    <i class="fas fa-check"></i> Confirmar
-                                </button>
-                                <button class="btn btn-cancel" onclick="cancelarAccion()">
-                                    <i class="fas fa-times"></i> Cancelar
-                                </button>
-                            </div>
-                        </div>
+            <!-- Panel de Confirmación -->
+            <div id="confirmacionPanel" class="mt-4" style="display: none;">
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Confirmar Acción</h6>
+                    <p id="mensajeConfirmacion"></p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-confirm" onclick="confirmarAccionConfirmada()">
+                            <i class="fas fa-check"></i> Confirmar
+                        </button>
+                        <button class="btn btn-cancel" onclick="cancelarAccion()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -222,30 +137,52 @@
             </div>
 
             <!-- Progress Section -->
-            <div class="card">
-                <div class="card-header">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
                     <i class="fas fa-tasks"></i> Estado del Procesamiento
                 </div>
-                <div class="card-body">
-                    <div class="row">
+                <div class="card-body p-4">
+                    <div class="row align-items-center mb-3">
                         <div class="col-md-8">
-                            <h5 id="pasoActual">Esperando inicio...</h5>
-                            <div class="progress mb-3">
-                                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%">0%</div>
+                            <h5 id="pasoActual" class="mb-3">Esperando inicio...</h5>
+                            <div class="progress" style="height: 20px;">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="text-center">
+                            <div class="text-center p-3 border rounded shadow-sm">
                                 <span id="statusIndicator" class="status-indicator status-error"></span>
-                                <span id="statusText">Inactivo</span>
+                                <span id="statusText" class="fw-bold">Inactivo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalle de Archivo en Proceso -->
+                    <div id="detalleArchivo" class="mb-3 p-3 border rounded bg-light" style="display: none;">
+                        <h6 class="d-flex align-items-center mb-2">
+                            <i class="fas fa-file-excel me-2 text-success"></i> Archivo en Proceso
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Nombre:</strong> <span id="nombreArchivo">-</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Progreso:</strong> <span id="progresoArchivo">0%</span></p>
+                                <div class="progress" style="height: 10px;">
+                                    <div id="progressBarArchivo" class="progress-bar bg-success" 
+                                         role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Log Messages -->
-                    <div class="mt-3">
-                        <h6><i class="fas fa-terminal"></i> Log de Procesamiento</h6>
-                        <div id="logContainer" class="log-container">
+                    <div class="mt-4">
+                        <h6 class="d-flex align-items-center mb-2">
+                            <i class="fas fa-terminal me-2"></i> Log de Procesamiento
+                        </h6>
+                        <div id="logContainer" class="log-container shadow-sm">
                             <div class="text-muted">No hay mensajes disponibles...</div>
                         </div>
                     </div>
@@ -304,13 +241,13 @@
                         <div class="col-md-6">
                             <h6><i class="fas fa-database"></i> Archivo Unido Principal</h6>
                             <p><strong>datos_completos_con_no_entregas.parquet</strong></p>
-                                                         <ul class="list-unstyled">
-                                 <li><i class="fas fa-check text-success"></i> Rep PLR + Vol Portafolio + No Entregas</li>
-                                 <li><i class="fas fa-key text-info"></i> Claves de unión: Entrega + Familia</li>
-                                 <li><i class="fas fa-table text-warning"></i> 36 columnas totales (incluye nuevas columnas de conteo)</li>
-                                 <li><i class="fas fa-chart-line text-primary"></i> Análisis completo OTIF</li>
-                                 <li><i class="fas fa-plus text-success"></i> <strong>Nuevas columnas:</strong> "Entregas" (primera ocurrencia) y "No Entrega" (primera ocurrencia con Cajas Equiv NE > 0)</li>
-                             </ul>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Rep PLR + Vol Portafolio + No Entregas</li>
+                                <li><i class="fas fa-key text-info"></i> Claves de unión: Entrega + Familia</li>
+                                <li><i class="fas fa-table text-warning"></i> 36 columnas totales (incluye nuevas columnas de conteo)</li>
+                                <li><i class="fas fa-chart-line text-primary"></i> Análisis completo OTIF</li>
+                                <li><i class="fas fa-plus text-success"></i> <strong>Nuevas columnas:</strong> "Entregas" (primera ocurrencia) y "No Entrega" (primera ocurrencia con Cajas Equiv NE > 0)</li>
+                            </ul>
                         </div>
                         <div class="col-md-6">
                             <h6><i class="fas fa-info-circle"></i> Archivos Generados</h6>
@@ -329,5 +266,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
- </body>
- </html>
+    <script src="{{ url_for('static', filename='js/hamburger-menu.js') }}"></script>
+</body>
+</html>

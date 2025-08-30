@@ -723,3 +723,379 @@ body {
 .btn-close:hover {
     opacity: 1;
 }
+
+/* Estilos para el menú organizado por categorías */
+.menu-category {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.menu-category:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.menu-category h5 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    text-align: center;
+}
+
+.menu-category h5 i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+/* Estilos específicos para cada categoría */
+.menu-category:nth-child(1) h5 {
+    border-bottom-color: #28a745;
+}
+
+.menu-category:nth-child(1) h5 i {
+    color: #28a745;
+}
+
+.menu-category:nth-child(2) h5 {
+    border-bottom-color: #007bff;
+}
+
+.menu-category:nth-child(2) h5 i {
+    color: #007bff;
+}
+
+.menu-category:nth-child(3) h5 {
+    border-bottom-color: #17a2b8;
+}
+
+.menu-category:nth-child(3) h5 i {
+    color: #17a2b8;
+}
+
+.menu-category:nth-child(4) h5 {
+    border-bottom-color: #ffc107;
+}
+
+.menu-category:nth-child(4) h5 i {
+    color: #ffc107;
+}
+
+.menu-category:nth-child(5) h5 {
+    border-bottom-color: #6f42c1;
+}
+
+.menu-category:nth-child(5) h5 i {
+    color: #6f42c1;
+}
+
+.menu-category:nth-child(6) h5 {
+    border-bottom-color: #6c757d;
+}
+
+.menu-category:nth-child(6) h5 i {
+    color: #6c757d;
+}
+
+/* Estilos para los botones dentro de las categorías */
+.menu-category .btn-action {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 15px;
+}
+
+.menu-category .btn-action:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-category .btn-action i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+}
+
+/* Responsive design para el menú */
+@media (max-width: 768px) {
+    .menu-category {
+        margin-bottom: 20px;
+    }
+    
+    .menu-category h5 {
+        font-size: 1rem;
+    }
+    
+    .menu-category .btn-action {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+}
+
+/* Animaciones para las categorías */
+.menu-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.menu-section:nth-child(1) { animation-delay: 0.1s; }
+.menu-section:nth-child(2) { animation-delay: 0.2s; }
+.menu-section:nth-child(3) { animation-delay: 0.3s; }
+.menu-section:nth-child(4) { animation-delay: 0.4s; }
+.menu-section:nth-child(5) { animation-delay: 0.5s; }
+.menu-section:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para el botón principal destacado */
+.btn-lg.btn-action {
+    font-size: 1.1rem;
+    padding: 15px 20px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-lg.btn-action:hover {
+    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+/* Estilos para el panel de confirmación */
+#confirmacionPanel {
+    animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mejoras generales del diseño */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    font-weight: 600;
+    padding: 15px 20px;
+}
+
+/* Estilos para el estado del procesamiento */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.5s infinite;
+}
+
+.status-running {
+    background: #f39c12;
+}
+
+.status-completed {
+    background: #27ae60;
+    animation: none;
+}
+
+.status-error {
+    background: #e74c3c;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Estilos para el log de procesamiento */
+.log-container {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    border: 1px solid #dee2e6;
+}
+
+/* Estilos para los diferentes tipos de mensajes de log */
+.log-message {
+    padding: 5px 0;
+    border-bottom: 1px dashed #e9ecef;
+    line-height: 1.4;
+}
+
+.log-success {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.log-error {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.log-warning {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+.log-info {
+    color: #17a2b8;
+}
+
+/* Nuevos estilos para mensajes de progreso de lectura de archivos */
+.log-reading {
+    color: #6f42c1;
+    font-weight: 500;
+}
+
+.log-progress {
+    color: #20c997;
+    font-weight: 500;
+    background-color: rgba(32, 201, 151, 0.1);
+    border-radius: 5px;
+    padding: 3px 8px;
+}
+
+/* Estilos para las estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.hamburger-menu {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.hamburger-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hamburger-header h3 {
+    color: white;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hamburger-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hamburger-controls .btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.hamburger-controls .btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hamburger-controls .btn:active {
+    transform: scale(0.95);
+}
+
+.hamburger-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hamburger-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}

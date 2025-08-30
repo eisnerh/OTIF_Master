@@ -1,0 +1,249 @@
+<!-- Menú Hamburguesa Recursivo -->
+<div class="hamburger-menu-container">
+    <div class="hamburger-menu">
+        <div class="hamburger-header">
+            <h3><i class="fas fa-bars"></i> 🎯 Menú del Sistema</h3>
+            <div class="hamburger-controls">
+                <button class="btn btn-sm btn-outline-light me-2" onclick="expandAllCategories()" title="Expandir todo">
+                    <i class="fas fa-expand-alt"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-light me-2" onclick="collapseAllCategories()" title="Contraer todo">
+                    <i class="fas fa-compress-alt"></i>
+                </button>
+                <button class="hamburger-toggle" id="hamburgerToggle">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="hamburger-content" id="hamburgerContent">
+            <!-- 🚀 PROCESAMIENTO PRINCIPAL -->
+            <div class="menu-section">
+                <div class="menu-category-header" data-category="procesamiento">
+                    <h5><i class="fas fa-rocket"></i> 🚀 Procesamiento Principal</h5>
+                    <i class="fas fa-chevron-down category-icon" id="icon-procesamiento"></i>
+                </div>
+                <div class="menu-category-content" id="content-procesamiento">
+                    <button class="btn btn-success btn-action btn-lg w-100 mb-2" onclick="confirmarAccion('todo', '¿Ejecutar TODO el procesamiento OTIF?')">
+                        <i class="fas fa-rocket"></i> 🚀 Ejecutar TODO el procesamiento
+                    </button>
+                    <button class="btn btn-info btn-action w-100 mb-2" onclick="ejecutarModulo('unificar')">
+                        <i class="fas fa-link"></i> 🔗 Unificar todos los datos
+                    </button>
+                    
+                    <!-- Subcategoría: Procesamiento Avanzado -->
+                    <div class="subcategory">
+                        <div class="menu-category-header" data-category="procesamiento-avanzado">
+                            <h5><i class="fas fa-cogs"></i> ⚙️ Procesamiento Avanzado</h5>
+                            <i class="fas fa-chevron-down category-icon" id="icon-procesamiento-avanzado"></i>
+                        </div>
+                        <div class="menu-category-content" id="content-procesamiento-avanzado">
+                            <button class="btn btn-warning btn-action w-100 mb-2" onclick="ejecutarModulo('procesamiento-batch')">
+                                <i class="fas fa-layer-group"></i> 📦 Procesamiento por Lotes
+                            </button>
+                            <button class="btn btn-secondary btn-action w-100 mb-2" onclick="ejecutarModulo('optimizacion')">
+                                <i class="fas fa-tachometer-alt"></i> ⚡ Optimización de Rendimiento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📊 MÓDULOS DE PROCESAMIENTO -->
+            <div class="menu-section">
+                <div class="menu-category-header" data-category="modulos">
+                    <h5><i class="fas fa-cube"></i> 📊 Módulos de Procesamiento</h5>
+                    <i class="fas fa-chevron-down category-icon" id="icon-modulos"></i>
+                </div>
+                <div class="menu-category-content" id="content-modulos">
+                    <button class="btn btn-primary btn-action w-100 mb-2" onclick="ejecutarModulo('rep-plr')">
+                        <i class="fas fa-chart-line"></i> 📈 Procesar REP PLR
+                    </button>
+                    <button class="btn btn-info btn-action w-100 mb-2" onclick="ejecutarModulo('vol-portafolio')">
+                        <i class="fas fa-chart-pie"></i> 🥧 Procesar Volumen Portafolio
+                    </button>
+                    <button class="btn btn-warning btn-action w-100 mb-2" onclick="ejecutarModulo('no-entregas')">
+                        <i class="fas fa-exclamation-triangle"></i> ⚠️ Procesar No Entregas
+                    </button>
+                    
+                    <!-- Subcategoría: Módulos Especializados -->
+                    <div class="subcategory">
+                        <div class="menu-category-header" data-category="modulos-especializados">
+                            <h5><i class="fas fa-microchip"></i> 🔬 Módulos Especializados</h5>
+                            <i class="fas fa-chevron-down category-icon" id="icon-modulos-especializados"></i>
+                        </div>
+                        <div class="menu-category-content" id="content-modulos-especializados">
+                            <button class="btn btn-success btn-action w-100 mb-2" onclick="ejecutarModulo('analisis-predictivo')">
+                                <i class="fas fa-brain"></i> 🧠 Análisis Predictivo
+                            </button>
+                            <button class="btn btn-danger btn-action w-100 mb-2" onclick="ejecutarModulo('detectar-anomalias')">
+                                <i class="fas fa-radar"></i> 🎯 Detectar Anomalías
+                            </button>
+                            
+                            <!-- Sub-subcategoría: Análisis Avanzado -->
+                            <div class="subcategory">
+                                <div class="menu-category-header" data-category="analisis-avanzado">
+                                    <h5><i class="fas fa-chart-bar"></i> 📊 Análisis Avanzado</h5>
+                                    <i class="fas fa-chevron-down category-icon" id="icon-analisis-avanzado"></i>
+                                </div>
+                                <div class="menu-category-content" id="content-analisis-avanzado">
+                                    <button class="btn btn-info btn-action w-100 mb-2" onclick="ejecutarModulo('tendencias')">
+                                        <i class="fas fa-trending-up"></i> 📈 Análisis de Tendencias
+                                    </button>
+                                    <button class="btn btn-warning btn-action w-100 mb-2" onclick="ejecutarModulo('correlaciones')">
+                                        <i class="fas fa-project-diagram"></i> 🔗 Análisis de Correlaciones
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🔍 VERIFICACIÓN Y VALIDACIÓN -->
+            <div class="menu-section">
+                <div class="menu-category-header" data-category="verificacion">
+                    <h5><i class="fas fa-search"></i> 🔍 Verificación y Validación</h5>
+                    <i class="fas fa-chevron-down category-icon" id="icon-verificacion"></i>
+                </div>
+                <div class="menu-category-content" id="content-verificacion">
+                    <button class="btn btn-info btn-action w-100 mb-2" onclick="verificarEstructura()">
+                        <i class="fas fa-folder-tree"></i> 📁 Verificar Estructura de Datos
+                    </button>
+                    <button class="btn btn-warning btn-action w-100 mb-2" onclick="validarDatos()">
+                        <i class="fas fa-check-double"></i> ✅ Validar Integridad de Datos
+                    </button>
+                    <button class="btn btn-success btn-action w-100 mb-2" onclick="generarReporte()">
+                        <i class="fas fa-file-alt"></i> 📄 Generar Reporte de Estado
+                    </button>
+                    
+                    <!-- Subcategoría: Validación Avanzada -->
+                    <div class="subcategory">
+                        <div class="menu-category-header" data-category="validacion-avanzada">
+                            <h5><i class="fas fa-shield-alt"></i> 🛡️ Validación Avanzada</h5>
+                            <i class="fas fa-chevron-down category-icon" id="icon-validacion-avanzada"></i>
+                        </div>
+                        <div class="menu-category-content" id="content-validacion-avanzada">
+                            <button class="btn btn-danger btn-action w-100 mb-2" onclick="ejecutarModulo('auditoria')">
+                                <i class="fas fa-user-shield"></i> 🔐 Auditoría de Seguridad
+                            </button>
+                            <button class="btn btn-info btn-action w-100 mb-2" onclick="ejecutarModulo('backup')">
+                                <i class="fas fa-database"></i> 💾 Verificar Backups
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ⚙️ CONFIGURACIÓN DEL SISTEMA -->
+            <div class="menu-section">
+                <div class="menu-category-header" data-category="configuracion">
+                    <h5><i class="fas fa-cog"></i> ⚙️ Configuración del Sistema</h5>
+                    <i class="fas fa-chevron-down category-icon" id="icon-configuracion"></i>
+                </div>
+                <div class="menu-category-content" id="content-configuracion">
+                    <button class="btn btn-primary btn-action w-100 mb-2" onclick="mostrarConfiguracion()">
+                        <i class="fas fa-sliders-h"></i> 🎛️ Configuración General
+                    </button>
+                    <button class="btn btn-info btn-action w-100 mb-2" onclick="configurarRutas()">
+                        <i class="fas fa-route"></i> 🛣️ Configurar Rutas de Datos
+                    </button>
+                    <button class="btn btn-warning btn-action w-100 mb-2" onclick="configurarNotificaciones()">
+                        <i class="fas fa-bell"></i> 🔔 Configurar Notificaciones
+                    </button>
+                    
+                    <!-- Subcategoría: Configuración Avanzada -->
+                    <div class="subcategory">
+                        <div class="menu-category-header" data-category="configuracion-avanzada">
+                            <h5><i class="fas fa-tools"></i> 🔧 Configuración Avanzada</h5>
+                            <i class="fas fa-chevron-down category-icon" id="icon-configuracion-avanzada"></i>
+                        </div>
+                        <div class="menu-category-content" id="content-configuracion-avanzada">
+                            <button class="btn btn-secondary btn-action w-100 mb-2" onclick="configurarAPI()">
+                                <i class="fas fa-plug"></i> 🔌 Configurar APIs
+                            </button>
+                            <button class="btn btn-danger btn-action w-100 mb-2" onclick="configurarSeguridad()">
+                                <i class="fas fa-lock"></i> 🔒 Configurar Seguridad
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📈 ANÁLISIS Y REPORTES -->
+            <div class="menu-section">
+                <div class="menu-category-header" data-category="analisis">
+                    <h5><i class="fas fa-chart-bar"></i> 📈 Análisis y Reportes</h5>
+                    <i class="fas fa-chevron-down category-icon" id="icon-analisis"></i>
+                </div>
+                <div class="menu-category-content" id="content-analisis">
+                    <button class="btn btn-success btn-action w-100 mb-2" onclick="generarReporteOTIF()">
+                        <i class="fas fa-file-chart-line"></i> 📊 Reporte OTIF Completo
+                    </button>
+                    <button class="btn btn-info btn-action w-100 mb-2" onclick="analizarTendencias()">
+                        <i class="fas fa-chart-line"></i> 📈 Análisis de Tendencias
+                    </button>
+                    <button class="btn btn-warning btn-action w-100 mb-2" onclick="exportarDatos()">
+                        <i class="fas fa-download"></i> 💾 Exportar Datos
+                    </button>
+                    
+                    <!-- Subcategoría: Reportes Especializados -->
+                    <div class="subcategory">
+                        <div class="menu-category-header" data-category="reportes-especializados">
+                            <h5><i class="fas fa-file-medical"></i> 📋 Reportes Especializados</h5>
+                            <i class="fas fa-chevron-down category-icon" id="icon-reportes-especializados"></i>
+                        </div>
+                        <div class="menu-category-content" id="content-reportes-especializados">
+                            <button class="btn btn-primary btn-action w-100 mb-2" onclick="reporteRendimiento()">
+                                <i class="fas fa-tachometer-alt"></i> ⚡ Reporte de Rendimiento
+                            </button>
+                            <button class="btn btn-danger btn-action w-100 mb-2" onclick="reporteErrores()">
+                                <i class="fas fa-bug"></i> 🐛 Reporte de Errores
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🛠️ HERRAMIENTAS Y UTILIDADES -->
+            <div class="menu-section">
+                <div class="menu-category-header" data-category="herramientas">
+                    <h5><i class="fas fa-wrench"></i> 🛠️ Herramientas y Utilidades</h5>
+                    <i class="fas fa-chevron-down category-icon" id="icon-herramientas"></i>
+                </div>
+                <div class="menu-category-content" id="content-herramientas">
+                    <button class="btn btn-info btn-action w-100 mb-2" onclick="limpiarCache()">
+                        <i class="fas fa-broom"></i> 🧹 Limpiar Cache
+                    </button>
+                    <button class="btn btn-warning btn-action w-100 mb-2" onclick="optimizarBaseDatos()">
+                        <i class="fas fa-database"></i> 🗄️ Optimizar Base de Datos
+                    </button>
+                    <button class="btn btn-success btn-action w-100 mb-2" onclick="backupAutomatico()">
+                        <i class="fas fa-save"></i> 💾 Backup Automático
+                    </button>
+                    
+                    <!-- Subcategoría: Herramientas Avanzadas -->
+                    <div class="subcategory">
+                        <div class="menu-category-header" data-category="herramientas-avanzadas">
+                            <h5><i class="fas fa-rocket"></i> 🚀 Herramientas Avanzadas</h5>
+                            <i class="fas fa-chevron-down category-icon" id="icon-herramientas-avanzadas"></i>
+                        </div>
+                        <div class="menu-category-content" id="content-herramientas-avanzadas">
+                            <button class="btn btn-danger btn-action w-100 mb-2" onclick="modoDebug()">
+                                <i class="fas fa-bug"></i> 🐛 Modo Debug
+                            </button>
+                            <button class="btn btn-secondary btn-action w-100 mb-2" onclick="monitoreoSistema()">
+                                <i class="fas fa-desktop"></i> 🖥️ Monitoreo del Sistema
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Jumbotron de Mensajes -->
+<div class="jumbotron-container">
+    <!-- Los mensajes se mostrarán dinámicamente aquí -->
+</div>
+

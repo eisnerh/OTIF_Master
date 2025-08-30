@@ -1,0 +1,559 @@
+/* ===== ESTILOS PARA EL MENÚ HAMBURGUESA RECURSIVO ===== */
+.hamburger-menu-container { 
+    margin-bottom: 30px; 
+}
+
+.hamburger-menu { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.hamburger-header { 
+    background: rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-header h3 { 
+    color: white;
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hamburger-controls { 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hamburger-controls .btn { 
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.hamburger-controls .btn:hover { 
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hamburger-controls .btn:active { 
+    transform: translateY(0);
+}
+
+.hamburger-toggle { 
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-toggle:hover { 
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-toggle span { 
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger-toggle.active span:nth-child(1) { 
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-toggle.active span:nth-child(2) { 
+    opacity: 0;
+}
+
+.hamburger-toggle.active span:nth-child(3) { 
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.hamburger-content { 
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.hamburger-content.expanded { 
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* ===== ESTILOS PARA CATEGORÍAS RECURSIVAS ===== */
+.menu-section { 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.menu-section:last-child { 
+    border-bottom: none;
+}
+
+.menu-section:hover { 
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.menu-category-header { 
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    border-left: 4px solid transparent;
+}
+
+.menu-category-header:hover { 
+    background: rgba(102, 126, 234, 0.1);
+    border-left-color: #667eea;
+    transform: translateX(5px);
+}
+
+.menu-category-header h5 { 
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-category-header h5 i { 
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.category-icon { 
+    transition: transform 0.3s ease;
+    color: #667eea;
+}
+
+.category-icon.rotated { 
+    transform: rotate(180deg);
+}
+
+.menu-category-content { 
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    background: rgba(248, 249, 250, 0.8);
+    border-left: 4px solid #e9ecef;
+}
+
+.menu-category-content.expanded { 
+    max-height: 1000px;
+}
+
+.menu-category-content .btn { 
+    margin: 8px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    padding: 12px 20px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-category-content .btn::before { 
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.menu-category-content .btn:hover::before { 
+    left: 100%;
+}
+
+.menu-category-content .btn:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== ESTILOS PARA SUBCATEGORÍAS RECURSIVAS ===== */
+.subcategory {
+    margin-left: 20px;
+    border-left: 2px solid #dee2e6;
+    padding-left: 15px;
+}
+
+.subcategory .menu-category-header {
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.subcategory .menu-category-header h5 {
+    font-size: 1rem;
+}
+
+.subcategory .menu-category-content .btn {
+    margin: 6px 15px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+}
+
+.subcategory .subcategory {
+    margin-left: 15px;
+    border-left: 2px solid #e9ecef;
+}
+
+.subcategory .subcategory .menu-category-header {
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.subcategory .subcategory .menu-category-header h5 {
+    font-size: 0.95rem;
+}
+
+.subcategory .subcategory .menu-category-content .btn {
+    margin: 5px 12px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+}
+
+/* Colores específicos para cada categoría */
+.menu-section:nth-child(1) .menu-category-header h5 i { color: #28a745; }
+.menu-section:nth-child(2) .menu-category-header h5 i { color: #007bff; }
+.menu-section:nth-child(3) .menu-category-header h5 i { color: #17a2b8; }
+.menu-section:nth-child(4) .menu-category-header h5 i { color: #ffc107; }
+.menu-section:nth-child(5) .menu-category-header h5 i { color: #6f42c1; }
+.menu-section:nth-child(6) .menu-category-header h5 i { color: #6c757d; }
+
+/* Animaciones para la expansión */
+@keyframes slideDown { 
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-category-content.expanded { 
+    animation: slideDown 0.3s ease-out;
+}
+
+/* ===== ESTILOS PARA JUMBOTRON DE MENSAJES ===== */
+.jumbotron-container {
+    margin-bottom: 30px;
+}
+
+.jumbotron-message {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 30px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.jumbotron-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+}
+
+.jumbotron-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.jumbotron-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.jumbotron-header .icon {
+    font-size: 2.5rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.jumbotron-content {
+    position: relative;
+    z-index: 1;
+}
+
+.jumbotron-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.jumbotron-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.jumbotron-actions .btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jumbotron-actions .btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    color: white;
+    text-decoration: none;
+}
+
+.jumbotron-actions .btn:active {
+    transform: translateY(0);
+}
+
+.jumbotron-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.jumbotron-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Variantes de jumbotron */
+.jumbotron-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.jumbotron-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+}
+
+.jumbotron-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+}
+
+.jumbotron-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+}
+
+/* Responsive design para el menú hamburguesa */
+@media (max-width: 768px) {
+    .hamburger-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .hamburger-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .hamburger-controls {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .menu-category-header {
+        padding: 12px 15px;
+    }
+    
+    .menu-category-header h5 {
+        font-size: 1rem;
+    }
+    
+    .menu-category-content .btn {
+        margin: 6px 15px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .jumbotron-message {
+        padding: 20px;
+    }
+    
+    .jumbotron-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .jumbotron-header .icon {
+        font-size: 2rem;
+    }
+    
+    .jumbotron-content p {
+        font-size: 1rem;
+    }
+    
+    .jumbotron-actions {
+        flex-direction: column;
+    }
+    
+    .jumbotron-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .hamburger-menu {
+        border-radius: 10px;
+    }
+    
+    .hamburger-header {
+        padding: 15px;
+    }
+    
+    .menu-category-header {
+        padding: 10px 12px;
+    }
+    
+    .menu-category-content .btn {
+        margin: 5px 12px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .subcategory {
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+    
+    .jumbotron-message {
+        padding: 15px;
+    }
+    
+    .jumbotron-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .jumbotron-content p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Efectos de hover mejorados */
+.menu-category-header:hover .category-icon { 
+    transform: scale(1.2); 
+}
+
+.menu-category-content .btn:active { 
+    transform: translateY(0) scale(0.98);
+}
+
+/* Estilos para el estado activo */
+.menu-category-header.active { 
+    background: rgba(102, 126, 234, 0.15);
+    border-left-color: #667eea;
+}
+
+.menu-category-header.active h5 { 
+    color: #667eea; 
+}
+
+/* Transiciones suaves */
+.hamburger-menu { 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+.menu-category-content { 
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+/* Efecto de profundidad */
+.hamburger-menu:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Estilos para el scroll interno */
+.hamburger-content { 
+    scrollbar-width: thin;
+    scrollbar-color: #667eea #f1f1f1;
+}
+
+.hamburger-content::-webkit-scrollbar { 
+    width: 8px; 
+}
+
+.hamburger-content::-webkit-scrollbar-track { 
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.hamburger-content::-webkit-scrollbar-thumb { 
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.hamburger-content::-webkit-scrollbar-thumb:hover { 
+    background: #5a6fd8;
+}
+
