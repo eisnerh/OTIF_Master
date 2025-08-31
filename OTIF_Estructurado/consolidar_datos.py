@@ -5,13 +5,13 @@ import os
 
 # --- 1. Definir Rutas de Archivos ---
 # Rutas de los archivos de entrada (fuente)
-path_vol_procesado = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_procesado_familia.parquet"
-path_vol_no_procesado = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_no_procesado_familia.parquet"
+path_vol_procesado = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_procesado_familia.parquet"
+path_vol_no_procesado = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_no_procesado_familia.parquet"
 # Asumimos la ruta para el reporte PLR, ajústala si es necesario.
-path_reporte_plr = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\reporte_plr.parquet"
+path_reporte_plr = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\reporte_plr.parquet"
 
 # Ruta del archivo de salida
-path_salida_consolidado = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\OTIF_Resultado.parquet"
+path_salida_consolidado = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\OTIF_Resultado.parquet"
 
 try:
     # --- 2. Cargar los DataFrames desde los archivos Parquet ---
