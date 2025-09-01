@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import os
+import time
 
 def ejecutar_script(nombre_script):
     """
@@ -11,6 +12,8 @@ def ejecutar_script(nombre_script):
     script_path = os.path.join(os.path.dirname(__file__), nombre_script)
     
     print(f"\n{'='*20}\nIniciando ejecución de: {nombre_script}\n{'='*20}")
+    
+    start_time = time.time()  # ⏲️ Record the start time
     
     try:
         # sys.executable es la ruta al intérprete de Python actual
@@ -24,6 +27,9 @@ def ejecutar_script(nombre_script):
             errors='ignore'
         )
         
+        end_time = time.time()  # 🏁 Record the end time
+        time_elapsed = end_time - start_time
+        
         # Imprime la salida estándar del script ejecutado
         print("Salida del script:")
         print(proceso.stdout)
@@ -34,6 +40,7 @@ def ejecutar_script(nombre_script):
             print(proceso.stderr)
             
         print(f"--- {nombre_script} finalizado exitosamente. ---")
+        print(f"--- Tiempo de ejecución para {nombre_script}: {time_elapsed:.2f} segundos. ---")
         return True
         
     except FileNotFoundError:
@@ -56,7 +63,6 @@ def main():
     """
     Función principal que define el orden de ejecución de los scripts.
     """
-    # Lista de los scripts a ejecutar en el orden deseado
     scripts_en_orden = [
         "volumen_procesado_familia.py",
         "vol_no_entregas.py",
@@ -66,13 +72,16 @@ def main():
     
     print(">>> INICIANDO PROCESO DE CONSOLIDACIÓN DE DATOS <<<")
     
+    total_start_time = time.time()  # ⏱️ Record the total process start time
+    
     for script in scripts_en_orden:
         if not ejecutar_script(script):
             print(f"\n>>> El proceso se detuvo debido a un error en '{script}'. <<<")
-            # Detiene la ejecución de los demás scripts si uno falla
             break
     else:
-        # Este bloque 'else' se ejecuta solo si el bucle 'for' termina sin un 'break'
+        total_end_time = time.time()  # 🛑 Record the total process end time
+        total_time_elapsed = (total_end_time - total_start_time)/60  # Convert to minutes
+        print(f"\n>>> Tiempo total del proceso: {total_time_elapsed:.2f} segundos. <<<")
         print("\n>>> TODOS LOS SCRIPTS SE HAN EJECUTADO CORRECTAMENTE. PROCESO FINALIZADO. <<<")
 
 if __name__ == "__main__":
