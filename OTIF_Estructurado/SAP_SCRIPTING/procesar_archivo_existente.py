@@ -23,7 +23,7 @@ def transform_data_for_powerbi(df):
     
     # Clean column names - remove extra spaces and special characters
     df_clean.columns = df_clean.columns.str.strip()
-    df_clean.columns = df_clean.columns.str.replace('\s+', ' ', regex=True)
+    df_clean.columns = df_clean.columns.str.replace(r'\s+', ' ', regex=True)
     
     # Convert date columns to proper datetime format
     date_columns = ['Fe.Entrega', 'Fecha Guía', 'Creado el']
