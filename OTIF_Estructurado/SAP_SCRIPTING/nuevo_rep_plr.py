@@ -133,13 +133,16 @@ if current_hour >= 14:
             
     except Exception as e:
         print(f"Error during Power BI file creation: {e}")
+        
+else:
+    print("The current time is before 2 PM. The script is not running.")
 
 
 def transform_data_for_powerbi(df):
     """
     Transform and clean data for optimal Power BI compatibility
     """
-    print("Transforming data for Power BI compatibility...")
+    print("🔄 Transforming data for Power BI compatibility...")
     
     # Create a copy to avoid modifying the original
     df_clean = df.copy()
@@ -159,7 +162,7 @@ def transform_data_for_powerbi(df):
             try:
                 df_clean[col] = pd.to_datetime(df_clean[col], errors='coerce')
             except:
-                print(f"Warning: Could not convert {col} to datetime")
+                print(f"⚠️  Warning: Could not convert {col} to datetime")
     
     # Convert time columns to proper time format
     time_columns = ['Hora Guía', 'Hora']
@@ -168,7 +171,7 @@ def transform_data_for_powerbi(df):
             try:
                 df_clean[col] = pd.to_datetime(df_clean[col], format='%H:%M:%S', errors='coerce').dt.time
             except:
-                print(f"Warning: Could not convert {col} to time")
+                print(f"⚠️  Warning: Could not convert {col} to time")
     
     # Convert numeric columns
     numeric_columns = ['Cajas R.S.', 'Cajas Físicas', 'Cajas Equiv.', 'Ruta', 'Entrega', 'Cliente']
@@ -177,7 +180,7 @@ def transform_data_for_powerbi(df):
             try:
                 df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce')
             except:
-                print(f"Warning: Could not convert {col} to numeric")
+                print(f"⚠️  Warning: Could not convert {col} to numeric")
     
     # Clean text columns - remove extra spaces
     text_columns = ['Centro', 'Nombre del Cliente', 'Estatus', 'Ruta Dist.', 'Camión', 
@@ -212,7 +215,7 @@ def transform_data_for_powerbi(df):
     if 'Tipo Ruta' in df_clean.columns:
         df_clean['Tipo_Ruta_Categoria'] = df_clean['Tipo Ruta'].apply(categorize_route_type)
     
-    print(f"Data transformation completed. Final dataset shape: {df_clean.shape}")
+    print(f"✅ Data transformation completed. Final dataset shape: {df_clean.shape}")
     return df_clean
 
 
@@ -252,7 +255,7 @@ def save_powerbi_files(df, excel_path, csv_path, parquet_path):
     """
     Save the dataframe in multiple formats optimized for Power BI
     """
-    print("Saving files in Power BI compatible formats...")
+    print("💾 Saving files in Power BI compatible formats...")
     
     try:
         # Save as Excel with proper formatting
@@ -276,15 +279,15 @@ def save_powerbi_files(df, excel_path, csv_path, parquet_path):
                 adjusted_width = min(max_length + 2, 50)
                 worksheet.column_dimensions[column_letter].width = adjusted_width
         
-        print(f"✓ Excel file saved: {excel_path}")
+        print(f"✅ Excel file saved: {excel_path}")
         
         # Save as CSV with UTF-8 encoding (Power BI preferred)
         df.to_csv(csv_path, index=False, encoding='utf-8-sig')
-        print(f"✓ CSV file saved: {csv_path}")
+        print(f"✅ CSV file saved: {csv_path}")
         
         # Save as Parquet for better performance in Power BI
         df.to_parquet(parquet_path, index=False)
-        print(f"✓ Parquet file saved: {parquet_path}")
+        print(f"✅ Parquet file saved: {parquet_path}")
         
         # Create a metadata file for Power BI
         create_powerbi_metadata(df, os.path.dirname(excel_path))
@@ -295,7 +298,7 @@ def save_powerbi_files(df, excel_path, csv_path, parquet_path):
         print("📈 Use the .xlsx file for manual review and analysis")
         
     except Exception as e:
-        print(f"Error saving Power BI files: {e}")
+        print(f"❌ Error saving Power BI files: {e}")
 
 
 def create_powerbi_metadata(df, output_path):
@@ -377,13 +380,10 @@ def create_powerbi_metadata(df, output_path):
         with open(metadata_path, 'w', encoding='utf-8') as f:
             json.dump(metadata, f, indent=2, ensure_ascii=False)
         
-        print(f"✓ Metadata file saved: {metadata_path}")
+        print(f"✅ Metadata file saved: {metadata_path}")
         
     except Exception as e:
-        print(f"Warning: Could not create metadata file: {e}")
-        
-else:
-    print("The current time is before 2 PM. The script is not running.")
+        print(f"⚠️  Warning: Could not create metadata file: {e}")
 
 
 def process_existing_file():
