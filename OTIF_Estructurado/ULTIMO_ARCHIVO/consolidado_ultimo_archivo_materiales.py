@@ -3,9 +3,9 @@ import os
 from datetime import datetime
 
 # Rutas y configuraciones
-carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\8-Agosto"
+carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\9-Septiembre"
 bahias = 'Bahias'
-nombre_base_salida = r"C:\data\Vol_Entregas_Portafolio_Agosto_2025"
+nombre_base_salida = r"C:\data\Vol_Entregas_Portafolio_Septiembre_2025"
 
 # Inicialización de variables
 archivos_con_errores = 0
@@ -28,7 +28,9 @@ if archivos_excel:
     print(f"Leyendo el último archivo: {ultimo_archivo}")  # Mostrar el nombre del archivo
     inicio_lectura = datetime.now()  # Registrar el tiempo de inicio de lectura
     try:
-        df = pd.read_excel(ruta_archivo, sheet_name=bahias, engine='openpyxl')
+        df = pd.read_excel(ruta_archivo, sheet_name=bahias, engine='openpyxl')    
+        # Filtrar registros donde la bahía no sea '00' ni '0'
+        df = df[~df['Bahía'].isin(['00', '0'])]
         # Verificar si las columnas existen
         if all(col in df.columns for col in ['Familia', 'CJE Conve']):
             # Crear columna 'Portafolio' basada en 'Familia'

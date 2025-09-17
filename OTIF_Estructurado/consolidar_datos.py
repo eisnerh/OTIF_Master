@@ -5,13 +5,13 @@ import os
 
 # --- 1. Definir Rutas de Archivos ---
 # Rutas de los archivos de entrada (fuente)
-path_vol_procesado = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_procesado_familia.parquet"
-path_vol_no_procesado = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_no_procesado_familia.parquet"
+path_vol_procesado = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_procesado_familia.parquet"
+path_vol_no_procesado = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_no_procesado_familia.parquet"
 # Asumimos la ruta para el reporte PLR, ajústala si es necesario.
-path_reporte_plr = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\reporte_plr.parquet"
+path_reporte_plr = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\reporte_plr.parquet"
 
 # Ruta del archivo de salida
-path_salida_consolidado = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\OTIF_Resultado.parquet"
+path_salida_consolidado = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\OTIF_Resultado.parquet"
 
 try:
     # --- 2. Cargar los DataFrames desde los archivos Parquet ---
@@ -52,7 +52,7 @@ try:
     # Las columnas que no existan en el DataFrame serán ignoradas.
     columnas_reordenadas = [
         "Centro", "Zona", "Entrega", "Cliente", "Nombre del Cliente", "Viaje", 
-        "Guia Entrega","Ruta", "Ruta Dist.",  "Origen", "Fuerza Ventas", "Region", 
+        "Guia Entrega","Ruta", "Hora", "Ruta Dist.",  "Origen", "Fuerza Ventas", "Region", 
         "Macro Canal", "Clasificación Clt", "Tipo Negocio", 
         "Provincia", "Cantón", "Distrito", "Latitud", "Longitud", "Familia", 
         "Fecha", "Cajas fisicas", "Cajas Equiv", "Entregas", "Descrip Cod Rechazo", 

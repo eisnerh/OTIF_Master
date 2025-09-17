@@ -5,10 +5,10 @@ import os
 
 # Define la ruta del archivo excel usando una 'r' para ruta literal
 # Pega aquí la ruta que copiaste del explorador de archivos
-excel_path = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\VOL POR PORTAFOLIO ENE-2025.xlsx"
+excel_path = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\VOL POR PORTAFOLIO ENE-2025.xlsx"
 
 # Define la ruta donde se va a guardar el archivo parquet
-parquet_path = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_procesado_familia.parquet"
+parquet_path = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_procesado_familia.parquet"
 
 # Crear el diccionario para almacenar el dataframe
 volumen_procesado_familia = {}

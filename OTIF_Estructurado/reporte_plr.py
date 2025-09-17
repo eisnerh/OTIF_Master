@@ -3,12 +3,12 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import os
 
-excel_path_folder = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025"
+excel_path_folder = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025"
 
-parquet_path = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\reporte_plr.parquet"
+parquet_path = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\reporte_plr.parquet"
 
 # Columns to select
-columns_to_select = ["Centro","Entrega","Ruta", "Cliente",	"Nombre del Cliente", "Ruta Dist.", "Viaje", "Guia Entrega","Origen","Fuerza Ventas",	"Region","Macro Canal","Clasificación Clt","Tipo Negocio","Provincia","Cantón","Distrito","Latitud","Longitud"]
+columns_to_select = ["Centro","Entrega","Ruta", "Cliente", "Hora" ,"Nombre del Cliente", "Ruta Dist.", "Viaje", "Guia Entrega","Origen","Fuerza Ventas",	"Region","Macro Canal","Clasificación Clt","Tipo Negocio","Provincia","Cantón","Distrito","Latitud","Longitud"]
 
 # List to store the dataframes
 all_dataframes = []
@@ -30,7 +30,10 @@ try:
                 # Read the Excel file and select columns from the "REP PLR" sheet
                 df = pd.read_excel(excel_path, sheet_name="REP PLR", usecols=columns_to_select)
                 all_dataframes.append(df)
-                print(f"Datos de '{file}' leídos y agregados.")
+                # df_filtered = df[df["Centro"] == "CD04"]
+                
+                print(f"Datos de '{file}' leidos y agregados.")
+                print(all_dataframes)
             except ValueError:
                 print(f"Advertencia: La hoja 'REP PLR' no fue encontrada en '{file}' o las columnas no coinciden.")
             except Exception as e:
@@ -40,7 +43,7 @@ try:
     if all_dataframes:
         consolidated_df = pd.concat(all_dataframes, ignore_index=True)
         print('Consolidación de datos completada.')
-
+        
         print('Transformación de datos finalizada.')
 
         # Convert to PyArrow table and save to Parquet

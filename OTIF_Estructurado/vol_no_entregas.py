@@ -4,8 +4,8 @@ import pyarrow.parquet as pq
 import os
 
 # Define the paths
-excel_folder_path = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\3-Reporte de Tipificación de Devoluciones\País\2025"
-parquet_path = r"D:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_no_procesado_familia.parquet"
+excel_folder_path = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\3-Reporte de Tipificación de Devoluciones\País\2025"
+parquet_path = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\Data\volumen_no_procesado_familia.parquet"
 
 # Columns to select
 columns_to_select = ["Entrega", "Categoría", "Descrip Cod Rechazo", "Cajas Eq.", "Estado Entregas", "Segmento"]
