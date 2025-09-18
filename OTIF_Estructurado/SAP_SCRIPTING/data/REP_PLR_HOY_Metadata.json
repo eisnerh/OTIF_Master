@@ -1,0 +1,281 @@
+{
+  "dataset_info": {
+    "name": "REP_PLR_HOY",
+    "description": "Reporte de Planeamiento de Rutas - Datos del día",
+    "created_date": "2025-09-17 22:56:43",
+    "total_records": 2932,
+    "total_columns": 45
+  },
+  "columns": {
+    "Centro": {
+      "description": "Centro de distribución",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 11
+    },
+    "Fe.Entrega": {
+      "description": "Fecha de entrega programada",
+      "data_type": "datetime64[ns]",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Ruta": {
+      "description": "Número de ruta",
+      "data_type": "int64",
+      "null_count": 0,
+      "unique_values": 258
+    },
+    "Entrega": {
+      "description": "Número de entrega",
+      "data_type": "int64",
+      "null_count": 0,
+      "unique_values": 2932
+    },
+    "Cliente": {
+      "description": "Código del cliente",
+      "data_type": "int64",
+      "null_count": 0,
+      "unique_values": 1728
+    },
+    "Nombre del Cliente": {
+      "description": "Nombre del cliente",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1714
+    },
+    "Estatus": {
+      "description": "Estatus de la entrega (5=Entregado)",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Verificado": {
+      "description": "Indicador de verificación",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Cajas R.S.": {
+      "description": "Cajas requeridas según sistema",
+      "data_type": "float64",
+      "null_count": 0,
+      "unique_values": 1978
+    },
+    "Ruta Dist.": {
+      "description": "Ruta de distribución",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 203
+    },
+    "Viaje": {
+      "description": "Número de viaje",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 5
+    },
+    "Camión": {
+      "description": "Número de camión",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 203
+    },
+    "Guia Entrega": {
+      "description": "Número de guía de entrega",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 264
+    },
+    "Fecha Guía": {
+      "description": "Fecha de la guía",
+      "data_type": "datetime64[ns]",
+      "null_count": 5,
+      "unique_values": 1
+    },
+    "Hora Guía": {
+      "description": "Hora de la guía",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Creado el": {
+      "description": "Fecha de creación del registro",
+      "data_type": "datetime64[ns]",
+      "null_count": 0,
+      "unique_values": 7
+    },
+    "Hora": {
+      "description": "Hora de creación",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 2805
+    },
+    "Cajas Físicas": {
+      "description": "Cajas físicas entregadas",
+      "data_type": "float64",
+      "null_count": 0,
+      "unique_values": 1163
+    },
+    "Cajas Equiv.": {
+      "description": "Cajas equivalentes",
+      "data_type": "float64",
+      "null_count": 0,
+      "unique_values": 2034
+    },
+    "Rol Alisto": {
+      "description": "Rol de alistamiento",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 2
+    },
+    "Reprogramado": {
+      "description": "Indicador de reprogramación",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 2
+    },
+    "Ped. Clte": {
+      "description": "Pedido del cliente",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 2861
+    },
+    "Ped. SAP": {
+      "description": "Pedido en SAP",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 2916
+    },
+    "Ped. Traslado": {
+      "description": "Pedido de traslado",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 96
+    },
+    "Tipo Ped.": {
+      "description": "Tipo de pedido",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 4
+    },
+    "Desc. Tipo": {
+      "description": "Descripción del tipo",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 4
+    },
+    "Origen": {
+      "description": "Origen del pedido",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 6
+    },
+    "Tipo Ruta": {
+      "description": "Tipo de ruta",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 6
+    },
+    "Fuerza Ventas": {
+      "description": "Fuerza de ventas",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 4
+    },
+    "Region": {
+      "description": "Región",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 11
+    },
+    "Zona Vtas": {
+      "description": "Zona de ventas",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 24
+    },
+    "Desc Zona Vtas": {
+      "description": "Descripción de zona de ventas",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 24
+    },
+    "Zona Superv": {
+      "description": "Zona de supervisión",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 46
+    },
+    "Desc Zona Superv": {
+      "description": "Descripción de zona de supervisión",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 46
+    },
+    "Agente Vtas": {
+      "description": "Código del agente de ventas",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 258
+    },
+    "Nombre": {
+      "description": "Nombre del agente de ventas",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 258
+    },
+    "Año": {
+      "description": "Año de la entrega (calculado)",
+      "data_type": "int32",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Mes": {
+      "description": "Mes de la entrega (calculado)",
+      "data_type": "int32",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Día": {
+      "description": "Día de la entrega (calculado)",
+      "data_type": "int32",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Día_Semana": {
+      "description": "Día de la semana (calculado)",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Semana": {
+      "description": "Semana del año (calculado)",
+      "data_type": "UInt32",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Diferencia_Cajas": {
+      "description": "Diferencia entre cajas físicas y requeridas (calculado)",
+      "data_type": "float64",
+      "null_count": 0,
+      "unique_values": 2005
+    },
+    "Porcentaje_Cumplimiento": {
+      "description": "Porcentaje de cumplimiento (calculado)",
+      "data_type": "float64",
+      "null_count": 3,
+      "unique_values": 2184
+    },
+    "Estatus_Categoria": {
+      "description": "Categoría del estatus (calculado)",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1
+    },
+    "Tipo_Ruta_Categoria": {
+      "description": "Categoría del tipo de ruta (calculado)",
+      "data_type": "object",
+      "null_count": 0,
+      "unique_values": 1
+    }
+  }
+}

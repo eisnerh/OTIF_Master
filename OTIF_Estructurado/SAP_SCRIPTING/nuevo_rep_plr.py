@@ -151,8 +151,14 @@ if current_hour >= 14:
             else:
                 print("No tables found in the HTML file")
         else:
-            # If it's a real Excel file, just convert it to the new format
-            df = pd.read_excel(saved_path)
+            # Use specialized SAP file processing (proven to work)
+            print("📊 Processing as specialized SAP file...")
+            df = process_sap_file_content(saved_path, encodings_to_try)
+            
+            if df is None:
+                print("❌ Could not process SAP file")
+                return
+                
             df = transform_data_for_powerbi(df)
             save_powerbi_files(df, excel_path, csv_path, parquet_path)
             
@@ -161,6 +167,72 @@ if current_hour >= 14:
         
 else:
     print("The current time is before 2 PM. The script is not running.")
+
+
+def process_sap_file_content(file_path, encodings_to_try):
+    """
+    Process SAP file with specialized method that works
+    """
+    try:
+        # Read the file line by line to understand its structure
+        lines = None
+        for encoding in encodings_to_try:
+            try:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    lines = f.readlines()
+                print(f"Successfully read file with encoding: {encoding}")
+                break
+            except:
+                continue
+        
+        if lines is None:
+            print("❌ Could not read file with any encoding")
+            return None
+        
+        print(f"📊 File has {len(lines)} lines")
+        
+        # Find the data section (skip headers)
+        data_start = None
+        for i, line in enumerate(lines):
+            if 'Centro' in line and 'Fe.Entrega' in line and 'Ruta' in line:
+                data_start = i
+                print(f"📋 Found header at line {i+1}")
+                break
+        
+        if data_start is None:
+            print("❌ Could not find data header")
+            return None
+        
+        # Extract header
+        header_line = lines[data_start].strip()
+        headers = [col.strip() for col in header_line.split('\t')]
+        print(f"📋 Found {len(headers)} columns: {headers[:5]}...")
+        
+        # Extract data rows
+        data_rows = []
+        for i in range(data_start + 1, len(lines)):
+            line = lines[i].strip()
+            if line and not line.startswith('16.09.2025'):  # Skip date headers
+                row_data = line.split('\t')
+                if len(row_data) >= len(headers):
+                    data_rows.append(row_data[:len(headers)])
+        
+        print(f"📊 Found {len(data_rows)} data rows")
+        
+        # Create DataFrame
+        df = pd.DataFrame(data_rows, columns=headers)
+        
+        # Clean up the DataFrame
+        df.dropna(how='all', inplace=True)
+        df.dropna(axis=1, how='all', inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        
+        print(f"✅ DataFrame created with shape: {df.shape}")
+        return df
+        
+    except Exception as e:
+        print(f"❌ Error processing SAP file content: {e}")
+        return None
 
 
 def transform_data_for_powerbi(df):
