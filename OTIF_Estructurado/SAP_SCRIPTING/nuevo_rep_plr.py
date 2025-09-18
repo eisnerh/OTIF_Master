@@ -84,12 +84,12 @@ if current_hour >= 14:
         # Define file names and paths for Power BI compatible files
         base_name = "REP_PLR_HOY"
         
-        # Use the data folder in the same directory as the script
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        data_dir = os.path.join(script_dir, "data")
+        # Use the specified directory C:\Data\Nite
+        data_dir = r"C:\Data\Nite"
         
         # Ensure data directory exists
         os.makedirs(data_dir, exist_ok=True)
+        print(f"📁 Using output directory: {data_dir}")
         
         # Power BI compatible file paths in the data folder
         excel_path = os.path.join(data_dir, f"{base_name}_PowerBI.xlsx")
@@ -491,8 +491,13 @@ def process_existing_file():
     try:
         # Define file paths
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        data_dir = os.path.join(script_dir, "data")
-        existing_file = os.path.join(data_dir, "REP_PLR_HOY.xls")
+        source_data_dir = os.path.join(script_dir, "data")
+        existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
+        
+        # Use the specified directory C:\Data\Nite for output
+        data_dir = r"C:\Data\Nite"
+        os.makedirs(data_dir, exist_ok=True)
+        print(f"📁 Using output directory: {data_dir}")
         
         # Check if the existing file exists
         if not os.path.exists(existing_file):

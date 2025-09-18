@@ -15,8 +15,13 @@ def process_sap_file():
     try:
         # Define file paths
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        data_dir = os.path.join(script_dir, "data")
-        existing_file = os.path.join(data_dir, "REP_PLR_HOY.xls")
+        source_data_dir = os.path.join(script_dir, "data")
+        existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
+        
+        # Use the specified directory C:\Data\Nite for output
+        data_dir = r"C:\Data\Nite"
+        os.makedirs(data_dir, exist_ok=True)
+        print(f"📁 Using output directory: {data_dir}")
         
         if not os.path.exists(existing_file):
             print(f"❌ File not found: {existing_file}")
