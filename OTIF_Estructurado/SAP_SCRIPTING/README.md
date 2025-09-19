@@ -3,8 +3,8 @@
 ## 📁 Estructura de Archivos
 
 ### Scripts Principales
-- **`script_maestro.py`** ⭐ **SCRIPT PRINCIPAL** - Ejecuta todo el flujo completo
-- **`loguearse.py`** - Script de login en SAP
+- **`script_maestro_nuevo.py`** ⭐ **SCRIPT PRINCIPAL** - Ejecuta todo el flujo completo
+- **`loguearse_simple.py`** - Script de login en SAP (sin emojis)
 - **`nuevo_rep_plr.py`** - Descarga reporte desde SAP
 - **`procesar_sap_simple.py`** - Procesa archivo SAP para Power BI
 
@@ -17,7 +17,7 @@
 
 ### Para ejecutar todo el flujo completo:
 ```bash
-python script_maestro.py
+python script_maestro_nuevo.py
 ```
 
 ### Para procesar solo archivos existentes:
