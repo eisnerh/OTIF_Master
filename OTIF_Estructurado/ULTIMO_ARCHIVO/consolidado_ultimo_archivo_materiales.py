@@ -5,7 +5,25 @@ from datetime import datetime
 # Rutas y configuraciones
 carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\9-Septiembre"
 bahias = 'Bahias'
-nombre_base_salida = r"C:\data\Vol_Entregas_Portafolio_Septiembre_2025"
+
+# Generar nombre base automáticamente basado en la fecha actual
+fecha_actual = datetime.now()
+mes_nombre = fecha_actual.strftime("%B")  # Nombre del mes en inglés
+mes_numero = fecha_actual.strftime("%m")  # Número del mes
+año = fecha_actual.strftime("%Y")
+
+# Crear nombre base dinámico
+nombre_base_salida = f"C:\\data\\Vol_Entregas_Portafolio_{mes_nombre}_{año}"
+
+# Crear directorio de salida si no existe
+directorio_salida = os.path.dirname(nombre_base_salida)
+if not os.path.exists(directorio_salida):
+    os.makedirs(directorio_salida, exist_ok=True)
+    print(f"📁 Directorio creado: {directorio_salida}")
+
+# Mostrar información del nombre generado
+print(f"📅 Procesando para el mes: {mes_nombre} {año}")
+print(f"📁 Nombre base del archivo: {nombre_base_salida}")
 
 # Inicialización de variables
 archivos_con_errores = 0
@@ -59,9 +77,12 @@ if archivos_excel:
             # Función para generar un nombre de archivo único
             def generar_nombre_unico(nombre_base):
                 contador = 1
-                nombre_archivo = f"{nombre_base}_{ult_fecha_archivo}.xlsx"
+                # Usar fecha del archivo procesado en lugar de fecha actual
+                fecha_archivo = datos_agrupados['Fecha'].max().strftime("%d-%m-%Y")
+                nombre_archivo = f"{nombre_base}_{fecha_archivo}.xlsx"
+                
                 while os.path.exists(nombre_archivo):
-                    nombre_archivo = f"{nombre_base}_{ult_fecha_archivo}_{contador}.xlsx"
+                    nombre_archivo = f"{nombre_base}_{fecha_archivo}_{contador}.xlsx"
                     contador += 1
                 return nombre_archivo
             
@@ -70,10 +91,12 @@ if archivos_excel:
             
             # Guardar el archivo final
             datos_agrupados.to_excel(nombre_archivo_salida, index=False)
-            print(f"El archivo '{nombre_archivo_salida}' se creó con los datos procesados.")
-
-            # Mensajes de salida
-            print(f"Datos agrupados del último archivo guardados en '{nombre_archivo_salida}'")
+            
+            # Mensajes de salida mejorados
+            print(f"✅ Archivo generado exitosamente: {nombre_archivo_salida}")
+            print(f"📊 Total de registros procesados: {len(datos_agrupados)}")
+            print(f"📅 Fecha del archivo procesado: {ult_fecha_archivo}")
+            print(f"📁 Ubicación: {os.path.dirname(nombre_archivo_salida)}")
         else:
             print(f"Error: Las columnas necesarias no se encontraron en '{ultimo_archivo}'.")
             archivos_con_errores += 1
