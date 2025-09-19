@@ -21,7 +21,7 @@ def loguearse_sap():
     
     try:
         # Ejecutar el script de login
-        result = subprocess.run([sys.executable, "loguearse.py"], 
+        result = subprocess.run([sys.executable, "loguearse_simple.py"], 
                               capture_output=True, text=True, cwd=os.path.dirname(__file__))
         
         if result.returncode == 0:
