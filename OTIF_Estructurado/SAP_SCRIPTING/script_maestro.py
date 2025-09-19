@@ -42,38 +42,15 @@ def ejecutar_nuevo_rep_plr():
             print("⚠️  Advertencia: Son menos de las 2 PM. El script principal no se ejecutará automáticamente.")
             print("🔄 Ejecutando función de procesamiento de archivo existente...")
             
-            # Ejecutar la función de procesamiento de archivo existente
-            from nuevo_rep_plr import process_sap_file_content, transform_data_for_powerbi, save_powerbi_files
-            import pandas as pd
+            # Ejecutar el script de procesamiento simple
+            result = subprocess.run([sys.executable, "procesar_sap_simple.py"], 
+                                  capture_output=True, text=True, cwd=os.path.dirname(__file__))
             
-             # Definir rutas - usar C:\Data\Nite\SAP_Document
-             source_data_dir = r"C:\Data\Nite\SAP_Document"
-             existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
-            
-            # Usar la ubicación especificada
-            data_dir = r"C:\Data\Nite"
-            os.makedirs(data_dir, exist_ok=True)
-            print(f"📁 Using output directory: {data_dir}")
-            
-            # Procesar archivo existente
-            encodings_to_try = ['utf-8', 'latin-1', 'cp1252', 'iso-8859-1', 'utf-16']
-            df = process_sap_file_content(existing_file, encodings_to_try)
-            
-            if df is not None:
-                # Transformar datos
-                df = transform_data_for_powerbi(df)
-                
-                # Guardar archivos
-                base_name = "REP_PLR_HOY"
-                excel_path = os.path.join(data_dir, f"{base_name}_PowerBI.xlsx")
-                csv_path = os.path.join(data_dir, f"{base_name}_PowerBI.csv")
-                parquet_path = os.path.join(data_dir, f"{base_name}_PowerBI.parquet")
-                
-                save_powerbi_files(df, excel_path, csv_path, parquet_path)
+            if result.returncode == 0:
                 print("✅ Archivo existente procesado exitosamente")
                 return True
             else:
-                print("❌ No se pudo procesar el archivo existente")
+                print(f"❌ Error procesando archivo existente: {result.stderr}")
                 return False
         else:
             # Ejecutar el script principal
