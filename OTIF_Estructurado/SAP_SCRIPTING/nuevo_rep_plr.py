@@ -7,12 +7,12 @@ import json
 
 # Check if the current time is after 2 PM
 current_hour = datetime.now().hour
-if current_hour <= 14:
+if current_hour >= 14:
     today_date_sap_format = datetime.today().strftime('%Y%m%d')
     
     # File path and name
     file_name = "REP_PLR_HOY.xls"
-    saved_path = os.path.join(os.environ["USERPROFILE"], "Documents", file_name)
+    saved_path = os.path.join("C:/data/Nite/SAP_Document", file_name)
     
     # Remove file if it already exists
     if os.path.exists(saved_path):
@@ -40,8 +40,8 @@ if current_hour <= 14:
         session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
         session.findById("wnd[1]/tbar[0]/btn[8]").press()
         
-        session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 11
-        session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "11"
+        session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 18
+        session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "18"
         session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
         
         session.findById("wnd[0]/usr/ctxtP_LFDAT-LOW").setFocus()

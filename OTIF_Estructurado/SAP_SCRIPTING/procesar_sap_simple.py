@@ -14,6 +14,7 @@ def process_sap_file_content(file_path, encodings_to_try):
     """
     try:
         # Read the file line by line to understand its structure
+        # "C:\data\Nite\SAP_Document\REP_PLR_HOY.xls"
         lines = None
         for encoding in encodings_to_try:
             try:
