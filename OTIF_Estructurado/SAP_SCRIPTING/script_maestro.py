@@ -100,7 +100,7 @@ def ejecutar_procesar_sap_especial():
     print("=" * 60)
     
     try:
-        result = subprocess.run([sys.executable, "procesar_sap_especial.py"], 
+        result = subprocess.run([sys.executable, "procesar_sap_simple.py"], 
                               capture_output=True, text=True, cwd=os.path.dirname(__file__))
         
         if result.returncode == 0:

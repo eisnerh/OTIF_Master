@@ -1,67 +1,62 @@
 #!/usr/bin/env python3
 """
-Script especializado para procesar archivos SAP con formato específico
+Script especializado para procesar archivos SAP sin emojis
 """
 
-import os
 import pandas as pd
+import os
 import json
 from datetime import datetime
 
-def process_sap_file():
+def process_sap_file_content(file_path, encodings_to_try):
     """
-    Procesa el archivo SAP con formato específico
+    Process SAP file with specialized method that works
     """
     try:
-        # Define file paths
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        source_data_dir = os.path.join(script_dir, "data")
-        existing_file = os.path.join(source_data_dir, "C:/Users/ELOPEZ21334/Documents/REP_PLR_HOY.xls")
-        
-        # Use the specified directory C:\Data\Nite for output
-        data_dir = r"C:\Data\Nite"
-        os.makedirs(data_dir, exist_ok=True)
-        print(f"📁 Using output directory: {data_dir}")
-        
-        if not os.path.exists(existing_file):
-            print(f"❌ File not found: {existing_file}")
-            return False
-        
-        print(f"📁 Processing SAP file: {existing_file}")
-        
         # Read the file line by line to understand its structure
-        with open(existing_file, 'r', encoding='utf-16') as f:
-            lines = f.readlines()
+        lines = None
+        for encoding in encodings_to_try:
+            try:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    lines = f.readlines()
+                print(f"Successfully read file with encoding: {encoding}")
+                break
+            except:
+                continue
         
-        print(f"📊 File has {len(lines)} lines")
+        if lines is None:
+            print("Could not read file with any encoding")
+            return None
+        
+        print(f"File has {len(lines)} lines")
         
         # Find the data section (skip headers)
         data_start = None
         for i, line in enumerate(lines):
             if 'Centro' in line and 'Fe.Entrega' in line and 'Ruta' in line:
                 data_start = i
-                print(f"📋 Found header at line {i+1}")
+                print(f"Found header at line {i+1}")
                 break
         
         if data_start is None:
-            print("❌ Could not find data header")
-            return False
+            print("Could not find data header")
+            return None
         
         # Extract header
         header_line = lines[data_start].strip()
         headers = [col.strip() for col in header_line.split('\t')]
-        print(f"📋 Found {len(headers)} columns: {headers[:5]}...")
+        print(f"Found {len(headers)} columns: {headers[:5]}...")
         
         # Extract data rows
         data_rows = []
         for i in range(data_start + 1, len(lines)):
             line = lines[i].strip()
-            if line and not line.startswith('16.09.2025'):  # Skip date headers
+            if line and not line.startswith('19.09.2025'):  # Skip date headers
                 row_data = line.split('\t')
                 if len(row_data) >= len(headers):
                     data_rows.append(row_data[:len(headers)])
         
-        print(f"📊 Found {len(data_rows)} data rows")
+        print(f"Found {len(data_rows)} data rows")
         
         # Create DataFrame
         df = pd.DataFrame(data_rows, columns=headers)
@@ -71,32 +66,19 @@ def process_sap_file():
         df.dropna(axis=1, how='all', inplace=True)
         df.reset_index(drop=True, inplace=True)
         
-        print(f"✅ DataFrame created with shape: {df.shape}")
-        
-        # Transform for Power BI
-        df = transform_data_for_powerbi(df)
-        
-        # Save in multiple formats
-        base_name = "REP_PLR_HOY"
-        excel_path = os.path.join(data_dir, f"{base_name}_PowerBI.xlsx")
-        csv_path = os.path.join(data_dir, f"{base_name}_PowerBI.csv")
-        parquet_path = os.path.join(data_dir, f"{base_name}_PowerBI.parquet")
-        
-        save_powerbi_files(df, excel_path, csv_path, parquet_path)
-        
-        print("✅ SAP file processed successfully!")
-        return True
+        print(f"DataFrame created with shape: {df.shape}")
+        return df
         
     except Exception as e:
-        print(f"❌ Error processing SAP file: {e}")
-        return False
+        print(f"Error processing SAP file content: {e}")
+        return None
 
 
 def transform_data_for_powerbi(df):
     """
     Transform and clean data for optimal Power BI compatibility
     """
-    print("🔄 Transforming data for Power BI compatibility...")
+    print("Transforming data for Power BI compatibility...")
     
     # Create a copy to avoid modifying the original
     df_clean = df.copy()
@@ -116,7 +98,7 @@ def transform_data_for_powerbi(df):
             try:
                 df_clean[col] = pd.to_datetime(df_clean[col], errors='coerce')
             except:
-                print(f"⚠️  Warning: Could not convert {col} to datetime")
+                print(f"Warning: Could not convert {col} to datetime")
     
     # Convert time columns to proper time format
     time_columns = ['Hora Guía', 'Hora']
@@ -125,7 +107,7 @@ def transform_data_for_powerbi(df):
             try:
                 df_clean[col] = pd.to_datetime(df_clean[col], format='%H:%M:%S', errors='coerce').dt.time
             except:
-                print(f"⚠️  Warning: Could not convert {col} to time")
+                print(f"Warning: Could not convert {col} to time")
     
     # Convert numeric columns
     numeric_columns = ['Cajas R.S.', 'Cajas Físicas', 'Cajas Equiv.', 'Ruta', 'Entrega', 'Cliente']
@@ -134,7 +116,7 @@ def transform_data_for_powerbi(df):
             try:
                 df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce')
             except:
-                print(f"⚠️  Warning: Could not convert {col} to numeric")
+                print(f"Warning: Could not convert {col} to numeric")
     
     # Clean text columns - remove extra spaces
     text_columns = ['Centro', 'Nombre del Cliente', 'Estatus', 'Ruta Dist.', 'Camión', 
@@ -169,7 +151,7 @@ def transform_data_for_powerbi(df):
     if 'Tipo Ruta' in df_clean.columns:
         df_clean['Tipo_Ruta_Categoria'] = df_clean['Tipo Ruta'].apply(categorize_route_type)
     
-    print(f"✅ Data transformation completed. Final dataset shape: {df_clean.shape}")
+    print(f"Data transformation completed. Final dataset shape: {df_clean.shape}")
     return df_clean
 
 
@@ -209,7 +191,7 @@ def save_powerbi_files(df, excel_path, csv_path, parquet_path):
     """
     Save the dataframe in multiple formats optimized for Power BI
     """
-    print("💾 Saving files in Power BI compatible formats...")
+    print("Saving files in Power BI compatible formats...")
     
     try:
         # Save as Excel with proper formatting
@@ -233,26 +215,26 @@ def save_powerbi_files(df, excel_path, csv_path, parquet_path):
                 adjusted_width = min(max_length + 2, 50)
                 worksheet.column_dimensions[column_letter].width = adjusted_width
         
-        print(f"✅ Excel file saved: {excel_path}")
+        print(f"Excel file saved: {excel_path}")
         
         # Save as CSV with UTF-8 encoding (Power BI preferred)
         df.to_csv(csv_path, index=False, encoding='utf-8-sig')
-        print(f"✅ CSV file saved: {csv_path}")
+        print(f"CSV file saved: {csv_path}")
         
         # Save as Parquet for better performance in Power BI
         df.to_parquet(parquet_path, index=False)
-        print(f"✅ Parquet file saved: {parquet_path}")
+        print(f"Parquet file saved: {parquet_path}")
         
         # Create a metadata file for Power BI
         create_powerbi_metadata(df, os.path.dirname(excel_path))
         
-        print("\n🎉 All Power BI compatible files created successfully!")
-        print("📊 Recommended file for Power BI: Use the .parquet file for best performance")
-        print("📋 Use the .csv file if you need to import into other tools")
-        print("📈 Use the .xlsx file for manual review and analysis")
+        print("\nAll Power BI compatible files created successfully!")
+        print("Recommended file for Power BI: Use the .parquet file for best performance")
+        print("Use the .csv file if you need to import into other tools")
+        print("Use the .xlsx file for manual review and analysis")
         
     except Exception as e:
-        print(f"❌ Error saving Power BI files: {e}")
+        print(f"Error saving Power BI files: {e}")
 
 
 def create_powerbi_metadata(df, output_path):
@@ -334,26 +316,71 @@ def create_powerbi_metadata(df, output_path):
         with open(metadata_path, 'w', encoding='utf-8') as f:
             json.dump(metadata, f, indent=2, ensure_ascii=False)
         
-        print(f"✅ Metadata file saved: {metadata_path}")
+        print(f"Metadata file saved: {metadata_path}")
         
     except Exception as e:
-        print(f"⚠️  Warning: Could not create metadata file: {e}")
+        print(f"Warning: Could not create metadata file: {e}")
+
+
+def process_sap_file():
+    """
+    Procesa el archivo SAP con formato específico
+    """
+    try:
+        # Define file paths
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        source_data_dir = os.path.join(script_dir, "data")
+        existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
+        
+        # Use the specified directory C:\Data\Nite for output
+        data_dir = r"C:\Data\Nite"
+        os.makedirs(data_dir, exist_ok=True)
+        print(f"Using output directory: {data_dir}")
+        
+        if not os.path.exists(existing_file):
+            print(f"File not found: {existing_file}")
+            return False
+        
+        print(f"Processing SAP file: {existing_file}")
+        
+        # Define output file paths
+        base_name = "REP_PLR_HOY"
+        excel_path = os.path.join(data_dir, f"{base_name}_PowerBI.xlsx")
+        csv_path = os.path.join(data_dir, f"{base_name}_PowerBI.csv")
+        parquet_path = os.path.join(data_dir, f"{base_name}_PowerBI.parquet")
+        
+        # Process the file
+        encodings_to_try = ['utf-8', 'latin-1', 'cp1252', 'iso-8859-1', 'utf-16']
+        df = process_sap_file_content(existing_file, encodings_to_try)
+        
+        if df is None:
+            print("Could not process SAP file")
+            return False
+        
+        # Transform for Power BI
+        df = transform_data_for_powerbi(df)
+        
+        # Save in multiple formats
+        save_powerbi_files(df, excel_path, csv_path, parquet_path)
+        
+        print("SAP file processed successfully!")
+        return True
+        
+    except Exception as e:
+        print(f"Error processing SAP file: {e}")
+        return False
 
 
 if __name__ == "__main__":
-    print("🚀 Starting specialized SAP file processing...")
+    print("Starting specialized SAP file processing...")
     print("=" * 60)
     
     success = process_sap_file()
     
     if success:
-        print("\n" + "=" * 60)
-        print("🎉 Process completed successfully!")
-        print("📁 Check the 'data' folder for the Power BI compatible files:")
-        print("   • REP_PLR_HOY_PowerBI.xlsx")
-        print("   • REP_PLR_HOY_PowerBI.csv")
-        print("   • REP_PLR_HOY_PowerBI.parquet")
-        print("   • REP_PLR_HOY_Metadata.json")
+        print("\nPROCESSING COMPLETED SUCCESSFULLY")
+        print("Files generated in: C:\\Data\\Nite")
     else:
-        print("\n" + "=" * 60)
-        print("❌ Process failed. Please check the error messages above.")
+        print("\nPROCESSING FAILED")
+    
+    print("=" * 60)
