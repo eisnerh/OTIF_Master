@@ -11,6 +11,7 @@ import sys
 import os
 import time
 from datetime import datetime
+from loguearse import *
 
 def loguearse_sap():
     """
@@ -20,8 +21,7 @@ def loguearse_sap():
     print("=" * 60)
     
     try:
-        # Importar y ejecutar el script de login
-        from loguearse import *
+        # Importar y ejecutar el script de login       
         print("✅ Sesión SAP iniciada correctamente")
         return True
     except Exception as e:
