@@ -25,6 +25,24 @@ def process_sap_file_content(file_path, encodings_to_try):
             except:
                 continue
         
+        # If UTF-16 didn't work, try reading as binary and decode manually
+        if lines is None:
+            try:
+                with open(file_path, 'rb') as f:
+                    content = f.read()
+                # Try to decode as UTF-16
+                try:
+                    content_str = content.decode('utf-16')
+                    lines = content_str.splitlines()
+                    print("Successfully read file as UTF-16 binary")
+                except:
+                    # Try to decode as UTF-16 LE
+                    content_str = content.decode('utf-16le')
+                    lines = content_str.splitlines()
+                    print("Successfully read file as UTF-16LE binary")
+            except:
+                pass
+        
         if lines is None:
             print("Could not read file with any encoding")
             return None
@@ -33,26 +51,40 @@ def process_sap_file_content(file_path, encodings_to_try):
         
         # Find the data section (skip headers)
         data_start = None
+        print("Searching for header...")
         for i, line in enumerate(lines):
-            if 'Centro' in line and 'Fe.Entrega' in line and 'Ruta' in line:
+            if 'Centro' in line and 'Ruta' in line:
                 data_start = i
                 print(f"Found header at line {i+1}")
+                print(f"Header line: {line.strip()}")
                 break
         
         if data_start is None:
             print("Could not find data header")
+            print("First 20 lines for debugging:")
+            for i, line in enumerate(lines[:20]):
+                print(f"Line {i+1}: {line.strip()}")
             return None
         
-        # Extract header
+        # Extract header from the found line
         header_line = lines[data_start].strip()
         headers = [col.strip() for col in header_line.split('\t')]
         print(f"Found {len(headers)} columns: {headers[:5]}...")
         
+        # Skip empty lines after header
+        data_start += 1
+        while data_start < len(lines) and not lines[data_start].strip():
+            data_start += 1
+        
         # Extract data rows
         data_rows = []
+        # Get current date in the format used by SAP (DD.MM.YYYY)
+        current_date = datetime.now().strftime('%d.%m.%Y')
+        print(f"Current date for header filtering: {current_date}")
+        
         for i in range(data_start + 1, len(lines)):
             line = lines[i].strip()
-            if line and not line.startswith('19.09.2025'):  # Skip date headers
+            if line and not line.startswith(current_date):  # Skip date headers dynamically
                 row_data = line.split('\t')
                 if len(row_data) >= len(headers):
                     data_rows.append(row_data[:len(headers)])
@@ -328,10 +360,16 @@ def process_sap_file():
     Procesa el archivo SAP con formato específico
     """
     try:
-        # Define file paths
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        source_data_dir = os.path.join(script_dir, "data")
+        # Define file paths - usar C:\Data\Nite\SAP_Document
+        source_data_dir = r"C:\Data\Nite\SAP_Document"
         existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
+        
+        # Fallback to original data folder if SAP_Document doesn't exist
+        if not os.path.exists(existing_file):
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            source_data_dir = os.path.join(script_dir, "data")
+            existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
+            print(f"Using fallback file: {existing_file}")
         
         # Use the specified directory C:\Data\Nite for output
         data_dir = r"C:\Data\Nite"

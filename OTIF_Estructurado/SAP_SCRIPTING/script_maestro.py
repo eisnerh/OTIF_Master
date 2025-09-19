@@ -46,10 +46,9 @@ def ejecutar_nuevo_rep_plr():
             from nuevo_rep_plr import process_sap_file_content, transform_data_for_powerbi, save_powerbi_files
             import pandas as pd
             
-            # Definir rutas
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-            source_data_dir = os.path.join(script_dir, "data")
-            existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
+             # Definir rutas - usar C:\Data\Nite\SAP_Document
+             source_data_dir = r"C:\Data\Nite\SAP_Document"
+             existing_file = os.path.join(source_data_dir, "REP_PLR_HOY.xls")
             
             # Usar la ubicación especificada
             data_dir = r"C:\Data\Nite"
