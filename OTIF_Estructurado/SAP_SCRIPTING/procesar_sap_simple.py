@@ -49,26 +49,29 @@ def process_sap_file_content(file_path, encodings_to_try):
         
         print(f"File has {len(lines)} lines")
         
-        # Find the data section (skip headers)
-        data_start = None
-        print("Searching for header...")
-        for i, line in enumerate(lines):
-            if 'Centro' in line and 'Ruta' in line:
-                data_start = i
-                print(f"Found header at line {i+1}")
-                print(f"Header line: {line.strip()}")
-                break
+        # Find the data section - header is always at line 7 (index 6)
+        data_start = 6  # Line 7 (0-indexed)
+        print(f"Using header at line {data_start + 1}")
         
-        if data_start is None:
-            print("Could not find data header")
-            print("First 20 lines for debugging:")
-            for i, line in enumerate(lines[:20]):
-                print(f"Line {i+1}: {line.strip()}")
+        if data_start >= len(lines):
+            print("File too short - no header found")
             return None
         
         # Extract header from the found line
         header_line = lines[data_start].strip()
         headers = [col.strip() for col in header_line.split('\t')]
+        
+        # Clean headers - remove null characters and extra spaces
+        clean_headers = []
+        for header in headers:
+            # Remove null characters and clean up
+            clean_header = header.replace('\x00', '').strip()
+            if clean_header:
+                clean_headers.append(clean_header)
+            else:
+                clean_headers.append(f"Column_{len(clean_headers)+1}")
+        
+        headers = clean_headers
         print(f"Found {len(headers)} columns: {headers[:5]}...")
         
         # Skip empty lines after header
@@ -87,7 +90,12 @@ def process_sap_file_content(file_path, encodings_to_try):
             if line and not line.startswith(current_date):  # Skip date headers dynamically
                 row_data = line.split('\t')
                 if len(row_data) >= len(headers):
-                    data_rows.append(row_data[:len(headers)])
+                    # Clean row data - remove null characters
+                    clean_row = []
+                    for j, cell in enumerate(row_data[:len(headers)]):
+                        clean_cell = cell.replace('\x00', '').strip()
+                        clean_row.append(clean_cell)
+                    data_rows.append(clean_row)
         
         print(f"Found {len(data_rows)} data rows")
         
