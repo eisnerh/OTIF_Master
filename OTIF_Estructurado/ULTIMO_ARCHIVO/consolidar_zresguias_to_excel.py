@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # Ruta del archivo original
-ruta_archivo = r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Planeamientos de Rutas - 1. Dashboard Planeamiento\ZRESGUIAS\ZRESGUIAS.xlsx"  # ← Cambia esto por la ruta real
+ruta_archivo = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Planeamientos de Rutas - 1. Dashboard Planeamiento\ZRESGUIAS\ZRESGUIAS.xlsx"  # ← Cambia esto por la ruta real
 
 # Nombre de la hoja que se va a conservar
 hoja_objetivo = "PEGAR"
