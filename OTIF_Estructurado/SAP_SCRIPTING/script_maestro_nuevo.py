@@ -107,7 +107,7 @@ def verificar_archivos_generados():
     data_dir = r"C:\Data\Nite"
     archivos_esperados = [
         "REP_PLR_HOY_PowerBI.xlsx",
-        "REP_PLR_HOY_PowerBI.csv", 
+        "REP_PLR_HOY_PowerBI.csv",
         "REP_PLR_HOY_PowerBI.parquet",
         "REP_PLR_HOY_Metadata.json"
     ]
