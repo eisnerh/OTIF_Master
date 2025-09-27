@@ -6,7 +6,7 @@ import time
 
 # --- Configuración ---
 # Directorios
-DIRECTORIO_TRABAJO = r"C:\SAP\CargaRS"
+DIRECTORIO_TRABAJO = r"C:\SAP\CARGARS"
 DIRECTORIO_MOVIDOS = os.path.join(DIRECTORIO_TRABAJO, "Movidos")
 
 # Configuración FTP (extraída de subeRS.ftp)
@@ -36,7 +36,7 @@ def main():
         return
 
     # 2. Transferencia de archivos vía FTP
-    archivos_a_subir = [f for f in os.listdir(DIRECTORIO_TRABAJO) if f.endswith(".dnl") and os.path.isfile(f)]
+    archivos_a_subir = [f for f in os.listdir(DIRECTORIO_TRABAJO) if f.endswith(".DNL") and os.path.isfile(f)]
     
     if not archivos_a_subir:
         mostrar_estado("ℹ️ Aviso: No se encontraron archivos '.dnl' para subir. Saltando paso FTP.")
@@ -68,11 +68,11 @@ def main():
             return
     
     # 3. Mover archivos procesados
-    mostrar_estado("Moviendo archivos '.dnl' procesados para archivarlos...")
+    mostrar_estado("Moviendo archivos '.DNL' procesados para archivarlos...")
     archivos_movidos = 0
     try:
         # Volvemos a listar los archivos, ya que si la subida falló, no se deben mover
-        archivos_para_mover = [f for f in os.listdir(DIRECTORIO_TRABAJO) if f.endswith(".dnl") and os.path.isfile(f)]
+        archivos_para_mover = [f for f in os.listdir(DIRECTORIO_TRABAJO) if f.endswith(".DNL") and os.path.isfile(f)]
 
         for archivo in archivos_para_mover:
             origen = os.path.join(DIRECTORIO_TRABAJO, archivo)
@@ -88,7 +88,7 @@ def main():
             mostrar_estado(f"✅ Éxito: Se movieron {archivos_movidos} archivo(s) a {DIRECTORIO_MOVIDOS}.")
         elif archivos_a_subir:
              # Este caso ocurre si se intentó subir pero no se encontró nada.
-             mostrar_estado("ℹ️ Aviso: No se encontraron archivos '.dnl' para mover.")
+             mostrar_estado("ℹ️ Aviso: No se encontraron archivos '.DNL' para mover.")
             
     except Exception as e:
         mostrar_estado(f"❌ ERROR: Falló el movimiento de archivos. Detalles: {e}")
