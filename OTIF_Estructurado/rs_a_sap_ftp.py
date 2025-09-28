@@ -13,7 +13,7 @@ DIRECTORIO_MOVIDOS = os.path.join(DIRECTORIO_TRABAJO, "Movidos")
 FTP_HOST = "fifjumpftp-prd.cloud.fifco.com"
 FTP_USER = "usaim"
 FTP_PASS = "usaim" # ¡Advertencia: Dejar credenciales en texto plano no es seguro!
-FTP_RUTA_REMOTA = "RoadShow/SnisSubeRS" # Combina los comandos 'cd RoadShow' y 'cd SnisSubeRS'
+FTP_RUTA_REMOTA = "RoadShow/SncaSubeRS" # Combina los comandos 'cd RoadShow' y 'cd SncaSubeRS'
 
 # --- Funciones ---
 
