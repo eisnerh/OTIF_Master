@@ -20,7 +20,7 @@
     "rep_plr": {
       "transaccion": "zsd_rep_planeamiento",
       "archivo_base": "REP_PLR_HOY",
-      "tipo_acceso": "menu_favoritos",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
@@ -35,9 +35,9 @@
       "activo": true
     },
     "y_dev_45": {
-      "transaccion": "y_dev_45",
+      "transaccion": "y_dev_42000045",
       "archivo_base": "y_dev_45",
-      "tipo_acceso": "menu_favoritos",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
@@ -52,9 +52,9 @@
       "activo": true
     },
     "y_dev_74": {
-      "transaccion": "y_dev_74",
+      "transaccion": "y_dev_42000074",
       "archivo_base": "y_dev_74",
-      "tipo_acceso": "menu_favoritos",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": true,
       "campo_fecha_inicio": "SP$00002-LOW",
       "campo_fecha_fin": null,
@@ -71,9 +71,9 @@
       "activo": true
     },
     "y_dev_82": {
-      "transaccion": "y_dev_82",
+      "transaccion": "y_dev_42000082",
       "archivo_base": "y_dev_82xls",
-      "tipo_acceso": "menu_favoritos",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": true,
       "campo_fecha_inicio": "SP$00005-LOW",
       "campo_fecha_fin": null,
@@ -92,7 +92,7 @@
     "z_devo_alv": {
       "transaccion": "z_devo_alv",
       "archivo_base": "zsd_devo_alv",
-      "tipo_acceso": "menu_favoritos",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
@@ -109,7 +109,7 @@
     "zhbo": {
       "transaccion": "zhbo",
       "archivo_base": "zhbo",
-      "tipo_acceso": "menu_favoritos",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
