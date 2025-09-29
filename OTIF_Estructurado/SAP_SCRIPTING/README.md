@@ -67,38 +67,10 @@ ejecutar_ahora.bat
 # Opción 2: Python directo
 python ejecutar_diario.py
 
-# Opción 3: Solo un reporte específico
+# Opción 3: Script principal
 python automatizacion_reportes_sap.py
 ```
 
-## 🧪 Pruebas y Validación
-
-### Probar Procesamiento con Archivos Existentes
-```bash
-# Probar procesamiento con archivos de la carpeta data
-python probar_procesamiento.py
-```
-
-Este script:
-- ✅ Procesa todos los archivos .xls de la carpeta `data`
-- ✅ Valida la estructura y formato de cada archivo
-- ✅ Genera archivos Power BI de prueba
-- ✅ Crea reporte de validación detallado
-- ✅ Verifica compatibilidad con diferentes encodings
-
-### Archivos de Prueba Generados
-```
-C:\Data\SAP_Automatizado\Pruebas\
-├── mb51_traslado_tical_PowerBI.xlsx
-├── mb51_traslado_tical_PowerBI.csv
-├── mb51_traslado_tical_PowerBI.parquet
-├── mb51_traslado_tical_Metadata.json
-├── rep_plr_PowerBI.xlsx
-├── rep_plr_PowerBI.csv
-├── rep_plr_PowerBI.parquet
-├── rep_plr_Metadata.json
-└── reporte_validacion.json
-```
 
 ## 📁 Estructura de Archivos
 
@@ -119,6 +91,10 @@ SAP_SCRIPTING/
 │   ├── zhbo
 │   ├── zred
 │   └── zsd_incidencias
+├── 📁 data/                            # Archivos de ejemplo
+│   ├── mb51_traslado_tical.xls
+│   ├── REP_PLR_HOY.xls
+│   └── [otros archivos de ejemplo]
 └── 📁 Nite/                            # Funcionalidad base
     ├── script_maestro_nuevo.py
     ├── loguearse_simple.py
@@ -127,25 +103,45 @@ SAP_SCRIPTING/
 
 ## 📊 Archivos Generados
 
-Para cada reporte se generan los siguientes archivos:
+Cada reporte se extrae en su propia carpeta separada para mejor organización:
 
-### Archivos Originales
-- `[reporte]_[YYYYMMDD].xls` - Archivo original de SAP
-
-### Archivos Power BI
-- `[reporte]_[YYYYMMDD]_PowerBI.xlsx` - Excel con formato
-- `[reporte]_[YYYYMMDD]_PowerBI.csv` - CSV para importar
-- `[reporte]_[YYYYMMDD]_PowerBI.parquet` - ⭐ **Recomendado para Power BI**
-- `[reporte]_[YYYYMMDD]_Metadata.json` - Metadatos y documentación
-
-### Ejemplo de Nombres
+### Estructura de Carpetas
 ```
-mb51_traslado_tical_20250115.xls
-mb51_traslado_tical_20250115_PowerBI.xlsx
-mb51_traslado_tical_20250115_PowerBI.csv
-mb51_traslado_tical_20250115_PowerBI.parquet
-mb51_traslado_tical_20250115_Metadata.json
+C:\Data\SAP_Automatizado\
+├── mb51\
+│   ├── mb51_traslado_tical_20250115.xls
+│   ├── mb51_traslado_tical_20250115_PowerBI.xlsx
+│   ├── mb51_traslado_tical_20250115_PowerBI.csv
+│   ├── mb51_traslado_tical_20250115_PowerBI.parquet
+│   └── mb51_traslado_tical_20250115_Metadata.json
+├── rep_plr\
+│   ├── rep_plr_20250115.xls
+│   ├── rep_plr_20250115_PowerBI.xlsx
+│   ├── rep_plr_20250115_PowerBI.csv
+│   ├── rep_plr_20250115_PowerBI.parquet
+│   └── rep_plr_20250115_Metadata.json
+├── y_dev_45\
+│   └── [archivos del reporte y_dev_45]
+├── ... [carpetas para cada reporte]
+└── Logs\
+    └── [archivos de log]
 ```
+
+### Archivos por Reporte
+Para cada reporte se generan:
+
+- **`[reporte]_[YYYYMMDD].xls`** - Archivo original de SAP
+- **`[reporte]_[YYYYMMDD]_PowerBI.xlsx`** - Excel con formato
+- **`[reporte]_[YYYYMMDD]_PowerBI.csv`** - CSV para importar
+- **`[reporte]_[YYYYMMDD]_PowerBI.parquet`** - ⭐ **Recomendado para Power BI**
+- **`[reporte]_[YYYYMMDD]_Metadata.json`** - Metadatos y documentación
+
+### Ventajas de la Estructura por Carpetas
+- ✅ **Organización clara**: Cada reporte en su carpeta
+- ✅ **Fácil navegación**: Localización rápida de archivos
+- ✅ **Separación de datos**: Evita mezcla entre reportes
+- ✅ **Escalabilidad**: Fácil agregar nuevos reportes
+- ✅ **Backup selectivo**: Respaldar reportes específicos
 
 ## 📋 Estructura de Archivos SAP
 

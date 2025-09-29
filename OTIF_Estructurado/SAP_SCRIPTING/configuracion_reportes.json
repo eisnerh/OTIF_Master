@@ -9,7 +9,13 @@
   "directorios": {
     "salida_principal": "C:\\Data\\SAP_Automatizado",
     "logs": "C:\\Data\\SAP_Automatizado\\Logs",
-    "backup": "C:\\Data\\SAP_Automatizado\\Backup"
+    "backup": "C:\\Data\\SAP_Automatizado\\Backup",
+    "estructura_carpetas": "Cada reporte se guarda en su propia carpeta separada",
+    "ejemplo_estructura": {
+      "mb51": "C:\\Data\\SAP_Automatizado\\mb51\\",
+      "rep_plr": "C:\\Data\\SAP_Automatizado\\rep_plr\\",
+      "y_dev_45": "C:\\Data\\SAP_Automatizado\\y_dev_45\\"
+    }
   },
   "reportes": {
     "mb51": {
@@ -115,9 +121,9 @@
     "email_destinatarios": [],
     "webhook_url": null
   },
-  "pruebas": {
-    "directorio_pruebas": "C:\\Data\\SAP_Automatizado\\Pruebas",
-    "archivos_ejemplo": [
+  "archivos_ejemplo": {
+    "directorio": "data/",
+    "archivos_disponibles": [
       "mb51_traslado_tical.xls",
       "REP_PLR_HOY.xls",
       "y_dev_45.xls",
@@ -127,7 +133,6 @@
       "zred.xls",
       "zsd_devo_alv.xls"
     ],
-    "script_pruebas": "probar_procesamiento.py",
-    "script_demo": "demo_procesamiento.py"
+    "descripcion": "Archivos de ejemplo para referencia de estructura"
   }
 }

@@ -50,9 +50,9 @@ class AutomatizacionSAP:
         self.usuario = "elopez21334"
         self.password = "Thunderx.2367"
         
-        # Directorio de salida
-        self.output_dir = r"C:\Data\SAP_Automatizado"
-        os.makedirs(self.output_dir, exist_ok=True)
+        # Directorio de salida base
+        self.output_base_dir = r"C:\Data\SAP_Automatizado"
+        os.makedirs(self.output_base_dir, exist_ok=True)
         
         # Variables de conexión SAP
         self.sap_gui_auto = None
@@ -188,10 +188,15 @@ class AutomatizacionSAP:
         try:
             logger.info(f"📊 Ejecutando reporte: {nombre_reporte}")
             
+            # Crear directorio específico para este reporte
+            reporte_dir = os.path.join(self.output_base_dir, nombre_reporte)
+            os.makedirs(reporte_dir, exist_ok=True)
+            logger.info(f"📁 Directorio del reporte: {reporte_dir}")
+            
             # Nombre del archivo con fecha
             fecha_str = self.fecha_ejecucion.strftime('%Y%m%d')
             nombre_archivo = f"{config['archivo_base']}_{fecha_str}.xls"
-            ruta_completa = os.path.join(self.output_dir, nombre_archivo)
+            ruta_completa = os.path.join(reporte_dir, nombre_archivo)
             
             # Eliminar archivo existente si existe
             if os.path.exists(ruta_completa):
@@ -224,6 +229,11 @@ class AutomatizacionSAP:
             if os.path.exists(ruta_completa):
                 tamaño = os.path.getsize(ruta_completa)
                 logger.info(f"✅ Reporte {nombre_reporte} exportado exitosamente: {nombre_archivo} ({tamaño:,} bytes)")
+                
+                # Procesar para Power BI en el mismo directorio
+                if self.procesar_archivo_para_powerbi(ruta_completa, reporte_dir):
+                    logger.info(f"✅ Archivos Power BI generados para {nombre_reporte}")
+                
                 return True
             else:
                 logger.error(f"❌ No se pudo crear el archivo para {nombre_reporte}")
@@ -279,10 +289,14 @@ class AutomatizacionSAP:
         except Exception as e:
             logger.error(f"❌ Error exportando a Excel: {e}")
 
-    def procesar_archivo_para_powerbi(self, ruta_archivo):
+    def procesar_archivo_para_powerbi(self, ruta_archivo, directorio_destino=None):
         """
         Procesa el archivo exportado para hacerlo compatible con Power BI
         Basado en la estructura específica de los archivos SAP de la carpeta data
+        
+        Args:
+            ruta_archivo: Ruta del archivo original
+            directorio_destino: Directorio donde guardar los archivos Power BI (opcional)
         """
         try:
             logger.info(f"📊 Procesando archivo SAP: {os.path.basename(ruta_archivo)}")
@@ -379,11 +393,15 @@ class AutomatizacionSAP:
             
             logger.info(f"✅ DataFrame creado: {df.shape[0]} filas, {df.shape[1]} columnas")
             
+            # Determinar directorio de destino
+            if directorio_destino is None:
+                directorio_destino = self.output_base_dir
+            
             # Crear archivos Power BI
             base_name = os.path.splitext(os.path.basename(ruta_archivo))[0]
-            excel_path = os.path.join(self.output_dir, f"{base_name}_PowerBI.xlsx")
-            csv_path = os.path.join(self.output_dir, f"{base_name}_PowerBI.csv")
-            parquet_path = os.path.join(self.output_dir, f"{base_name}_PowerBI.parquet")
+            excel_path = os.path.join(directorio_destino, f"{base_name}_PowerBI.xlsx")
+            csv_path = os.path.join(directorio_destino, f"{base_name}_PowerBI.csv")
+            parquet_path = os.path.join(directorio_destino, f"{base_name}_PowerBI.parquet")
             
             # Guardar en múltiples formatos
             try:
@@ -422,7 +440,7 @@ class AutomatizacionSAP:
                 }
             }
             
-            metadata_path = os.path.join(self.output_dir, f"{base_name}_Metadata.json")
+            metadata_path = os.path.join(directorio_destino, f"{base_name}_Metadata.json")
             with open(metadata_path, 'w', encoding='utf-8') as f:
                 json.dump(metadata, f, indent=2, ensure_ascii=False)
             
@@ -447,7 +465,7 @@ class AutomatizacionSAP:
         logger.info("=" * 80)
         logger.info(f"📅 Fecha de ejecución: {self.fecha_ejecucion.strftime('%Y-%m-%d %H:%M:%S')}")
         logger.info(f"📊 Período de datos: {self.fecha_inicio.strftime('%d.%m.%Y')} - {self.fecha_fin.strftime('%d.%m.%Y')}")
-        logger.info(f"📁 Directorio de salida: {self.output_dir}")
+        logger.info(f"📁 Directorio base de salida: {self.output_base_dir}")
         logger.info("=" * 80)
         
         resultados = {}
@@ -460,13 +478,6 @@ class AutomatizacionSAP:
             exito = self.ejecutar_reporte(nombre_reporte, config)
             
             if exito:
-                # Procesar para Power BI
-                fecha_str = self.fecha_ejecucion.strftime('%Y%m%d')
-                archivo_original = os.path.join(self.output_dir, f"{config['archivo_base']}_{fecha_str}.xls")
-                
-                if os.path.exists(archivo_original):
-                    self.procesar_archivo_para_powerbi(archivo_original)
-                
                 resultados[nombre_reporte] = "✅ Exitoso"
             else:
                 resultados[nombre_reporte] = "❌ Fallido"
@@ -537,7 +548,7 @@ if __name__ == "__main__":
         exito = automatizacion.main()
         if exito:
             print("\n🎉 AUTOMATIZACIÓN COMPLETADA EXITOSAMENTE")
-            print("📁 Archivos generados en:", automatizacion.output_dir)
+            print("📁 Archivos generados en:", automatizacion.output_base_dir)
         else:
             print("\n❌ AUTOMATIZACIÓN FALLÓ")
     except KeyboardInterrupt:
