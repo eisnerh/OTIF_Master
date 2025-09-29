@@ -21,82 +21,154 @@
     "mb51": {
       "transaccion": "mb51",
       "archivo_base": "mb51_traslado_tical",
-      "tiene_fechas": true,
-      "campo_fecha_inicio": "BUDAT-LOW",
-      "campo_fecha_fin": "BUDAT-HIGH",
+      "tipo_acceso": "transaccion_directa",
+      "tiene_fechas": false,
+      "campo_fecha_inicio": null,
+      "campo_fecha_fin": null,
       "descripcion": "Reporte de movimientos de material",
+      "flujo_especial": "navegacion_alv",
+      "pasos_especiales": [
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico",
+        "ejecutar_sin_fechas"
+      ],
       "activo": true
     },
     "rep_plr": {
       "transaccion": "zsd_rep_planeamiento",
-      "archivo_base": "rep_plr",
+      "archivo_base": "REP_PLR_HOY",
+      "tipo_acceso": "menu_favoritos",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
       "descripcion": "Reporte PLR (Planificación Logística)",
+      "flujo_especial": "menu_favoritos",
+      "pasos_especiales": [
+        "expandir_nodo_favoritos",
+        "seleccionar_reporte_plr",
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico"
+      ],
       "activo": true
     },
     "y_dev_45": {
       "transaccion": "y_dev_45",
       "archivo_base": "y_dev_45",
+      "tipo_acceso": "menu_favoritos",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
       "descripcion": "Reporte de desarrollo 45",
+      "flujo_especial": "menu_favoritos",
+      "pasos_especiales": [
+        "expandir_nodo_favoritos",
+        "seleccionar_reporte_y_dev_45",
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico"
+      ],
       "activo": true
     },
     "y_dev_74": {
       "transaccion": "y_dev_74",
       "archivo_base": "y_dev_74",
+      "tipo_acceso": "menu_favoritos",
       "tiene_fechas": true,
       "campo_fecha_inicio": "SP$00002-LOW",
       "campo_fecha_fin": null,
-      "descripcion": "Reporte de desarrollo 74",
+      "descripcion": "Detalle de movimiento de guías",
+      "flujo_especial": "menu_favoritos_con_fecha",
+      "pasos_especiales": [
+        "expandir_nodo_favoritos",
+        "seleccionar_reporte_y_dev_74",
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico",
+        "configurar_fecha_proceso",
+        "ejecutar_reporte"
+      ],
       "activo": true
     },
     "y_dev_82": {
       "transaccion": "y_dev_82",
-      "archivo_base": "y_dev_82",
+      "archivo_base": "y_dev_82xls",
+      "tipo_acceso": "menu_favoritos",
       "tiene_fechas": true,
       "campo_fecha_inicio": "SP$00005-LOW",
       "campo_fecha_fin": null,
-      "descripcion": "Reporte de desarrollo 82",
+      "descripcion": "Análisis carga de camión por bahías",
+      "flujo_especial": "menu_favoritos_con_fecha",
+      "pasos_especiales": [
+        "expandir_nodo_favoritos",
+        "seleccionar_reporte_y_dev_82",
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico",
+        "configurar_fecha_proceso",
+        "ejecutar_reporte"
+      ],
       "activo": true
     },
     "z_devo_alv": {
       "transaccion": "z_devo_alv",
       "archivo_base": "zsd_devo_alv",
+      "tipo_acceso": "menu_favoritos",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
       "descripcion": "Reporte de devoluciones ALV",
+      "flujo_especial": "menu_favoritos",
+      "pasos_especiales": [
+        "expandir_nodo_favoritos",
+        "seleccionar_reporte_z_devo_alv",
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico"
+      ],
       "activo": true
     },
     "zhbo": {
       "transaccion": "zhbo",
       "archivo_base": "zhbo",
+      "tipo_acceso": "menu_favoritos",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
       "descripcion": "Reporte HBO",
+      "flujo_especial": "menu_favoritos",
+      "pasos_especiales": [
+        "expandir_nodo_favoritos",
+        "seleccionar_reporte_zhbo",
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico"
+      ],
       "activo": true
     },
     "zred": {
       "transaccion": "zred",
       "archivo_base": "zred",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": true,
       "campo_fecha_inicio": "SO_FECHA-LOW",
       "campo_fecha_fin": "SO_FECHA-HIGH",
       "descripcion": "Reporte de red",
+      "flujo_especial": "transaccion_directa_con_fechas",
+      "pasos_especiales": [
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico",
+        "configurar_fechas_rango"
+      ],
       "activo": true
     },
     "zsd_incidencias": {
       "transaccion": "zsd_incidencias",
       "archivo_base": "data_incidencias",
+      "tipo_acceso": "transaccion_directa",
       "tiene_fechas": false,
       "campo_fecha_inicio": null,
       "campo_fecha_fin": null,
       "descripcion": "Reporte de incidencias SD",
+      "flujo_especial": "transaccion_directa",
+      "pasos_especiales": [
+        "navegar_a_reporte_alv",
+        "seleccionar_reporte_especifico"
+      ],
       "activo": true
     }
   },

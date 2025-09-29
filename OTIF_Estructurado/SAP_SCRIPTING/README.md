@@ -15,17 +15,48 @@ Este proyecto automatiza la extracción diaria de **9 reportes de SAP** con proc
 
 ## 📊 Reportes Incluidos
 
-| Reporte | Transacción | Descripción | Fechas |
-|---------|-------------|-------------|---------|
-| **mb51** | MB51 | Movimientos de material | ✅ |
-| **rep_plr** | ZSD_REP_PLANEAMIENTO | Planificación logística | ❌ |
-| **y_dev_45** | Y_DEV_45 | Desarrollo 45 | ❌ |
-| **y_dev_74** | Y_DEV_74 | Desarrollo 74 | ✅ |
-| **y_dev_82** | Y_DEV_82 | Desarrollo 82 | ✅ |
-| **z_devo_alv** | Z_DEVO_ALV | Devoluciones ALV | ❌ |
-| **zhbo** | ZHBO | HBO | ❌ |
-| **zred** | ZRED | Red | ✅ |
-| **zsd_incidencias** | ZSD_INCIDENCIAS | Incidencias SD | ❌ |
+El sistema automatiza la extracción de **9 reportes** de SAP con flujos específicos para cada uno:
+
+| Reporte | Transacción | Tipo Acceso | Descripción | Fechas | Flujo Especial |
+|---------|-------------|-------------|-------------|--------|----------------|
+| **mb51** | `mb51` | Transacción Directa | Reporte de movimientos de material | ❌ | Navegación ALV |
+| **rep_plr** | `zsd_rep_planeamiento` | Menú Favoritos | Reporte PLR (Planificación Logística) | ❌ | Favoritos + ALV |
+| **y_dev_45** | `y_dev_45` | Menú Favoritos | Reporte de desarrollo 45 | ❌ | Favoritos + ALV |
+| **y_dev_74** | `y_dev_74` | Menú Favoritos | Detalle de movimiento de guías | ✅ | Favoritos + Fecha |
+| **y_dev_82** | `y_dev_82` | Menú Favoritos | Análisis carga de camión por bahías | ✅ | Favoritos + Fecha |
+| **z_devo_alv** | `z_devo_alv` | Menú Favoritos | Reporte de devoluciones ALV | ❌ | Favoritos + ALV |
+| **zhbo** | `zhbo` | Menú Favoritos | Reporte HBO | ❌ | Favoritos + ALV |
+| **zred** | `zred` | Transacción Directa | Reporte de red | ✅ | Transacción + Fechas |
+| **zsd_incidencias** | `zsd_incidencias` | Transacción Directa | Reporte de incidencias SD | ❌ | Transacción Directa |
+
+### 🔄 Tipos de Flujo de Ejecución
+
+#### **1. Transacción Directa**
+- **Reportes**: mb51, zred, zsd_incidencias
+- **Proceso**: Acceso directo por código de transacción
+- **Características**: 
+  - Navegación directa a la transacción
+  - Selección de reporte específico en lista ALV
+  - Configuración de fechas cuando es necesario
+
+#### **2. Menú Favoritos**
+- **Reportes**: rep_plr, y_dev_45, y_dev_74, y_dev_82, z_devo_alv, zhbo
+- **Proceso**: Navegación por menú de favoritos de SAP
+- **Características**:
+  - Expansión de nodos específicos del menú
+  - Selección de reporte en lista de favoritos
+  - Navegación adicional a lista ALV
+  - Configuración de fechas cuando es necesario
+
+### 📅 Configuración de Fechas
+
+#### **Reportes con Fechas**
+- **y_dev_74**: Campo `SP$00002-LOW` (fecha de proceso)
+- **y_dev_82**: Campo `SP$00005-LOW` (fecha de proceso)
+- **zred**: Campos `SO_FECHA-LOW` y `SO_FECHA-HIGH` (rango de fechas)
+
+#### **Reportes sin Fechas**
+- **mb51, rep_plr, y_dev_45, z_devo_alv, zhbo, zsd_incidencias**: Ejecución directa sin configuración de fechas
 
 ## 🛠️ Instalación
 

@@ -181,12 +181,319 @@ class AutomatizacionSAP:
             logger.error(f"❌ Error al conectar con SAP: {e}")
             return False
 
+    def ejecutar_transaccion_directa(self, config, ruta_archivo):
+        """
+        Ejecuta reportes que usan transacciones directas (mb51, zred, zsd_incidencias)
+        """
+        try:
+            logger.info(f"🔄 Ejecutando transacción directa: {config['transaccion']}")
+            
+            # Ir a la transacción
+            self.session.findById("wnd[0]/tbar[0]/okcd").text = config['transaccion']
+            self.session.findById("wnd[0]").sendVKey(0)
+            time.sleep(2)
+            
+            # Navegar al reporte ALV
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Seleccionar reporte específico
+            if config['transaccion'] == 'mb51':
+                # Para mb51, seleccionar el reporte específico
+                self.seleccionar_reporte_mb51()
+            elif config['transaccion'] == 'zred':
+                # Para zred, configurar fechas y seleccionar reporte
+                self.seleccionar_reporte_zred()
+                self.configurar_fechas_rango(config)
+            elif config['transaccion'] == 'zsd_incidencias':
+                # Para zsd_incidencias, seleccionar reporte
+                self.seleccionar_reporte_zsd_incidencias()
+            
+            # Ejecutar reporte
+            self.session.findById("wnd[0]/tbar[1]/btn[8]").press()
+            time.sleep(5)
+            
+            # Exportar
+            return self.exportar_a_excel(ruta_archivo)
+            
+        except Exception as e:
+            logger.error(f"❌ Error en transacción directa: {e}")
+            return False
+
+    def ejecutar_menu_favoritos(self, config, ruta_archivo):
+        """
+        Ejecuta reportes que usan menú de favoritos
+        """
+        try:
+            logger.info(f"⭐ Ejecutando desde menú favoritos: {config['transaccion']}")
+            
+            # Navegar a favoritos y expandir nodos
+            if config['transaccion'] in ['rep_plr', 'y_dev_45', 'y_dev_74', 'y_dev_82', 'z_devo_alv', 'zhbo']:
+                self.expandir_nodo_favoritos(config['transaccion'])
+            
+            # Seleccionar reporte específico
+            self.seleccionar_reporte_favoritos(config)
+            
+            # Navegar al reporte ALV
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Seleccionar reporte específico en ALV
+            self.seleccionar_reporte_alv_especifico(config)
+            
+            # Configurar fechas si es necesario
+            if config['tiene_fechas']:
+                self.configurar_fecha_proceso(config)
+            
+            # Ejecutar reporte
+            self.session.findById("wnd[0]/tbar[1]/btn[8]").press()
+            time.sleep(5)
+            
+            # Exportar
+            return self.exportar_a_excel(ruta_archivo)
+            
+        except Exception as e:
+            logger.error(f"❌ Error en menú favoritos: {e}")
+            return False
+
+    def expandir_nodo_favoritos(self, transaccion):
+        """
+        Expande los nodos necesarios en el menú de favoritos
+        """
+        try:
+            if transaccion == 'rep_plr':
+                # Expandir nodo F00029 y seleccionar F00120
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").expandNode("F00029")
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00120"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").topNode = "Favo"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode("F00120")
+            elif transaccion == 'y_dev_45':
+                # Expandir nodo F00118 y seleccionar F00139
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").expandNode("F00118")
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00139"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").topNode = "Favo"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode("F00139")
+            elif transaccion == 'y_dev_74':
+                # Seleccionar F00119
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00119"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode("F00119")
+            elif transaccion == 'y_dev_82':
+                # Seleccionar F00123
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00123"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode("F00123")
+            elif transaccion == 'z_devo_alv':
+                # Expandir nodo F00118 y seleccionar F00072
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").expandNode("F00118")
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00072"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").topNode = "Favo"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode("F00072")
+            elif transaccion == 'zhbo':
+                # Seleccionar F00096
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00096"
+                self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode("F00096")
+            
+            time.sleep(2)
+            
+        except Exception as e:
+            logger.error(f"❌ Error expandiendo nodo favoritos: {e}")
+            raise
+
+    def seleccionar_reporte_favoritos(self, config):
+        """
+        Selecciona el reporte específico en la lista de favoritos
+        """
+        try:
+            # Navegar a favoritos
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Limpiar filtro de usuario
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").text = ""
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").setFocus()
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
+            self.session.findById("wnd[1]/tbar[0]/btn[8]").press()
+            time.sleep(2)
+            
+            # Seleccionar reporte según transacción
+            if config['transaccion'] == 'rep_plr':
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 11
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 7
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "11"
+            elif config['transaccion'] == 'y_dev_45':
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 2
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "2"
+            elif config['transaccion'] == 'y_dev_74':
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 25
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 12
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "25"
+            elif config['transaccion'] == 'y_dev_82':
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 2
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "2"
+            elif config['transaccion'] == 'z_devo_alv':
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 12
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "12"
+            elif config['transaccion'] == 'zhbo':
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 11
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 1
+                self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "11"
+            
+            # Doble clic para seleccionar
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
+            time.sleep(2)
+            
+        except Exception as e:
+            logger.error(f"❌ Error seleccionando reporte favoritos: {e}")
+            raise
+
+    def seleccionar_reporte_alv_especifico(self, config):
+        """
+        Selecciona el reporte específico en la lista ALV
+        """
+        try:
+            # Navegar a favoritos
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Limpiar filtro de usuario
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").text = ""
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").setFocus()
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
+            self.session.findById("wnd[1]/tbar[0]/btn[8]").press()
+            time.sleep(2)
+            
+            # Doble clic para seleccionar
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
+            time.sleep(2)
+            
+        except Exception as e:
+            logger.error(f"❌ Error seleccionando reporte ALV: {e}")
+            raise
+
+    def configurar_fecha_proceso(self, config):
+        """
+        Configura la fecha de proceso para reportes que la requieren
+        """
+        try:
+            if config['transaccion'] == 'y_dev_74':
+                campo_fecha = "wnd[0]/usr/ctxtSP$00002-LOW"
+                self.session.findById(campo_fecha).text = self.fecha_inicio.strftime('%d.%m.%Y')
+                self.session.findById(campo_fecha).setFocus()
+                self.session.findById(campo_fecha).caretPosition = 2
+            elif config['transaccion'] == 'y_dev_82':
+                campo_fecha = "wnd[0]/usr/ctxtSP$00005-LOW"
+                self.session.findById(campo_fecha).text = self.fecha_inicio.strftime('%d.%m.%Y')
+                self.session.findById(campo_fecha).caretPosition = 2
+            
+            time.sleep(1)
+            
+        except Exception as e:
+            logger.error(f"❌ Error configurando fecha proceso: {e}")
+            raise
+
+    def seleccionar_reporte_mb51(self):
+        """
+        Selecciona el reporte específico para mb51
+        """
+        try:
+            # Navegar a favoritos
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Limpiar filtro de usuario
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").setFocus()
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
+            self.session.findById("wnd[1]/tbar[0]/btn[8]").press()
+            time.sleep(2)
+            
+            # Navegar a favoritos nuevamente
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Seleccionar reporte específico (fila 405)
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 405
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "405"
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
+            time.sleep(2)
+            
+        except Exception as e:
+            logger.error(f"❌ Error seleccionando reporte mb51: {e}")
+            raise
+
+    def seleccionar_reporte_zred(self):
+        """
+        Selecciona el reporte específico para zred
+        """
+        try:
+            # Navegar a favoritos
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Seleccionar reporte específico (fila 1)
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 1
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "1"
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
+            time.sleep(2)
+            
+        except Exception as e:
+            logger.error(f"❌ Error seleccionando reporte zred: {e}")
+            raise
+
+    def seleccionar_reporte_zsd_incidencias(self):
+        """
+        Selecciona el reporte específico para zsd_incidencias
+        """
+        try:
+            # Navegar a favoritos
+            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
+            time.sleep(2)
+            
+            # Limpiar filtro de usuario
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").text = ""
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").setFocus()
+            self.session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
+            self.session.findById("wnd[1]/tbar[0]/btn[8]").press()
+            time.sleep(2)
+            
+            # Seleccionar reporte específico (fila 12)
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 12
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "12"
+            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
+            time.sleep(2)
+            
+        except Exception as e:
+            logger.error(f"❌ Error seleccionando reporte zsd_incidencias: {e}")
+            raise
+
+    def configurar_fechas_rango(self, config):
+        """
+        Configura fechas de rango para reportes como zred
+        """
+        try:
+            # Configurar fecha de inicio
+            campo_inicio = f"wnd[0]/usr/ctxt{config['campo_fecha_inicio']}"
+            self.session.findById(campo_inicio).text = self.fecha_inicio.strftime('%d.%m.%Y')
+            logger.info(f"📅 Fecha inicio configurada: {self.fecha_inicio.strftime('%d.%m.%Y')}")
+            
+            # Configurar fecha de fin
+            campo_fin = f"wnd[0]/usr/ctxt{config['campo_fecha_fin']}"
+            self.session.findById(campo_fin).text = self.fecha_fin.strftime('%d.%m.%Y')
+            self.session.findById(campo_fin).setFocus()
+            self.session.findById(campo_fin).caretPosition = 10
+            logger.info(f"📅 Fecha fin configurada: {self.fecha_fin.strftime('%d.%m.%Y')}")
+            
+            time.sleep(1)
+            
+        except Exception as e:
+            logger.error(f"❌ Error configurando fechas rango: {e}")
+            raise
+
     def ejecutar_reporte(self, nombre_reporte, config):
         """
-        Ejecuta un reporte específico de SAP
+        Ejecuta un reporte específico de SAP con flujo personalizado
         """
         try:
             logger.info(f"📊 Ejecutando reporte: {nombre_reporte}")
+            logger.info(f"📋 Flujo especial: {config.get('flujo_especial', 'estandar')}")
             
             # Crear directorio específico para este reporte
             reporte_dir = os.path.join(self.output_base_dir, nombre_reporte)
@@ -205,28 +512,17 @@ class AutomatizacionSAP:
             # Maximizar ventana
             self.session.findById("wnd[0]").maximize()
             
-            # Ir a la transacción
-            self.session.findById("wnd[0]/tbar[0]/okcd").text = config['transaccion']
-            self.session.findById("wnd[0]").sendVKey(0)
-            
-            # Esperar que cargue la transacción
-            time.sleep(2)
-            
-            # Configurar fechas si el reporte las requiere
-            if config['tiene_fechas']:
-                self.configurar_fechas(config)
-            
-            # Ejecutar el reporte
-            self.session.findById("wnd[0]/tbar[1]/btn[8]").press()
-            
-            # Esperar que se genere el reporte
-            time.sleep(5)
-            
-            # Exportar a Excel
-            self.exportar_a_excel(ruta_completa)
+            # Ejecutar flujo específico según el tipo de reporte
+            if config.get('tipo_acceso') == 'transaccion_directa':
+                exito = self.ejecutar_transaccion_directa(config, ruta_completa)
+            elif config.get('tipo_acceso') == 'menu_favoritos':
+                exito = self.ejecutar_menu_favoritos(config, ruta_completa)
+            else:
+                logger.error(f"❌ Tipo de acceso no reconocido: {config.get('tipo_acceso')}")
+                return False
             
             # Verificar que el archivo se creó
-            if os.path.exists(ruta_completa):
+            if exito and os.path.exists(ruta_completa):
                 tamaño = os.path.getsize(ruta_completa)
                 logger.info(f"✅ Reporte {nombre_reporte} exportado exitosamente: {nombre_archivo} ({tamaño:,} bytes)")
                 
