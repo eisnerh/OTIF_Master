@@ -13,6 +13,8 @@ If IsObject(WScript) Then
    WScript.ConnectObject application, "on"
 End If
 session.findById("wnd[0]").maximize
+session.findById("wnd[0]/tbar[0]/okcd").text = "y_dev_42000082"
+session.findById("wnd[0]").sendVKey(0)
 session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00123"
 session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode "F00123"
 session.findById("wnd[0]/tbar[1]/btn[17]").press
