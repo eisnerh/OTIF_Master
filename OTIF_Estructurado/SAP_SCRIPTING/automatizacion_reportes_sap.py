@@ -36,7 +36,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('automatizacion_sap.log'),
+        logging.FileHandler('automatizacion_sap.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
@@ -64,72 +64,41 @@ class AutomatizacionSAP:
         self.fecha_ejecucion = datetime.now()
         self.fecha_inicio, self.fecha_fin = self.calcular_fechas_procesamiento()
         
-        # Configuración de reportes
-        self.reportes_config = {
-            'mb51': {
-                'transaccion': 'mb51',
-                'archivo_base': 'mb51_traslado_tical',
-                'tiene_fechas': True,
-                'campo_fecha_inicio': 'BUDAT-LOW',
-                'campo_fecha_fin': 'BUDAT-HIGH'
-            },
-            'rep_plr': {
-                'transaccion': 'zsd_rep_planeamiento',
-                'archivo_base': 'rep_plr',
-                'tiene_fechas': False,
-                'campo_fecha_inicio': None,
-                'campo_fecha_fin': None
-            },
-            'y_dev_45': {
-                'transaccion': 'y_dev_45',
-                'archivo_base': 'y_dev_45',
-                'tiene_fechas': False,
-                'campo_fecha_inicio': None,
-                'campo_fecha_fin': None
-            },
-            'y_dev_74': {
-                'transaccion': 'y_dev_74',
-                'archivo_base': 'y_dev_74',
-                'tiene_fechas': True,
-                'campo_fecha_inicio': 'SP$00002-LOW',
-                'campo_fecha_fin': None
-            },
-            'y_dev_82': {
-                'transaccion': 'y_dev_82',
-                'archivo_base': 'y_dev_82',
-                'tiene_fechas': True,
-                'campo_fecha_inicio': 'SP$00005-LOW',
-                'campo_fecha_fin': None
-            },
-            'z_devo_alv': {
-                'transaccion': 'z_devo_alv',
-                'archivo_base': 'zsd_devo_alv',
-                'tiene_fechas': False,
-                'campo_fecha_inicio': None,
-                'campo_fecha_fin': None
-            },
-            'zhbo': {
-                'transaccion': 'zhbo',
-                'archivo_base': 'zhbo',
-                'tiene_fechas': False,
-                'campo_fecha_inicio': None,
-                'campo_fecha_fin': None
-            },
-            'zred': {
-                'transaccion': 'zred',
-                'archivo_base': 'zred',
-                'tiene_fechas': True,
-                'campo_fecha_inicio': 'SO_FECHA-LOW',
-                'campo_fecha_fin': 'SO_FECHA-HIGH'
-            },
-            'zsd_incidencias': {
-                'transaccion': 'zsd_incidencias',
-                'archivo_base': 'data_incidencias',
-                'tiene_fechas': False,
-                'campo_fecha_inicio': None,
-                'campo_fecha_fin': None
+        # Cargar configuración desde archivo JSON
+        self.reportes_config = self.cargar_configuracion()
+
+    def cargar_configuracion(self):
+        """
+        Carga la configuración de reportes desde el archivo JSON
+        """
+        try:
+            config_path = os.path.join(os.path.dirname(__file__), 'configuracion_reportes.json')
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config_data = json.load(f)
+            
+            # Extraer solo los reportes activos
+            reportes_config = {}
+            for nombre_reporte, config in config_data['reportes'].items():
+                if config.get('activo', True):  # Solo incluir reportes activos
+                    reportes_config[nombre_reporte] = config
+            
+            logger.info(f"[CONFIG] Cargados {len(reportes_config)} reportes desde configuración")
+            return reportes_config
+            
+        except Exception as e:
+            logger.error(f"[ERROR] Error cargando configuración: {e}")
+            # Configuración de respaldo en caso de error
+            return {
+                'mb51': {
+                    'transaccion': 'mb51',
+                    'archivo_base': 'mb51_traslado_tical',
+                    'tipo_acceso': 'transaccion_directa',
+                    'tiene_fechas': True,
+                    'campo_fecha_inicio': 'BUDAT-LOW',
+                    'campo_fecha_fin': 'BUDAT-HIGH',
+                    'flujo_especial': 'navegacion_alv'
+                }
             }
-        }
 
     def calcular_fechas_procesamiento(self):
         """
@@ -157,7 +126,7 @@ class AutomatizacionSAP:
         Establece conexión con SAP GUI
         """
         try:
-            logger.info("🔐 Iniciando conexión con SAP...")
+            logger.info("[CONEXION] Iniciando conexión con SAP...")
             self.sap_gui_auto = win32com.client.GetObject("SAPGUI")
             if not self.sap_gui_auto:
                 raise Exception("SAP GUI no está disponible")
@@ -178,7 +147,7 @@ class AutomatizacionSAP:
             return True
             
         except Exception as e:
-            logger.error(f"❌ Error al conectar con SAP: {e}")
+            logger.error(f"[ERROR] Error al conectar con SAP: {e}")
             return False
 
     def ejecutar_transaccion_directa(self, config, ruta_archivo):
@@ -217,7 +186,7 @@ class AutomatizacionSAP:
             return self.exportar_a_excel(ruta_archivo)
             
         except Exception as e:
-            logger.error(f"❌ Error en transacción directa: {e}")
+            logger.error(f"[ERROR] Error en transacción directa: {e}")
             return False
 
     def ejecutar_menu_favoritos(self, config, ruta_archivo):
@@ -253,7 +222,7 @@ class AutomatizacionSAP:
             return self.exportar_a_excel(ruta_archivo)
             
         except Exception as e:
-            logger.error(f"❌ Error en menú favoritos: {e}")
+            logger.error(f"[ERROR] Error en menú favoritos: {e}")
             return False
 
     def expandir_nodo_favoritos(self, transaccion):
@@ -295,7 +264,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
         except Exception as e:
-            logger.error(f"❌ Error expandiendo nodo favoritos: {e}")
+            logger.error(f"[ERROR] Error expandiendo nodo favoritos: {e}")
             raise
 
     def seleccionar_reporte_favoritos(self, config):
@@ -342,7 +311,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
         except Exception as e:
-            logger.error(f"❌ Error seleccionando reporte favoritos: {e}")
+            logger.error(f"[ERROR] Error seleccionando reporte favoritos: {e}")
             raise
 
     def seleccionar_reporte_alv_especifico(self, config):
@@ -366,7 +335,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
         except Exception as e:
-            logger.error(f"❌ Error seleccionando reporte ALV: {e}")
+            logger.error(f"[ERROR] Error seleccionando reporte ALV: {e}")
             raise
 
     def configurar_fecha_proceso(self, config):
@@ -387,7 +356,7 @@ class AutomatizacionSAP:
             time.sleep(1)
             
         except Exception as e:
-            logger.error(f"❌ Error configurando fecha proceso: {e}")
+            logger.error(f"[ERROR] Error configurando fecha proceso: {e}")
             raise
 
     def seleccionar_reporte_mb51(self):
@@ -416,7 +385,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
         except Exception as e:
-            logger.error(f"❌ Error seleccionando reporte mb51: {e}")
+            logger.error(f"[ERROR] Error seleccionando reporte mb51: {e}")
             raise
 
     def seleccionar_reporte_zred(self):
@@ -435,7 +404,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
         except Exception as e:
-            logger.error(f"❌ Error seleccionando reporte zred: {e}")
+            logger.error(f"[ERROR] Error seleccionando reporte zred: {e}")
             raise
 
     def seleccionar_reporte_zsd_incidencias(self):
@@ -461,7 +430,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
         except Exception as e:
-            logger.error(f"❌ Error seleccionando reporte zsd_incidencias: {e}")
+            logger.error(f"[ERROR] Error seleccionando reporte zsd_incidencias: {e}")
             raise
 
     def configurar_fechas_rango(self, config):
@@ -484,7 +453,7 @@ class AutomatizacionSAP:
             time.sleep(1)
             
         except Exception as e:
-            logger.error(f"❌ Error configurando fechas rango: {e}")
+            logger.error(f"[ERROR] Error configurando fechas rango: {e}")
             raise
 
     def ejecutar_reporte(self, nombre_reporte, config):
@@ -492,13 +461,13 @@ class AutomatizacionSAP:
         Ejecuta un reporte específico de SAP con flujo personalizado
         """
         try:
-            logger.info(f"📊 Ejecutando reporte: {nombre_reporte}")
-            logger.info(f"📋 Flujo especial: {config.get('flujo_especial', 'estandar')}")
+            logger.info(f"[REPORTE] Ejecutando reporte: {nombre_reporte}")
+            logger.info(f"[FLUJO] Flujo especial: {config.get('flujo_especial', 'estandar')}")
             
             # Crear directorio específico para este reporte
             reporte_dir = os.path.join(self.output_base_dir, nombre_reporte)
             os.makedirs(reporte_dir, exist_ok=True)
-            logger.info(f"📁 Directorio del reporte: {reporte_dir}")
+            logger.info(f"[DIRECTORIO] Directorio del reporte: {reporte_dir}")
             
             # Nombre del archivo con fecha
             fecha_str = self.fecha_ejecucion.strftime('%Y%m%d')
@@ -518,7 +487,7 @@ class AutomatizacionSAP:
             elif config.get('tipo_acceso') == 'menu_favoritos':
                 exito = self.ejecutar_menu_favoritos(config, ruta_completa)
             else:
-                logger.error(f"❌ Tipo de acceso no reconocido: {config.get('tipo_acceso')}")
+                logger.error(f"[ERROR] Tipo de acceso no reconocido: {config.get('tipo_acceso')}")
                 return False
             
             # Verificar que el archivo se creó
@@ -532,11 +501,11 @@ class AutomatizacionSAP:
                 
                 return True
             else:
-                logger.error(f"❌ No se pudo crear el archivo para {nombre_reporte}")
+                logger.error(f"[ERROR] No se pudo crear el archivo para {nombre_reporte}")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ Error ejecutando reporte {nombre_reporte}: {e}")
+            logger.error(f"[ERROR] Error ejecutando reporte {nombre_reporte}: {e}")
             return False
 
     def configurar_fechas(self, config):
@@ -558,7 +527,7 @@ class AutomatizacionSAP:
             logger.info(f"📅 Fechas configuradas: {fecha_inicio_str} - {fecha_fin_str}")
             
         except Exception as e:
-            logger.error(f"❌ Error configurando fechas: {e}")
+            logger.error(f"[ERROR] Error configurando fechas: {e}")
 
     def exportar_a_excel(self, ruta_archivo):
         """
@@ -583,7 +552,7 @@ class AutomatizacionSAP:
             time.sleep(3)
             
         except Exception as e:
-            logger.error(f"❌ Error exportando a Excel: {e}")
+            logger.error(f"[ERROR] Error exportando a Excel: {e}")
 
     def procesar_archivo_para_powerbi(self, ruta_archivo, directorio_destino=None):
         """
@@ -595,7 +564,7 @@ class AutomatizacionSAP:
             directorio_destino: Directorio donde guardar los archivos Power BI (opcional)
         """
         try:
-            logger.info(f"📊 Procesando archivo SAP: {os.path.basename(ruta_archivo)}")
+            logger.info(f"[PROCESO] Procesando archivo SAP: {os.path.basename(ruta_archivo)}")
             
             # Leer el archivo línea por línea
             encodings_to_try = ['utf-8', 'latin-1', 'cp1252', 'iso-8859-1', 'utf-16']
@@ -611,7 +580,7 @@ class AutomatizacionSAP:
                     continue
             
             if lines is None:
-                logger.error(f"❌ No se pudo leer el archivo con ningún encoding")
+                logger.error(f"[ERROR] No se pudo leer el archivo con ningún encoding")
                 return False
             
             logger.info(f"📄 Total de líneas en archivo: {len(lines)}")
@@ -633,17 +602,17 @@ class AutomatizacionSAP:
                     # Verificar que no sea una línea de datos (no debe empezar con espacios o números)
                     if not line_stripped.startswith('\t') and not any(line_stripped.startswith(str(x)) for x in range(10)):
                         header_line_idx = i
-                        logger.info(f"📋 Encabezados encontrados en línea {i+1}")
+                        logger.info(f"[INFO] Encabezados encontrados en línea {i+1}")
                         break
             
             if header_line_idx is None:
-                logger.error("❌ No se encontró la línea de encabezados")
+                logger.error("[ERROR] No se encontró la línea de encabezados")
                 return False
             
             # Extraer encabezados
             header_line = lines[header_line_idx].strip()
             headers = [col.strip() for col in header_line.split('\t') if col.strip()]
-            logger.info(f"📋 Columnas detectadas: {len(headers)} - {headers[:5]}...")
+            logger.info(f"[INFO] Columnas detectadas: {len(headers)} - {headers[:5]}...")
             
             # Extraer datos (líneas después del encabezado)
             data_rows = []
@@ -671,7 +640,7 @@ class AutomatizacionSAP:
                     row_data.extend([''] * (len(headers) - len(row_data)))
                     data_rows.append(row_data)
             
-            logger.info(f"📊 Filas de datos encontradas: {len(data_rows)}")
+            logger.info(f"[DATOS] Filas de datos encontradas: {len(data_rows)}")
             
             if not data_rows:
                 logger.warning("⚠️ No se encontraron datos en el archivo")
@@ -702,19 +671,19 @@ class AutomatizacionSAP:
             # Guardar en múltiples formatos
             try:
                 df.to_excel(excel_path, index=False, engine='openpyxl')
-                logger.info(f"📊 Excel guardado: {excel_path}")
+                logger.info(f"[ARCHIVO] Excel guardado: {excel_path}")
             except Exception as e:
                 logger.warning(f"⚠️ Error guardando Excel: {e}")
             
             try:
                 df.to_csv(csv_path, index=False, encoding='utf-8')
-                logger.info(f"📊 CSV guardado: {csv_path}")
+                logger.info(f"[ARCHIVO] CSV guardado: {csv_path}")
             except Exception as e:
                 logger.warning(f"⚠️ Error guardando CSV: {e}")
             
             try:
                 df.to_parquet(parquet_path, index=False)
-                logger.info(f"📊 Parquet guardado: {parquet_path}")
+                logger.info(f"[ARCHIVO] Parquet guardado: {parquet_path}")
             except Exception as e:
                 logger.warning(f"⚠️ Error guardando Parquet: {e}")
             
@@ -741,7 +710,7 @@ class AutomatizacionSAP:
                 json.dump(metadata, f, indent=2, ensure_ascii=False)
             
             logger.info(f"✅ Archivo Power BI procesado exitosamente: {base_name}")
-            logger.info(f"📊 Archivos generados:")
+            logger.info(f"[ARCHIVO] Archivos generados:")
             logger.info(f"   • Excel: {excel_path}")
             logger.info(f"   • CSV: {csv_path}")
             logger.info(f"   • Parquet: {parquet_path}")
@@ -750,7 +719,7 @@ class AutomatizacionSAP:
             return True
             
         except Exception as e:
-            logger.error(f"❌ Error procesando archivo para Power BI: {e}")
+            logger.error(f"[ERROR] Error procesando archivo para Power BI: {e}")
             return False
 
     def ejecutar_todos_los_reportes(self):
@@ -760,14 +729,14 @@ class AutomatizacionSAP:
         logger.info("🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP")
         logger.info("=" * 80)
         logger.info(f"📅 Fecha de ejecución: {self.fecha_ejecucion.strftime('%Y-%m-%d %H:%M:%S')}")
-        logger.info(f"📊 Período de datos: {self.fecha_inicio.strftime('%d.%m.%Y')} - {self.fecha_fin.strftime('%d.%m.%Y')}")
-        logger.info(f"📁 Directorio base de salida: {self.output_base_dir}")
+        logger.info(f"[PERIODO] Período de datos: {self.fecha_inicio.strftime('%d.%m.%Y')} - {self.fecha_fin.strftime('%d.%m.%Y')}")
+        logger.info(f"[DIRECTORIO] Directorio base de salida: {self.output_base_dir}")
         logger.info("=" * 80)
         
         resultados = {}
         
         for nombre_reporte, config in self.reportes_config.items():
-            logger.info(f"\n📊 Procesando reporte: {nombre_reporte}")
+            logger.info(f"\n[REPORTE] Procesando reporte: {nombre_reporte}")
             logger.info("-" * 50)
             
             # Ejecutar reporte
@@ -776,14 +745,14 @@ class AutomatizacionSAP:
             if exito:
                 resultados[nombre_reporte] = "✅ Exitoso"
             else:
-                resultados[nombre_reporte] = "❌ Fallido"
+                resultados[nombre_reporte] = "[FALLIDO] Fallido"
             
             # Esperar entre reportes
             time.sleep(2)
         
         # Resumen final
         logger.info("\n" + "=" * 80)
-        logger.info("📋 RESUMEN DE EJECUCIÓN")
+        logger.info("[RESUMEN] RESUMEN DE EJECUCIÓN")
         logger.info("=" * 80)
         
         exitosos = 0
@@ -797,9 +766,9 @@ class AutomatizacionSAP:
                 fallidos += 1
         
         logger.info("-" * 50)
-        logger.info(f"📊 Total exitosos: {exitosos}")
-        logger.info(f"📊 Total fallidos: {fallidos}")
-        logger.info(f"📊 Porcentaje éxito: {(exitosos/(exitosos+fallidos)*100):.1f}%")
+        logger.info(f"[ESTADISTICAS] Total exitosos: {exitosos}")
+        logger.info(f"[ESTADISTICAS] Total fallidos: {fallidos}")
+        logger.info(f"[ESTADISTICAS] Porcentaje éxito: {(exitosos/(exitosos+fallidos)*100):.1f}%")
         logger.info("=" * 80)
         
         return exitosos == len(self.reportes_config)
@@ -811,7 +780,7 @@ class AutomatizacionSAP:
         try:
             if self.session:
                 self.session.findById("wnd[0]/tbar[0]/btn[15]").press()
-                logger.info("🔐 Sesión SAP cerrada")
+                logger.info("[CONEXION] Sesión SAP cerrada")
         except Exception as e:
             logger.warning(f"⚠️ Error cerrando sesión SAP: {e}")
 
@@ -830,7 +799,7 @@ class AutomatizacionSAP:
             return exito
             
         except Exception as e:
-            logger.error(f"❌ Error en ejecución principal: {e}")
+            logger.error(f"[ERROR] Error en ejecución principal: {e}")
             return False
         
         finally:
@@ -844,10 +813,10 @@ if __name__ == "__main__":
         exito = automatizacion.main()
         if exito:
             print("\n🎉 AUTOMATIZACIÓN COMPLETADA EXITOSAMENTE")
-            print("📁 Archivos generados en:", automatizacion.output_base_dir)
+            print("[ARCHIVO] Archivos generados en:", automatizacion.output_base_dir)
         else:
-            print("\n❌ AUTOMATIZACIÓN FALLÓ")
+            print("\n[ERROR] AUTOMATIZACIÓN FALLÓ")
     except KeyboardInterrupt:
         print("\n⚠️ Proceso interrumpido por el usuario")
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\n[ERROR] Error inesperado: {e}")
