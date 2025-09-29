@@ -12,21 +12,25 @@ If IsObject(WScript) Then
    WScript.ConnectObject session,     "on"
    WScript.ConnectObject application, "on"
 End If
-session.findById("wnd[0]").resizeWorkingPane 236,35,false
+session.findById("wnd[0]").maximize
 session.findById("wnd[0]/tbar[0]/okcd").text = "mb51"
 session.findById("wnd[0]").sendVKey 0
 session.findById("wnd[0]/tbar[1]/btn[17]").press
+session.findById("wnd[1]/usr/txtENAME-LOW").setFocus
+session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
 session.findById("wnd[1]/tbar[0]/btn[8]").press
-session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 2
-session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "2"
+session.findById("wnd[1]").close
+session.findById("wnd[0]/tbar[1]/btn[17]").press
+session.findById("wnd[1]/tbar[0]/btn[8]").press
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 54
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 91
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 205
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 242
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 356
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 405
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").firstVisibleRow = 390
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "405"
 session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell
-session.findById("wnd[0]/usr/ctxtKUNNR-LOW").text = ""
-session.findById("wnd[0]/usr/ctxtKDAUF-LOW").text = ""
-session.findById("wnd[0]/usr/txtMAT_KDAU-LOW").text = ""
-session.findById("wnd[0]/usr/ctxtBUDAT-LOW").text = "27.09.2025"
-session.findById("wnd[0]/usr/ctxtBUDAT-HIGH").text = "28.09.2025"
-session.findById("wnd[0]/usr/ctxtBUDAT-HIGH").setFocus
-session.findById("wnd[0]/usr/ctxtBUDAT-HIGH").caretPosition = 10
 session.findById("wnd[0]/tbar[1]/btn[8]").press
 session.findById("wnd[0]/mbar/menu[0]/menu[1]/menu[2]").select
 session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").select
@@ -38,5 +42,9 @@ session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").text = "0000"
 session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").setFocus
 session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").caretPosition = 4
 session.findById("wnd[1]/tbar[0]/btn[0]").press
+session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").text = "0000"
+session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").setFocus
+session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").caretPosition = 4
+session.findById("wnd[1]/tbar[0]/btn[11]").press
 session.findById("wnd[0]/tbar[0]/btn[3]").press
 session.findById("wnd[0]/tbar[0]/btn[15]").press

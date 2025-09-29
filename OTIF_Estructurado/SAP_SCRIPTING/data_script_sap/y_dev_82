@@ -12,17 +12,24 @@ If IsObject(WScript) Then
    WScript.ConnectObject session,     "on"
    WScript.ConnectObject application, "on"
 End If
-session.findById("wnd[0]").resizeWorkingPane 236,35,false
+session.findById("wnd[0]").maximize
 session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").selectedNode = "F00123"
 session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode "F00123"
 session.findById("wnd[0]/tbar[1]/btn[17]").press
+session.findById("wnd[1]/usr/txtENAME-LOW").text = ""
+session.findById("wnd[1]/usr/txtENAME-LOW").setFocus
+session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
 session.findById("wnd[1]/tbar[0]/btn[8]").press
-session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "0"
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 2
+session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "2"
 session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell
 session.findById("wnd[0]/tbar[1]/btn[8]").press
 session.findById("wnd[0]/usr/ctxtSP$00005-LOW").text = "27.09.2025"
 session.findById("wnd[0]/usr/ctxtSP$00005-LOW").caretPosition = 2
 session.findById("wnd[0]/tbar[1]/btn[8]").press
+session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").setCurrentCell 7,"ZCARGACAMION_CAB-CHOFER"
+session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").selectedRows = "7"
+session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").contextMenu
 session.findById("wnd[0]/mbar/menu[0]/menu[3]/menu[2]").select
 session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").select
 session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").setFocus
