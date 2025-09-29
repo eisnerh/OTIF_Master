@@ -3,8 +3,7 @@
 🚀 SCRIPT MAESTRO DE AUTOMATIZACIÓN SAP
 =====================================
 
-Este script automatiza la extracción de 9 reportes de SAP:
-- mb51: Reporte de movimientos de material
+Este script automatiza la extracción de 8 reportes de SAP:
 - rep_plr: Reporte PLR (Planificación Logística)
 - y_dev_45: Reporte de desarrollo 45
 - y_dev_74: Reporte de desarrollo 74
@@ -89,14 +88,14 @@ class AutomatizacionSAP:
             logger.error(f"[ERROR] Error cargando configuración: {e}")
             # Configuración de respaldo en caso de error
             return {
-                'mb51': {
-                    'transaccion': 'mb51',
-                    'archivo_base': 'mb51_traslado_tical',
-                    'tipo_acceso': 'transaccion_directa',
-                    'tiene_fechas': True,
-                    'campo_fecha_inicio': 'BUDAT-LOW',
-                    'campo_fecha_fin': 'BUDAT-HIGH',
-                    'flujo_especial': 'navegacion_alv'
+                'rep_plr': {
+                    'transaccion': 'zsd_rep_planeamiento',
+                    'archivo_base': 'REP_PLR_HOY',
+                    'tipo_acceso': 'menu_favoritos',
+                    'tiene_fechas': False,
+                    'campo_fecha_inicio': None,
+                    'campo_fecha_fin': None,
+                    'flujo_especial': 'menu_favoritos'
                 }
             }
 
@@ -152,7 +151,7 @@ class AutomatizacionSAP:
 
     def ejecutar_transaccion_directa(self, config, ruta_archivo):
         """
-        Ejecuta reportes que usan transacciones directas (mb51, zred, zsd_incidencias)
+        Ejecuta reportes que usan transacciones directas (zred, zsd_incidencias)
         """
         try:
             logger.info(f"🔄 Ejecutando transacción directa: {config['transaccion']}")
@@ -167,10 +166,7 @@ class AutomatizacionSAP:
             time.sleep(2)
             
             # Seleccionar reporte específico
-            if config['transaccion'] == 'mb51':
-                # Para mb51, seleccionar el reporte específico
-                self.seleccionar_reporte_mb51()
-            elif config['transaccion'] == 'zred':
+            if config['transaccion'] == 'zred':
                 # Para zred, configurar fechas y seleccionar reporte
                 self.seleccionar_reporte_zred()
                 self.configurar_fechas_rango(config)
@@ -359,34 +355,6 @@ class AutomatizacionSAP:
             logger.error(f"[ERROR] Error configurando fecha proceso: {e}")
             raise
 
-    def seleccionar_reporte_mb51(self):
-        """
-        Selecciona el reporte específico para mb51
-        """
-        try:
-            # Navegar a favoritos
-            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
-            time.sleep(2)
-            
-            # Limpiar filtro de usuario
-            self.session.findById("wnd[1]/usr/txtENAME-LOW").setFocus()
-            self.session.findById("wnd[1]/usr/txtENAME-LOW").caretPosition = 0
-            self.session.findById("wnd[1]/tbar[0]/btn[8]").press()
-            time.sleep(2)
-            
-            # Navegar a favoritos nuevamente
-            self.session.findById("wnd[0]/tbar[1]/btn[17]").press()
-            time.sleep(2)
-            
-            # Seleccionar reporte específico (fila 405)
-            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = 405
-            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = "405"
-            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell()
-            time.sleep(2)
-            
-        except Exception as e:
-            logger.error(f"[ERROR] Error seleccionando reporte mb51: {e}")
-            raise
 
     def seleccionar_reporte_zred(self):
         """

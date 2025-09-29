@@ -12,28 +12,11 @@
     "backup": "C:\\Data\\SAP_Automatizado\\Backup",
     "estructura_carpetas": "Cada reporte se guarda en su propia carpeta separada",
     "ejemplo_estructura": {
-      "mb51": "C:\\Data\\SAP_Automatizado\\mb51\\",
       "rep_plr": "C:\\Data\\SAP_Automatizado\\rep_plr\\",
       "y_dev_45": "C:\\Data\\SAP_Automatizado\\y_dev_45\\"
     }
   },
   "reportes": {
-    "mb51": {
-      "transaccion": "mb51",
-      "archivo_base": "mb51_traslado_tical",
-      "tipo_acceso": "transaccion_directa",
-      "tiene_fechas": false,
-      "campo_fecha_inicio": null,
-      "campo_fecha_fin": null,
-      "descripcion": "Reporte de movimientos de material",
-      "flujo_especial": "navegacion_alv",
-      "pasos_especiales": [
-        "navegar_a_reporte_alv",
-        "seleccionar_reporte_especifico",
-        "ejecutar_sin_fechas"
-      ],
-      "activo": true
-    },
     "rep_plr": {
       "transaccion": "zsd_rep_planeamiento",
       "archivo_base": "REP_PLR_HOY",
@@ -196,7 +179,6 @@
   "archivos_ejemplo": {
     "directorio": "data/",
     "archivos_disponibles": [
-      "mb51_traslado_tical.xls",
       "REP_PLR_HOY.xls",
       "y_dev_45.xls",
       "y_dev_74.xls",
