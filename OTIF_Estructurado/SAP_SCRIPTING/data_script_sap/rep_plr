@@ -36,4 +36,3 @@ session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").text = "0000"
 session.findById("wnd[1]/usr/ctxtDY_FILENAME").caretPosition = 7
 session.findById("wnd[1]/tbar[0]/btn[0]").press
 session.findById("wnd[0]/tbar[0]/btn[15]").press
-session.findById("wnd[0]/tbar[0]/btn[15]").press
