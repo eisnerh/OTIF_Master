@@ -1,122 +1,14 @@
---- Logging error ---
-Traceback (most recent call last):
-  File "C:\ProgramData\anaconda3\Lib\logging\__init__.py", line 1163, in emit
-    stream.write(msg + self.terminator)
-  File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f510' in position 33: character maps to <undefined>
-Call stack:
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 129, in <module>
-    main()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 118, in main
-    success = script.execute()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 48, in execute
-    if not self.connect_sap():
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 53, in connect_sap
-    self.logger.info("🔐 Conectando a SAP GUI...")
-Message: '🔐 Conectando a SAP GUI...'
-Arguments: ()
-2025-09-30 14:08:02,316 - INFO - 🔐 Conectando a SAP GUI...
---- Logging error ---
-Traceback (most recent call last):
-  File "C:\ProgramData\anaconda3\Lib\logging\__init__.py", line 1163, in emit
-    stream.write(msg + self.terminator)
-  File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
-UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 33: character maps to <undefined>
-Call stack:
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 129, in <module>
-    main()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 118, in main
-    success = script.execute()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 48, in execute
-    if not self.connect_sap():
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 66, in connect_sap
-    self.logger.info("✅ Conexión SAP establecida correctamente")    
-Message: '✅ Conexión SAP establecida correctamente'
-Arguments: ()
-2025-09-30 14:08:02,638 - INFO - ✅ Conexión SAP establecida correctamente
---- Logging error ---
-Traceback (most recent call last):
-  File "C:\ProgramData\anaconda3\Lib\logging\__init__.py", line 1163, in emit
-    stream.write(msg + self.terminator)
-  File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 33: character maps to <undefined>
-Call stack:
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 129, in <module>
-    main()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 118, in main
-    success = script.execute()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 53, in execute
-    if not self.navigate_to_transaction(self.transaction_code):      
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 81, in navigate_to_transaction
-    self.logger.info(f"📊 Navegando a transacción: {transaction_code}")
-Message: '📊 Navegando a transacción: zsd_incidencias'
-Arguments: ()
-2025-09-30 14:08:02,663 - INFO - 📊 Navegando a transacción: zsd_incidencias
---- Logging error ---
-Traceback (most recent call last):
-  File "C:\ProgramData\anaconda3\Lib\logging\__init__.py", line 1163, in emit
-    stream.write(msg + self.terminator)
-  File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4cb' in position 33: character maps to <undefined>
-Call stack:
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 129, in <module>
-    main()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 118, in main
-    success = script.execute()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 66, in execute
-    if not self.select_row(self.row_number):
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 137, in select_row
-    self.logger.info(f"📋 Seleccionando fila: {row_number}")
-Message: '📋 Seleccionando fila: 12'
-Arguments: ()
-2025-09-30 14:08:03,308 - INFO - 📋 Seleccionando fila: 12
---- Logging error ---
-Traceback (most recent call last):
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 138, in select_row
-    self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = row_number
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<COMObject <unknown>>", line 2, in findById
-pywintypes.com_error: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
-
-During handling of the above exception, another exception occurred:  
-
-Traceback (most recent call last):
-  File "C:\ProgramData\anaconda3\Lib\logging\__init__.py", line 1163, in emit
-    stream.write(msg + self.terminator)
-  File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
-UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 34: character maps to <undefined>
-Call stack:
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 129, in <module>
-    main()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 118, in main
-    success = script.execute()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 66, in execute
-    if not self.select_row(self.row_number):
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 143, in select_row
-    self.logger.error(f"❌ Error seleccionando fila {row_number}: {e}")
-Message: "❌ Error seleccionando fila 12: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\\\Program Files (x86)\\\\SAP\\\\FrontEnd\\\\SAPgui\\\\sapfront.HLP', 393215, 0), None)"
-Arguments: ()
-2025-09-30 14:08:03,317 - ERROR - ❌ Error seleccionando fila 12: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
-❌ FALLO: No se pudo seleccionar la fila
---- Logging error ---
-Traceback (most recent call last):
-  File "C:\ProgramData\anaconda3\Lib\logging\__init__.py", line 1163, in emit
-    stream.write(msg + self.terminator)
-  File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-cturado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 118, in main
-    success = script.execute()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\zsd_incidencias.py", line 103, in execute
-    self.cleanup()
-  File "c:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\base_sap_script.py", line 299, in cleanup
-    self.logger.info("🧹 Limpieza completada")
+PS C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master> & C:/ProgramData/anaconda3/python.exe c:/Users/ELOPEZ21334/anaconda_projects/OTIF_Master/OTIF_Estructurado/SAP_SCRIPTING/REVISOR_SCRIPTS/scripts_individuales/zsd_incidencias.py
+INICIANDO SCRIPT ZSD_INCIDENCIAS
+============================================================  
+Hora de inicio: 2025-09-30 14:34:10
+============================================================  
+2025-09-30 14:34:10,031 - INFO - Conectando a SAP GUI...      
+2025-09-30 14:34:10,079 - INFO - Conexión SAP establecida correctamente
+2025-09-30 14:34:10,080 - INFO - Navegando a transacción: zsd_incidencias
+ontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+ADVERTENCIA: No se pudo seleccionar celda en grilla, continuando...
+2025-09-30 14:34:10,477 - INFO - Exportando a Excel: data_incidencias.xls
+2025-09-30 14:34:10,480 - ERROR - Error exportando archivo data_incidencias.xls: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+FALLO: No se pudo exportar a Excel
+2025-09-30 14:34:10,485 - INFO - Limpieza completada
