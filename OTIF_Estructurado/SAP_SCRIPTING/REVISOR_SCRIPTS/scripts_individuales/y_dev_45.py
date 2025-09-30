@@ -25,30 +25,30 @@ class YDev45Script(BaseSAPScript):
         """
         Ejecuta la transacción Y_DEV_45
         """
-        print("🚀 INICIANDO SCRIPT Y_DEV_45")
+        print("INICIANDO SCRIPT Y_DEV_45")
         print("=" * 60)
-        print(f"⏰ Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
         
         try:
             # Conectar a SAP
             if not self.connect_sap():
-                print("❌ FALLO: No se pudo conectar a SAP")
+                print("FALLO: No se pudo conectar a SAP")
                 return False
             
             # Navegar a la transacción
             if not self.navigate_to_transaction(self.transaction_code):
-                print("❌ FALLO: No se pudo navegar a la transacción")
+                print("FALLO: No se pudo navegar a la transacción")
                 return False
             
             # Seleccionar nodo
             if not self.select_node(self.node_id):
-                print("❌ FALLO: No se pudo seleccionar el nodo")
+                print("FALLO: No se pudo seleccionar el nodo")
                 return False
             
             # Presionar botón de selección
             if not self.press_selection_button():
-                print("❌ FALLO: No se pudo presionar botón de selección")
+                print("FALLO: No se pudo presionar botón de selección")
                 return False
             
             # Limpiar campo de usuario
@@ -56,36 +56,36 @@ class YDev45Script(BaseSAPScript):
             
             # Seleccionar fila específica
             if not self.select_row(self.row_number):
-                print("❌ FALLO: No se pudo seleccionar la fila")
+                print("FALLO: No se pudo seleccionar la fila")
                 return False
             
             # Ejecutar reporte
             if not self.execute_report():
-                print("❌ FALLO: No se pudo ejecutar el reporte")
+                print("FALLO: No se pudo ejecutar el reporte")
                 return False
             
             # Exportar a Excel
             if not self.export_to_excel(self.filename):
-                print("❌ FALLO: No se pudo exportar a Excel")
+                print("FALLO: No se pudo exportar a Excel")
                 return False
             
             # Verificar archivo generado
             if not self.verify_output_file(self.filename):
-                print("❌ FALLO: Archivo no se generó correctamente")
+                print("FALLO: Archivo no se generó correctamente")
                 return False
             
             print("\n" + "=" * 60)
-            print("🎉 PROCESO Y_DEV_45 COMPLETADO EXITOSAMENTE")
+            print("PROCESO Y_DEV_45 COMPLETADO EXITOSAMENTE")
             print("=" * 60)
-            print(f"📁 Archivo generado: {self.filename}")
-            print(f"📂 Ubicación: {self.output_path}")
-            print(f"⏰ Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"Archivo generado: {self.filename}")
+            print(f"Ubicación: {self.output_path}")
+            print(f"Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             print("=" * 60)
             
             return True
             
         except Exception as e:
-            print(f"❌ Error inesperado: {e}")
+            print(f"Error inesperado: {e}")
             return False
         finally:
             self.cleanup()
@@ -99,25 +99,25 @@ def main():
     
     if len(sys.argv) > 1:
         output_path = sys.argv[1]
-        print(f"📂 Usando ruta personalizada: {output_path}")
+        print(f"Usando ruta personalizada: {output_path}")
     
     # Crear y ejecutar script
     script = YDev45Script(output_path)
     success = script.execute()
     
     if success:
-        print("\n✅ Script Y_DEV_45 ejecutado exitosamente")
+        print("\nScript Y_DEV_45 ejecutado exitosamente")
         sys.exit(0)
     else:
-        print("\n❌ Script Y_DEV_45 falló")
+        print("\nScript Y_DEV_45 falló")
         sys.exit(1)
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n⚠️  Script interrumpido por el usuario")
+        print("\nScript interrumpido por el usuario")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\nError inesperado: {e}")
         sys.exit(1)

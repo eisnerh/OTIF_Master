@@ -55,6 +55,10 @@ def main():
     """
     print("Removiendo emojis de archivos Python...")
     
+    # Obtener directorio actual
+    current_dir = os.getcwd()
+    print(f"Directorio actual: {current_dir}")
+    
     # Lista de archivos a procesar
     files_to_process = [
         'base_sap_script.py',
@@ -75,11 +79,12 @@ def main():
     success_count = 0
     
     for file_name in files_to_process:
-        if os.path.exists(file_name):
-            if remove_emojis_from_file(file_name):
+        file_path = os.path.join(current_dir, file_name)
+        if os.path.exists(file_path):
+            if remove_emojis_from_file(file_path):
                 success_count += 1
         else:
-            print(f"Archivo no encontrado: {file_name}")
+            print(f"Archivo no encontrado: {file_path}")
     
     print(f"\nProcesamiento completado: {success_count}/{len(files_to_process)} archivos")
 

@@ -25,20 +25,20 @@ class YDev82Script(BaseSAPScript):
         """
         Ejecuta la transacción Y_DEV_82
         """
-        print("🚀 INICIANDO SCRIPT Y_DEV_82")
+        print("INICIANDO SCRIPT Y_DEV_82")
         print("=" * 60)
-        print(f"⏰ Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
         
         try:
             # Conectar a SAP
             if not self.connect_sap():
-                print("❌ FALLO: No se pudo conectar a SAP")
+                print("FALLO: No se pudo conectar a SAP")
                 return False
             
             # Navegar a la transacción
             if not self.navigate_to_transaction(self.transaction_code):
-                print("❌ FALLO: No se pudo navegar a la transacción")
+                print("FALLO: No se pudo navegar a la transacción")
                 return False
             
             # Seleccionar nodo
