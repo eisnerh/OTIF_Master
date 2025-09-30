@@ -6,6 +6,7 @@ Basado en la configuración encontrada en el sistema
 
 import sys
 import os
+import time
 from datetime import datetime
 from base_sap_script import BaseSAPScript
 
@@ -26,17 +27,95 @@ class ZSDIncidenciasScript(BaseSAPScript):
         """
         try:
             self.logger.info("Seleccionando celda en grilla...")
-            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").setCurrentCell(4, "ZONA")
-            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").selectedRows = "4"
-            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").contextMenu
-            return True
+            
+            # Intentar múltiples métodos de selección
+            methods = [
+                self._try_select_cell_method1,
+                self._try_select_cell_method2,
+                self._try_select_cell_method3
+            ]
+            
+            for method in methods:
+                if method():
+                    return True
+            
+            self.logger.warning("No se pudo seleccionar celda con ningún método")
+            return False
+            
         except Exception as e:
             self.logger.error(f"Error seleccionando celda en grilla: {e}")
             return False
     
+    def _try_select_cell_method1(self):
+        """Método 1: Selección directa"""
+        try:
+            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").setCurrentCell(4, "ZONA")
+            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").selectedRows = "4"
+            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").contextMenu
+            return True
+        except:
+            return False
+    
+    def _try_select_cell_method2(self):
+        """Método 2: Selección con doble clic"""
+        try:
+            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").setCurrentCell(4, "ZONA")
+            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").doubleClickCurrentCell()
+            return True
+        except:
+            return False
+    
+    def _try_select_cell_method3(self):
+        """Método 3: Selección simple"""
+        try:
+            self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").selectedRows = "4"
+            return True
+        except:
+            return False
+    
+    def diagnose_interface(self):
+        """
+        Diagnostica la interfaz actual para identificar controles disponibles
+        """
+        try:
+            self.logger.info("Diagnosticando interfaz...")
+            
+            # Listar controles disponibles
+            controls = []
+            try:
+                # Verificar si existe la grilla
+                grid = self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell")
+                controls.append("GRID: wnd[0]/usr/cntlGRID1/shellcont/shell")
+            except:
+                controls.append("GRID: No encontrada")
+            
+            try:
+                # Verificar menú de exportación
+                menu = self.session.findById("wnd[0]/mbar/menu[0]/menu[3]/menu[2]")
+                controls.append("MENU_EXPORT: wnd[0]/mbar/menu[0]/menu[3]/menu[2]")
+            except:
+                controls.append("MENU_EXPORT: No encontrado")
+            
+            try:
+                # Verificar botones de toolbar
+                toolbar = self.session.findById("wnd[0]/tbar[1]")
+                controls.append("TOOLBAR: wnd[0]/tbar[1]")
+            except:
+                controls.append("TOOLBAR: No encontrado")
+            
+            # Log de controles encontrados
+            for control in controls:
+                self.logger.info(f"Control disponible: {control}")
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error en diagnóstico: {e}")
+            return False
+
     def execute(self):
         """
-        Ejecuta la transacción ZSD_INCIDENCIAS
+        Ejecuta la transacción ZSD_INCIDENCIAS usando la lógica del entorno Nite
         """
         print("INICIANDO SCRIPT ZSD_INCIDENCIAS")
         print("=" * 60)
@@ -44,10 +123,13 @@ class ZSDIncidenciasScript(BaseSAPScript):
         print("=" * 60)
         
         try:
-            # Conectar a SAP
+            # Conectar a SAP (método del entorno Nite)
             if not self.connect_sap():
                 print("FALLO: No se pudo conectar a SAP")
                 return False
+            
+            # Esperar un momento para estabilizar la conexión
+            time.sleep(2)
             
             # Navegar a la transacción
             if not self.navigate_to_transaction(self.transaction_code):
@@ -72,11 +154,14 @@ class ZSDIncidenciasScript(BaseSAPScript):
                 print("FALLO: No se pudo ejecutar el reporte")
                 return False
             
+            # Esperar a que se genere el reporte
+            time.sleep(5)
+            
             # Paso especial: Seleccionar celda en grilla
             if not self.select_grid_cell():
                 print("ADVERTENCIA: No se pudo seleccionar celda en grilla, continuando...")
             
-            # Exportar a Excel
+            # Exportar a Excel (método del entorno Nite)
             if not self.export_to_excel(self.filename):
                 print("FALLO: No se pudo exportar a Excel")
                 return False
