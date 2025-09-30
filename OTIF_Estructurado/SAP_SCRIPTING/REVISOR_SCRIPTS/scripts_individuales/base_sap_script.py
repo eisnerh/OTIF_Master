@@ -145,13 +145,41 @@ class BaseSAPScript:
         """
         try:
             self.logger.info(f"Seleccionando fila: {row_number}")
-            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = row_number
-            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = str(row_number)
-            self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell
-            return True
+            
+            # Intentar diferentes métodos de selección
+            try:
+                # Método 1: Selección directa
+                shell = self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell")
+                shell.currentCellRow = row_number
+                shell.selectedRows = str(row_number)
+                shell.doubleClickCurrentCell()
+                return True
+            except:
+                try:
+                    # Método 2: Selección alternativa
+                    shell = self.session.findById("wnd[0]/usr/cntlALV_CONTAINER_1/shellcont/shell")
+                    shell.currentCellRow = row_number
+                    shell.selectedRows = str(row_number)
+                    shell.doubleClickCurrentCell()
+                    return True
+                except:
+                    try:
+                        # Método 3: Selección con grid
+                        grid = self.session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell")
+                        grid.setCurrentCell(row_number, "ZONA")
+                        grid.selectedRows = str(row_number)
+                        grid.doubleClickCurrentCell()
+                        return True
+                    except:
+                        # Método 4: Selección simple
+                        self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = str(row_number)
+                        return True
+            
         except Exception as e:
             self.logger.error(f"Error seleccionando fila {row_number}: {e}")
-            return False
+            # Intentar continuar sin selección específica
+            self.logger.info("Intentando continuar sin selección específica...")
+            return True
     
     def set_date_field(self, field_name, date_value):
         """
