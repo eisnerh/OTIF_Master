@@ -35,22 +35,32 @@ class BaseSAPScript:
         Configura el sistema de logging
         """
         log_file = f"{self.script_name}_automation.log"
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
-        )
+        
+        # Configurar handler para archivo con UTF-8
+        file_handler = logging.FileHandler(log_file, encoding='utf-8')
+        file_handler.setLevel(logging.INFO)
+        
+        # Configurar handler para consola sin emojis
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        
+        # Formato sin emojis para consola
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        console_handler.setFormatter(formatter)
+        file_handler.setFormatter(formatter)
+        
+        # Configurar logger
         self.logger = logging.getLogger(self.script_name)
+        self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(file_handler)
+        self.logger.addHandler(console_handler)
     
     def connect_sap(self):
         """
         Establece conexión con SAP GUI
         """
         try:
-            self.logger.info("🔐 Conectando a SAP GUI...")
+            self.logger.info("Conectando a SAP GUI...")
             
             # Obtener objeto SAP GUI
             sap_gui_auto = win32com.client.GetObject("SAPGUI")
@@ -63,11 +73,11 @@ class BaseSAPScript:
             # Maximizar ventana
             self.session.findById("wnd[0]").maximize
             
-            self.logger.info("✅ Conexión SAP establecida correctamente")
+            self.logger.info("Conexión SAP establecida correctamente")
             return True
             
         except Exception as e:
-            self.logger.error(f"❌ Error conectando a SAP: {e}")
+            self.logger.error(f"Error conectando a SAP: {e}")
             return False
     
     def navigate_to_transaction(self, transaction_code):
@@ -78,12 +88,12 @@ class BaseSAPScript:
             transaction_code (str): Código de la transacción SAP
         """
         try:
-            self.logger.info(f"📊 Navegando a transacción: {transaction_code}")
+            self.logger.info(f"Navegando a transacción: {transaction_code}")
             self.session.findById("wnd[0]/tbar[0]/okcd").text = transaction_code
             self.session.findById("wnd[0]").sendVKey(0)
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error navegando a transacción {transaction_code}: {e}")
+            self.logger.error(f"Error navegando a transacción {transaction_code}: {e}")
             return False
     
     def select_node(self, node_id):
@@ -94,11 +104,11 @@ class BaseSAPScript:
             node_id (str): ID del nodo a seleccionar
         """
         try:
-            self.logger.info(f"🔍 Seleccionando nodo: {node_id}")
+            self.logger.info(f"Seleccionando nodo: {node_id}")
             self.session.findById("wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell").doubleClickNode(node_id)
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error seleccionando nodo {node_id}: {e}")
+            self.logger.error(f"Error seleccionando nodo {node_id}: {e}")
             return False
     
     def press_selection_button(self):
@@ -109,7 +119,7 @@ class BaseSAPScript:
             self.session.findById("wnd[0]/tbar[1]/btn[17]").press
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error presionando botón de selección: {e}")
+            self.logger.error(f"Error presionando botón de selección: {e}")
             return False
     
     def clear_user_field(self):
@@ -134,13 +144,13 @@ class BaseSAPScript:
             row_number (int): Número de fila a seleccionar
         """
         try:
-            self.logger.info(f"📋 Seleccionando fila: {row_number}")
+            self.logger.info(f"Seleccionando fila: {row_number}")
             self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").currentCellRow = row_number
             self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").selectedRows = str(row_number)
             self.session.findById("wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell").doubleClickCurrentCell
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error seleccionando fila {row_number}: {e}")
+            self.logger.error(f"Error seleccionando fila {row_number}: {e}")
             return False
     
     def set_date_field(self, field_name, date_value):
@@ -152,14 +162,14 @@ class BaseSAPScript:
             date_value (str): Valor de la fecha
         """
         try:
-            self.logger.info(f"📅 Estableciendo fecha {field_name}: {date_value}")
+            self.logger.info(f"Estableciendo fecha {field_name}: {date_value}")
             date_field = f"wnd[0]/usr/ctxt{field_name}"
             self.session.findById(date_field).text = date_value
             self.session.findById(date_field).setFocus
             self.session.findById(date_field).caretPosition = 2
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error estableciendo fecha {field_name}: {e}")
+            self.logger.error(f"Error estableciendo fecha {field_name}: {e}")
             return False
     
     def execute_report(self):
@@ -167,11 +177,11 @@ class BaseSAPScript:
         Ejecuta el reporte
         """
         try:
-            self.logger.info("🚀 Ejecutando reporte...")
+            self.logger.info("Ejecutando reporte...")
             self.session.findById("wnd[0]/tbar[1]/btn[8]").press
             return True
         except Exception as e:
-            self.logger.error(f"❌ Error ejecutando reporte: {e}")
+            self.logger.error(f"Error ejecutando reporte: {e}")
             return False
     
     def export_to_excel(self, filename):
@@ -182,7 +192,7 @@ class BaseSAPScript:
             filename (str): Nombre del archivo de salida
         """
         try:
-            self.logger.info(f"📁 Exportando a Excel: {filename}")
+            self.logger.info(f"Exportando a Excel: {filename}")
             
             # Ir al menú de exportación
             self.session.findById("wnd[0]/mbar/menu[0]/menu[3]/menu[2]").select
@@ -206,11 +216,11 @@ class BaseSAPScript:
             self.session.findById("wnd[0]/tbar[0]/btn[3]").press
             self.session.findById("wnd[0]/tbar[0]/btn[15]").press
             
-            self.logger.info(f"✅ Archivo exportado: {filename}")
+            self.logger.info(f"Archivo exportado: {filename}")
             return True
             
         except Exception as e:
-            self.logger.error(f"❌ Error exportando archivo {filename}: {e}")
+            self.logger.error(f"Error exportando archivo {filename}: {e}")
             return False
     
     def verify_output_file(self, filename):
@@ -224,10 +234,10 @@ class BaseSAPScript:
         
         if os.path.exists(file_path):
             size = os.path.getsize(file_path)
-            self.logger.info(f"✅ {filename} - {size:,} bytes")
+            self.logger.info(f"{filename} - {size:,} bytes")
             return True
         else:
-            self.logger.error(f"❌ {filename} - No encontrado")
+            self.logger.error(f"{filename} - No encontrado")
             return False
     
     def process_for_powerbi(self, filename):
@@ -238,7 +248,7 @@ class BaseSAPScript:
             filename (str): Nombre del archivo a procesar
         """
         try:
-            self.logger.info(f"🔄 Procesando {filename} para Power BI...")
+            self.logger.info(f"Procesando {filename} para Power BI...")
             
             # Importar el procesador de datos
             from procesar_datos_sap import ProcesadorDatosSAP
@@ -253,14 +263,14 @@ class BaseSAPScript:
             success = procesador.procesar_archivo_sap(file_path, output_name)
             
             if success:
-                self.logger.info(f"✅ {filename} procesado para Power BI")
+                self.logger.info(f"{filename} procesado para Power BI")
                 return True
             else:
-                self.logger.error(f"❌ Error procesando {filename} para Power BI")
+                self.logger.error(f"Error procesando {filename} para Power BI")
                 return False
                 
         except Exception as e:
-            self.logger.error(f"❌ Error en procesamiento Power BI: {e}")
+            self.logger.error(f"Error en procesamiento Power BI: {e}")
             return False
     
     def get_today_date(self):
@@ -281,11 +291,11 @@ class BaseSAPScript:
         if weekday == 0:  # Lunes
             # Si es lunes, ejecutar sábado (2 días atrás)
             target_date = today - timedelta(days=2)
-            self.logger.info("📅 Es lunes - ejecutando reporte del sábado")
+            self.logger.info("Es lunes - ejecutando reporte del sábado")
         else:
             # Para otros días, un día atrás
             target_date = today - timedelta(days=1)
-            self.logger.info(f"📅 Día {today.strftime('%A')} - ejecutando reporte de ayer")
+            self.logger.info(f"Día {today.strftime('%A')} - ejecutando reporte de ayer")
         
         return target_date.strftime("%d.%m.%Y")
     
@@ -296,6 +306,6 @@ class BaseSAPScript:
         try:
             if self.session:
                 self.session.findById("wnd[0]/tbar[0]/btn[15]").press
-            self.logger.info("🧹 Limpieza completada")
+            self.logger.info("Limpieza completada")
         except:
             pass
