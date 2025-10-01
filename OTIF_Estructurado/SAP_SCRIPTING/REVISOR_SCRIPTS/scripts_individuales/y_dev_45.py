@@ -265,6 +265,10 @@ def run_y_dev_45(session, row_number: int, output_path: str, filename: str,
     # 9) Guardado
     ensure_dir(output_path)
     full_path = os.path.join(output_path, filename)
+    
+    # Eliminar archivo si ya existe para evitar conflictos
+    if os.path.exists(full_path):
+        os.remove(full_path)
 
     find(session, "wnd[1]/usr/ctxtDY_PATH").text = output_path
     find(session, "wnd[1]/usr/ctxtDY_FILENAME").text = filename

@@ -184,6 +184,10 @@ def run_zred(session, row_number: int, output_path: str, filename: str, encoding
     # 7) Rellenar ruta, archivo y codificación
     ensure_dir(output_path)
     full_path = os.path.join(output_path, filename)
+    
+    # Eliminar archivo si ya existe para evitar conflictos
+    if os.path.exists(full_path):
+        os.remove(full_path)
 
     # Si aparece un diálogo de selección de ruta/archivo:
     # En tu VBScript eran estos IDs:

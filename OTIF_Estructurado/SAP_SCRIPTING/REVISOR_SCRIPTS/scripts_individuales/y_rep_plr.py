@@ -310,6 +310,10 @@ def run_rep_plr(session, row_number: int, output_path: str, filename: str,
     # 10) Guardado
     ensure_dir(output_path)
     full_path = os.path.join(output_path, filename)
+    
+    # Eliminar archivo si ya existe para evitar conflictos
+    if os.path.exists(full_path):
+        os.remove(full_path)
 
     find(session, "wnd[1]/usr/ctxtDY_PATH").text = output_path
     find(session, "wnd[1]/usr/ctxtDY_FILENAME").text = filename
