@@ -51,7 +51,7 @@ def main():
     
     # Lista de scripts a ejecutar
     scripts = [
-        ("REP_PLR", "rep_plr.py"),
+        ("REP_PLR", "y_rep_plr.py"),
         ("Y_DEV_45", "y_dev_45.py"),
         ("Y_DEV_74", "y_dev_74.py"),
         ("Y_DEV_82", "y_dev_82.py"),
