@@ -187,7 +187,14 @@ def run_zred(session, row_number: int, output_path: str, filename: str, encoding
     
     # Eliminar archivo si ya existe para evitar conflictos
     if os.path.exists(full_path):
-        os.remove(full_path)
+        try:
+            os.remove(full_path)
+        except PermissionError:
+            # Si no se puede eliminar por permisos, intentar con nombre único
+            base_name, ext = os.path.splitext(filename)
+            timestamp = datetime.now().strftime('%H%M%S')
+            filename = f"{base_name}_{timestamp}{ext}"
+            full_path = os.path.join(output_path, filename)
 
     # Si aparece un diálogo de selección de ruta/archivo:
     # En tu VBScript eran estos IDs:

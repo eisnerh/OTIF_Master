@@ -168,7 +168,14 @@ def run_y_dev_82(session, row_number: int, output_path: str, filename: str, enco
     
     # Eliminar archivo si ya existe para evitar conflictos
     if os.path.exists(full_path):
-        os.remove(full_path)
+        try:
+            os.remove(full_path)
+        except PermissionError:
+            # Si no se puede eliminar por permisos, intentar con nombre único
+            base_name, ext = os.path.splitext(filename)
+            timestamp = datetime.now().strftime('%H%M%S')
+            filename = f"{base_name}_{timestamp}{ext}"
+            full_path = os.path.join(output_path, filename)
 
     find(session, "wnd[1]/usr/ctxtDY_PATH").text = output_path
     find(session, "wnd[1]/usr/ctxtDY_FILENAME").text = filename
