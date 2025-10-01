@@ -212,8 +212,8 @@ def run_zhbo(session, row_number: int, output_path: str, filename: str, date_str
 
 def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta ZHBO y exporta el reporte a Excel (standalone).")
-    p.add_argument("-o", "--output", default=r"C:\data\bo", help="Ruta de salida (por defecto: C:\\data\\bo)")
-    p.add_argument("-f", "--filename", default="zhbo"+datetime.now().strftime('%Y-%m-%d')+".xls", help="Nombre del archivo (por defecto: zhbo.xls)")
+    p.add_argument("-o", "--output", default=r"C:\data\zhbo", help="Ruta de salida (por defecto: C:\\data\\zhbo)")
+    p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("-r", "--row", type=int, default=11, help="Fila del ALV a seleccionar (por defecto: 11)")
     p.add_argument("--date", help='Fecha a usar en FECHA-LOW (formato "dd.mm.yyyy"). Si se omite, usa AYER.')
     p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")
@@ -226,6 +226,14 @@ def main():
 
     # Si no se pasó --date, usar AYER
     date_str = args.date or (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
+    
+    # Generar nombre de archivo con fecha si no se especifica
+    if not args.filename:
+        fecha_actual = datetime.now().strftime('%d-%m-%Y')
+        args.filename = f"zhbo_{fecha_actual}.xls"
+    
+    # Asegurar que el directorio existe
+    os.makedirs(args.output, exist_ok=True)
 
     print("INICIANDO SCRIPT ZHBO")
     print("=" * 60)

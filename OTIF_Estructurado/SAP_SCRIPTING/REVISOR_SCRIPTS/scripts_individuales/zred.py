@@ -220,7 +220,7 @@ def run_zred(session, row_number: int, output_path: str, filename: str, encoding
 def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta ZRED y exporta el reporte a Excel (standalone).")
     p.add_argument("-o", "--output", default=r"C:\data\zred", help="Ruta de salida (por defecto: C:\\data\\zred)")
-    p.add_argument("-f", "--filename", default="zred_"+ datetime.now().strftime('%Y-%m-%d')+".xls", help="Nombre del archivo (por defecto: zred.xls)")
+    p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("-r", "--row", type=int, default=1, help="Fila del ALV a seleccionar (por defecto: 1)")
     p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")
     p.add_argument("--sess", type=int, default=0, help="Índice de sesión SAP (por defecto: 0)")
@@ -229,6 +229,14 @@ def parse_args():
 
 def main():
     args = parse_args()
+    
+    # Generar nombre de archivo con fecha si no se especifica
+    if not args.filename:
+        fecha_actual = datetime.now().strftime('%d-%m-%Y')
+        args.filename = f"zred_{fecha_actual}.xls"
+    
+    # Asegurar que el directorio existe
+    os.makedirs(args.output, exist_ok=True)
 
     print("INICIANDO SCRIPT ZRED")
     print("=" * 60)

@@ -343,8 +343,8 @@ def run_rep_plr(session, row_number: int, output_path: str, filename: str,
 
 def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta REP_PLR y exporta a Excel (standalone y robusto).")
-    p.add_argument("-o", "--output", default=r"C:\data", help="Ruta de salida (por defecto: C:\\data)")
-    p.add_argument("-f", "--filename", default="REP_PLR.xls", help="Nombre del archivo (por defecto: REP_PLR.xls)")
+    p.add_argument("-o", "--output", default=r"C:\data\rep_plr", help="Ruta de salida (por defecto: C:\\data\\rep_plr)")
+    p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("-r", "--row", type=int, default=11, help="Fila del ALV a seleccionar (por defecto: 11)")
     p.add_argument("--date", help='Fecha para P_LFDAT-LOW (formato "dd.mm.yyyy"). Si se omite, usa AYER.')
     p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")
@@ -356,6 +356,14 @@ def parse_args():
 def main():
     args = parse_args()
     date_str = args.date or (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
+    
+    # Generar nombre de archivo con fecha si no se especifica
+    if not args.filename:
+        fecha_actual = datetime.now().strftime('%d-%m-%Y')
+        args.filename = f"rep_plr_{fecha_actual}.xls"
+    
+    # Asegurar que el directorio existe
+    os.makedirs(args.output, exist_ok=True)
 
     print("INICIANDO SCRIPT REP_PLR")
     print("=" * 60)

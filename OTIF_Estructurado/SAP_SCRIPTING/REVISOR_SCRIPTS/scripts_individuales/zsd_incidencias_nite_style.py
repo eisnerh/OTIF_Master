@@ -19,8 +19,12 @@ def ejecutar_zsd_incidencias():
     print("=" * 60)
     
     # File path and name
-    file_name = "data_incidencias_" + datetime.now().strftime('%Y-%m-%d') + ".xls"
-    saved_path = os.path.join("C:/data/incidencias", file_name)
+    fecha_actual = datetime.now().strftime('%d-%m-%Y')
+    file_name = f"zsd_incidencias_{fecha_actual}.xls"
+    saved_path = os.path.join("C:/data/zsd_incidencias", file_name)
+    
+    # Asegurar que el directorio existe
+    os.makedirs(os.path.dirname(saved_path), exist_ok=True)
     
     # Remove file if it already exists
     if os.path.exists(saved_path):

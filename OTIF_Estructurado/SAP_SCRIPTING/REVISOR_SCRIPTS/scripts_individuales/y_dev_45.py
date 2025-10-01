@@ -297,8 +297,8 @@ def run_y_dev_45(session, row_number: int, output_path: str, filename: str,
 
 def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta Y_DEV_45 y exporta a Excel (robusto).")
-    p.add_argument("-o", "--output", default=r"C:\data", help="Ruta de salida (por defecto: C:\\data)")
-    p.add_argument("-f", "--filename", default="y_dev_45.xls", help="Nombre del archivo (por defecto: y_dev_45.xls)")
+    p.add_argument("-o", "--output", default=r"C:\data\y_dev_45", help="Ruta de salida (por defecto: C:\\data\\y_dev_45)")
+    p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("-r", "--row", type=int, default=2, help="Fila del ALV a seleccionar (por defecto: 2)")
     p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")
     p.add_argument("--sess", type=int, default=0, help="Índice de sesión SAP (por defecto: 0)")
@@ -308,6 +308,14 @@ def parse_args():
 
 def main():
     args = parse_args()
+    
+    # Generar nombre de archivo con fecha si no se especifica
+    if not args.filename:
+        fecha_actual = datetime.now().strftime('%d-%m-%Y')
+        args.filename = f"y_dev_45_{fecha_actual}.xls"
+    
+    # Asegurar que el directorio existe
+    os.makedirs(args.output, exist_ok=True)
 
     print("INICIANDO SCRIPT Y_DEV_45")
     print("=" * 60)

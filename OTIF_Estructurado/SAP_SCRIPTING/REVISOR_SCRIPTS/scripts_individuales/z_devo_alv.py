@@ -218,8 +218,8 @@ def parse_args():
     p.add_argument("--tcode", default="y_devo_alv", help='Transacción a ejecutar (por defecto: "y_devo_alv")')
     p.add_argument("--node", default="F00072", help='Nodo del árbol a abrir (por defecto: "F00072")')
     p.add_argument("-r", "--row", type=int, default=12, help="Fila del ALV a seleccionar (por defecto: 12)")
-    p.add_argument("-o", "--output", default=r"C:\data\no_entregas", help="Ruta de salida (por defecto: C:\\data\\no_entregas)")
-    p.add_argument("-f", "--filename", default="zsd_devo_alv"+datetime.now().strftime('%Y-%m-%d')+".xls", help="Nombre del archivo (por defecto: zsd_devo_alv.xls)")
+    p.add_argument("-o", "--output", default=r"C:\data\z_devo_alv", help="Ruta de salida (por defecto: C:\\data\\z_devo_alv)")
+    p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")
     p.add_argument("--sess", type=int, default=0, help="Índice de sesión SAP (por defecto: 0)")
     return p.parse_args()
@@ -227,6 +227,14 @@ def parse_args():
 
 def main():
     args = parse_args()
+    
+    # Generar nombre de archivo con fecha si no se especifica
+    if not args.filename:
+        fecha_actual = datetime.now().strftime('%d-%m-%Y')
+        args.filename = f"z_devo_alv_{fecha_actual}.xls"
+    
+    # Asegurar que el directorio existe
+    os.makedirs(args.output, exist_ok=True)
 
     print("INICIANDO SCRIPT Z_DEVO_ALV")
     print("=" * 60)
