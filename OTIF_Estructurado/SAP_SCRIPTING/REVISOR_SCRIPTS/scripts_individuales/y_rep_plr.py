@@ -30,6 +30,35 @@ class SAPGuiError(Exception):
 def ensure_dir(path: str):
     os.makedirs(path, exist_ok=True)
 
+def limpiar_sesion_sap(session):
+    """
+    Limpia la sesión SAP antes de ejecutar el script.
+    - Cierra ventanas abiertas
+    - Regresa al menú principal
+    - Espera a que la sesión esté lista
+    """
+    try:
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+        session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+
+        # Cerrar ventanas adicionales si existen
+        for i in range(1, 10):  # Máximo 10 ventanas
+            try:
+                session.findById(f"wnd[{i}]").close()
+            except:
+                break  # No hay más ventanas
+
+        # Esperar a que la sesión esté lista
+        while not session.findById("wnd[0]/usr").Text:
+            time.sleep(0.5)
+
+        print("✅ Sesión SAP limpiada correctamente.")
+    except Exception as e:
+        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+
+
 def attach_to_sap(connection_index: int = -1, session_index: int = -1):
     """Adjunta a SAP GUI (si índices < 0, toma la última conexión/sesión abiertas)."""
     try:
@@ -326,7 +355,7 @@ def parse_args():
     p.add_argument("--tcode", default="zsd_rep_planeamiento", help='Transacción (por defecto: "zsd_rep_planeamiento")')
     p.add_argument("--node", default="F00120", help='Nodo del árbol a abrir (por defecto: "F00120")')
     p.add_argument("-r", "--row", type=int, default=11, help="Fila del ALV a seleccionar (por defecto: 11)")
-    p.add_argument("-o", "--output", default=r"C:\\data\\rep_plr", help="Ruta de salida (por defecto: C:\\data\\rep_plr)")
+    p.add_argument("-o", "--output", default=r"C:\\data\\SAP_Extraction\\rep_plr", help="Ruta de salida (por defecto: C:\\data\\SAP_Extraction\\rep_plr)")
     p.add_argument("-f", "--filename", default=nombre_archivo, help=f"Nombre del archivo (por defecto: {nombre_archivo})")
     p.add_argument("--date", help='Fecha para P_LFDAT-LOW ("dd.mm.yyyy"). Si se omite, usa AYER.')
     p.add_argument("--encoding", default="0000", help='Codificación de archivo (campo DY_FILE_ENCODING).')

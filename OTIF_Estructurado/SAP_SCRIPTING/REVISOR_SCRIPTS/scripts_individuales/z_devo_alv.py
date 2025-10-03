@@ -17,6 +17,35 @@ class SAPGuiError(Exception): pass
 
 def ensure_dir(p): os.makedirs(p, exist_ok=True)
 
+def limpiar_sesion_sap(session):
+    """
+    Limpia la sesión SAP antes de ejecutar el script.
+    - Cierra ventanas abiertas
+    - Regresa al menú principal
+    - Espera a que la sesión esté lista
+    """
+    try:
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+        session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+
+        # Cerrar ventanas adicionales si existen
+        for i in range(1, 10):  # Máximo 10 ventanas
+            try:
+                session.findById(f"wnd[{i}]").close()
+            except:
+                break  # No hay más ventanas
+
+        # Esperar a que la sesión esté lista
+        while not session.findById("wnd[0]/usr").Text:
+            time.sleep(0.5)
+
+        print("✅ Sesión SAP limpiada correctamente.")
+    except Exception as e:
+        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+
+
 def attach_to_sap(conn_idx=-1, sess_idx=-1):
     try: SapGuiAuto = win32com.client.GetObject("SAPGUI")
     except Exception: raise SAPGuiError("No se encontro SAPGUI. Abre SAP Logon.")
@@ -174,7 +203,7 @@ def run_z_devo_alv(session,tcode,node_key,row_number,output_path,filename,encodi
 def parse_args():
     p=argparse.ArgumentParser(description="Z_DEVO_ALV homologado")
     p.add_argument("--tcode",default="y_devo_alv"); p.add_argument("--node",default="F00072")
-    p.add_argument("-r","--row",type=int,default=12); p.add_argument("-o","--output",default=r"C:\\data\\z_devo_alv")
+    p.add_argument("-r","--row",type=int,default=12); p.add_argument("-o","--output",default=r"C:\\data\\SAP_Extraction\\z_devo_alv")
     p.add_argument("-f","--filename"); p.add_argument("--conn",type=int,default=-1); p.add_argument("--sess",type=int,default=-1)
     p.add_argument("--debug",action="store_true"); return p.parse_args()
 

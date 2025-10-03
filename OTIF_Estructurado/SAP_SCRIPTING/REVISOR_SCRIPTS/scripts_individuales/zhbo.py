@@ -24,6 +24,35 @@ def set_main_date(session, field_id, date_str):
     try: ctrl.setFocus(); ctrl.caretPosition = len(date_str)
     except Exception: pass
 
+def limpiar_sesion_sap(session):
+    """
+    Limpia la sesión SAP antes de ejecutar el script.
+    - Cierra ventanas abiertas
+    - Regresa al menú principal
+    - Espera a que la sesión esté lista
+    """
+    try:
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+        session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+
+        # Cerrar ventanas adicionales si existen
+        for i in range(1, 10):  # Máximo 10 ventanas
+            try:
+                session.findById(f"wnd[{i}]").close()
+            except:
+                break  # No hay más ventanas
+
+        # Esperar a que la sesión esté lista
+        while not session.findById("wnd[0]/usr").Text:
+            time.sleep(0.5)
+
+        print("✅ Sesión SAP limpiada correctamente.")
+    except Exception as e:
+        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+
+
 def run_zhbo(session,row_number,output_path,filename,date_str,encoding="0000",debug=False):
     send_tcode(session,"zhbo")
     if press_if_exists(session,"wnd[0]/tbar[1]/btn[17]") is False and debug:
@@ -64,7 +93,7 @@ def run_zhbo(session,row_number,output_path,filename,date_str,encoding="0000",de
 
 def parse_args():
     p=argparse.ArgumentParser(description="ZHBO homologado")
-    p.add_argument("-o","--output",default=r"C:\\data\\zhbo"); p.add_argument("-f","--filename")
+    p.add_argument("-o","--output",default=r"C:\\data\\SAP_Extraction\\zhbo"); p.add_argument("-f","--filename")
     p.add_argument("-r","--row",type=int,default=11); p.add_argument("--date")
     p.add_argument("--conn",type=int,default=-1); p.add_argument("--sess",type=int,default=-1); p.add_argument("--debug",action="store_true")
     return p.parse_args()

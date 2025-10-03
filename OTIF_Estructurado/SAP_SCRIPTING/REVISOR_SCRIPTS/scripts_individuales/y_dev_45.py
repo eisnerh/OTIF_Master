@@ -1,22 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Automatiza la transacción Y_DEV_45 (y_dev_42000045) y exporta a Excel usando SAP GUI Scripting (COM).
-Patrón robusto:
-  - Detección dinámica del árbol (GuiTree). Si no existe, se continúa sin seleccionar nodo.
-  - Retorno automático a SAP Easy Access al finalizar.
-  - Modo --debug para listar controles visibles e IDs (ayuda a ajustar IDs en tu entorno).
-
-Requisitos:
-  - SAP GUI Scripting habilitado en cliente y servidor.
-  - pywin32 instalado: pip install pywin32
-  - SAP Logon abierto y sesión activa.
-
-Uso (ejemplo):
-  python y_dev_45.py --output "C:\\data" --filename "y_dev_45.xls" --row 2 --conn 0 --sess 0
-  python y_dev_45.py --output "C:\\data" --filename "y_dev_45.xls" --row 2 --conn 0 --sess 0 --debug
-"""
-
 import os
 import sys
 import time
@@ -70,6 +51,35 @@ def find(session, obj_id, timeout=12.0, interval=0.25):
         except Exception:
             time.sleep(interval)
     raise SAPGuiError(f"No se encontró el control: {obj_id}")
+
+
+def limpiar_sesion_sap(session):
+    """
+    Limpia la sesión SAP antes de ejecutar el script.
+    - Cierra ventanas abiertas
+    - Regresa al menú principal
+    - Espera a que la sesión esté lista
+    """
+    try:
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+        session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+
+        # Cerrar ventanas adicionales si existen
+        for i in range(1, 10):  # Máximo 10 ventanas
+            try:
+                session.findById(f"wnd[{i}]").close()
+            except:
+                break  # No hay más ventanas
+
+        # Esperar a que la sesión esté lista
+        while not session.findById("wnd[0]/usr").Text:
+            time.sleep(0.5)
+
+        print("✅ Sesión SAP limpiada correctamente.")
+    except Exception as e:
+        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
 
 
 def exists(session, obj_id):
@@ -308,7 +318,7 @@ def run_y_dev_45(session, row_number: int, output_path: str, filename: str,
 
 def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta Y_DEV_45 y exporta a Excel (robusto).")
-    p.add_argument("-o", "--output", default=r"C:\data\y_dev_45", help="Ruta de salida (por defecto: C:\\data\\y_dev_45)")
+    p.add_argument("-o", "--output", default=r"C:\data\SAP_Extraction\y_dev_45", help="Ruta de salida (por defecto: C:\\data\\SAP_Extraction\\y_dev_45)")
     p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("-r", "--row", type=int, default=2, help="Fila del ALV a seleccionar (por defecto: 2)")
     p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")

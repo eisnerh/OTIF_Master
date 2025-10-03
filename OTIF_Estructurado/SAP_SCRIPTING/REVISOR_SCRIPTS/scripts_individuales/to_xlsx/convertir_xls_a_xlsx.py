@@ -26,7 +26,7 @@ logging.basicConfig(
 class ConvertidorXLS:
     """Clase para convertir archivos XLS a XLSX"""
     
-    def __init__(self, ruta_base: str = "Data/SAP_Extraction"):
+    def __init__(self, ruta_base: str = r"C:\data\SAP_Extraction"):
         """
         Inicializar el convertidor
         

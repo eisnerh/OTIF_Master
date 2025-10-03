@@ -15,17 +15,19 @@ def main():
     print("Sistema OTIF - Extracciones SAP")
     print("="*60)
     
+    sys.path.append(str(script_principal.parent))
+    
     # Verificar que el script principal existe
-    script_principal = Path("convertir_xls_a_xlsx.py")
+    script_principal = Path(r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py")
     if not script_principal.exists():
         print("❌ Error: No se encontró el script 'convertir_xls_a_xlsx.py'")
         print("   Asegúrate de que esté en el mismo directorio.")
         return 1
     
     # Verificar que la carpeta de datos existe
-    carpeta_datos = Path("Data/SAP_Extraction")
+    carpeta_datos = Path(r"C:\data\SAP_Extraction")
     if not carpeta_datos.exists():
-        print("❌ Error: No se encontró la carpeta 'Data/SAP_Extraction'")
+        print("❌ Error: No se encontró la carpeta 'C:\data\SAP_Extraction'")
         print("   Asegúrate de ejecutar el script desde el directorio raíz del proyecto.")
         return 1
     

@@ -155,6 +155,34 @@ def find_control_by_type(root, target_type: str, timeout: float = 8.0):
         time.sleep(0.25)
     return None
 
+def limpiar_sesion_sap(session):
+    """
+    Limpia la sesión SAP antes de ejecutar el script.
+    - Cierra ventanas abiertas
+    - Regresa al menú principal
+    - Espera a que la sesión esté lista
+    """
+    try:
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+        session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+
+        # Cerrar ventanas adicionales si existen
+        for i in range(1, 10):  # Máximo 10 ventanas
+            try:
+                session.findById(f"wnd[{i}]").close()
+            except:
+                break  # No hay más ventanas
+
+        # Esperar a que la sesión esté lista
+        while not session.findById("wnd[0]/usr").Text:
+            time.sleep(0.5)
+
+        print("✅ Sesión SAP limpiada correctamente.")
+    except Exception as e:
+        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+
 
 def try_get_tree(session):
     """Intenta obtener el GuiTree principal por IDs comunes o por tipo (fallback)."""
@@ -360,7 +388,7 @@ def parse_args():
     p.add_argument("--tcode", default="y_dev_42000074", help='Transacción a ejecutar (por defecto: "y_dev_42000074")')
     p.add_argument("--node", default="F00119", help='Nodo del árbol a abrir (por defecto: "F00119")')
     p.add_argument("-r", "--row", type=int, default=25, help="Fila del ALV a seleccionar (por defecto: 25)")
-    p.add_argument("-o", "--output", default=r"C:\\data\\y_dev_74", help="Ruta de salida (por defecto: C:\\data\\y_dev_74)")
+    p.add_argument("-o", "--output", default=r"C:\\data\\SAP_Extraction\\y_dev_74", help="Ruta de salida (por defecto: C:\\data\\SAP_Extraction\\y_dev_74)")
     p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("--date", help='Fecha para SP$00002-LOW (formato "dd.mm.yyyy"). Si se omite, usa AYER.')
     p.add_argument("--conn", type=int, default=-1, help="Índice de conexión SAP (-1 = auto, por defecto: -1)")

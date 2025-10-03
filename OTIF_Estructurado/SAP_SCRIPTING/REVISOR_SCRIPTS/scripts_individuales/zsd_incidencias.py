@@ -1,23 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-ZSD_INCIDENCIAS (homologado, estilo robusto)
--------------------------------------------
-• Reemplaza los accesos directos a COM por utilidades con timeout (find/exists/press).
-• Autodetección de conexión y sesión por defecto (--conn -1, --sess -1) y log de índices efectivos.
-• Manejo estándar de exportación (DY_PATH/DY_FILENAME/ENCODING) con *fallback* al método NITE (F4 -> wnd[2]).
-• Scroll seguro y doble clic en ALV.
-• Modo --debug con DUMP de controles.
-• Retorno a SAP Easy Access al finalizar.
-
-Requisitos:
-- SAP GUI Scripting habilitado (cliente/servidor).
-- pywin32 instalado: pip install pywin32
-- SAP Logon abierto y sesión activa.
-
-Uso (ejemplos):
-  python zsd_incidencias_homologado.py --row 12 --output "C:\\data\\zsd_incidencias" --debug
-  python zsd_incidencias_homologado.py --row 5 --filename "incidencias.xls" --conn -1 --sess -1
-"""
 import os
 import sys
 import time
@@ -38,6 +18,34 @@ class SAPGuiError(Exception):
 # ------------------------------ utilidades base --------------------------------
 def ensure_dir(path: str):
     os.makedirs(path, exist_ok=True)
+
+def limpiar_sesion_sap(session):
+    """
+    Limpia la sesión SAP antes de ejecutar el script.
+    - Cierra ventanas abiertas
+    - Regresa al menú principal
+    - Espera a que la sesión esté lista
+    """
+    try:
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+        session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)  # Enter
+
+        # Cerrar ventanas adicionales si existen
+        for i in range(1, 10):  # Máximo 10 ventanas
+            try:
+                session.findById(f"wnd[{i}]").close()
+            except:
+                break  # No hay más ventanas
+
+        # Esperar a que la sesión esté lista
+        while not session.findById("wnd[0]/usr").Text:
+            time.sleep(0.5)
+
+        print("✅ Sesión SAP limpiada correctamente.")
+    except Exception as e:
+        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
 
 
 def attach_to_sap(connection_index: int = -1, session_index: int = -1):
@@ -283,7 +291,7 @@ def run_zsd_incidencias(session, row_number: int, output_path: str, filename: st
 def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta ZSD_INCIDENCIAS y exporta a Excel (homologado).")
     p.add_argument("-r", "--row", type=int, default=12, help="Fila del ALV a seleccionar (por defecto: 12)")
-    p.add_argument("-o", "--output", default=r"C:\\data\\zsd_incidencias", help="Ruta de salida (por defecto: C:\\data\\zsd_incidencias)")
+    p.add_argument("-o", "--output", default=r"C:\\data\\SAP_Extraction\\zsd_incidencias", help="Ruta de salida (por defecto: C:\\data\\SAP_Extraction\\zsd_incidencias)")
     p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("--encoding", default="0000", help="Codificación de archivo (campo DY_FILE_ENCODING)")
     p.add_argument("--conn", type=int, default=-1, help="Índice de conexión SAP (-1 = auto)")
