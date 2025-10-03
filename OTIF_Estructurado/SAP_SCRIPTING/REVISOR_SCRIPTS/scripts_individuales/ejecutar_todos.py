@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
 Script maestro que ejecuta todos los scripts SAP individuales
-Basado en el patrón del script maestro de Nite
+Sincronizado con los scripts individuales: y_dev_45, y_dev_74, y_dev_82, y_rep_plr, 
+z_devo_alv, zred, zhbo, zsd_incidencias
 """
 
 import subprocess
 import sys
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def ejecutar_script(script_name, script_path, *args):
     """
@@ -19,7 +20,7 @@ def ejecutar_script(script_name, script_path, *args):
         script_path (str): Ruta al script
         *args: Argumentos adicionales para el script
     """
-    print(f"🚀 Ejecutando {script_name}...")
+    print(f"Ejecutando {script_name}...")
     print("=" * 60)
     
     try:
@@ -30,81 +31,208 @@ def ejecutar_script(script_name, script_path, *args):
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
         
         if result.returncode == 0:
-            print(f"✅ {script_name} ejecutado exitosamente")
+            print(f"OK: {script_name} ejecutado exitosamente")
+            if result.stdout:
+                print(f"Salida: {result.stdout.strip()}")
             return True
         else:
-            print(f"❌ Error en {script_name}: {result.stderr}")
+            print(f"ERROR: {script_name}")
+            if result.stderr:
+                print(f"Error: {result.stderr.strip()}")
+            if result.stdout:
+                print(f"Salida: {result.stdout.strip()}")
             return False
             
     except Exception as e:
-        print(f"❌ Error ejecutando {script_name}: {e}")
+        print(f"ERROR ejecutando {script_name}: {e}")
         return False
+
+def crear_carpetas_salida(base_output_path, scripts_config):
+    """
+    Crea las carpetas de salida necesarias para todos los scripts
+    
+    Args:
+        base_output_path (str): Ruta base para las carpetas
+        scripts_config (list): Lista de configuración de scripts
+    """
+    print("Verificando y creando carpetas de salida...")
+    
+    for script_config in scripts_config:
+        output_path = os.path.join(base_output_path, script_config["output_subdir"])
+        if not os.path.exists(output_path):
+            try:
+                os.makedirs(output_path, exist_ok=True)
+                print(f"Carpeta creada: {output_path}")
+            except Exception as e:
+                print(f"ERROR: No se pudo crear la carpeta {output_path}: {e}")
+        else:
+            print(f"Carpeta ya existe: {output_path}")
+    
+    print("Verificacion de carpetas completada.")
+    print("-" * 60)
 
 def main():
     """
-    Función principal que ejecuta todos los scripts
+    Función principal que ejecuta todos los scripts SAP individuales
     """
-    print("🚀 INICIANDO EJECUCIÓN DE TODOS LOS SCRIPTS SAP")
+    print("INICIANDO EJECUCION DE TODOS LOS SCRIPTS SAP")
     print("=" * 80)
-    print(f"⏰ Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
     
-    # Lista de scripts a ejecutar
-    scripts = [
-        ("REP_PLR", "y_rep_plr.py"),
-        ("Y_DEV_45", "y_dev_45.py"),
-        ("Y_DEV_74", "y_dev_74.py"),
-        ("Y_DEV_82", "y_dev_82.py"),
-        ("ZHBO", "zhbo.py"),
-        ("ZRED", "zred.py"),
-        ("Z_DEVO_ALV", "z_devo_alv.py"),
-        ("ZSD_INCIDENCIAS", "zsd_incidencias.py")
+    # Configuración de scripts con sus parámetros específicos
+    scripts_config = [
+        {
+            "name": "Y_REP_PLR",
+            "file": "y_rep_plr.py",
+            "needs_date": True,
+            "default_row": 11,
+            "output_subdir": "rep_plr"
+        },
+        {
+            "name": "Y_DEV_45", 
+            "file": "y_dev_45.py",
+            "needs_date": False,
+            "default_row": 2,
+            "output_subdir": "y_dev_45"
+        },
+        {
+            "name": "Y_DEV_74",
+            "file": "y_dev_74.py", 
+            "needs_date": True,
+            "default_row": 25,
+            "output_subdir": "y_dev_74"
+        },
+        {
+            "name": "Y_DEV_82",
+            "file": "y_dev_82.py",
+            "needs_date": False,
+            "default_row": 2,
+            "output_subdir": "y_dev_82"
+        },
+        {
+            "name": "ZHBO",
+            "file": "zhbo.py",
+            "needs_date": True,
+            "default_row": 1,
+            "output_subdir": "zhbo"
+        },
+        {
+            "name": "ZRED",
+            "file": "zred.py",
+            "needs_date": False,
+            "default_row": 1,
+            "output_subdir": "zred"
+        },
+        {
+            "name": "Z_DEVO_ALV",
+            "file": "z_devo_alv.py",
+            "needs_date": False,
+            "default_row": 1,
+            "output_subdir": "z_devo_alv"
+        },
+        {
+            "name": "ZSD_INCIDENCIAS",
+            "file": "zsd_incidencias.py",
+            "needs_date": False,
+            "default_row": 12,
+            "output_subdir": "zsd_incidencias"
+        }
     ]
     
-    # Verificar argumentos de línea de comandos
+    # Procesar argumentos de línea de comandos
     custom_date = None
-    output_path = "C:\\data"
+    base_output_path = "C:\\data"
     use_dynamic_date = True
+    debug_mode = False
+    custom_row = None
+    connection_index = -1
+    session_index = -1
     
-    if len(sys.argv) > 1:
-        if sys.argv[1].lower() == "dynamic":
+    # Parsear argumentos
+    i = 1
+    while i < len(sys.argv):
+        arg = sys.argv[i].lower()
+        if arg == "dynamic":
             use_dynamic_date = True
-            print("📅 Usando fecha dinámica automática")
-        else:
-            custom_date = sys.argv[1]
+            print("Usando fecha dinamica automatica")
+        elif arg == "--date" and i + 1 < len(sys.argv):
+            custom_date = sys.argv[i + 1]
             use_dynamic_date = False
-            print(f"📅 Usando fecha personalizada: {custom_date}")
+            print(f"Usando fecha personalizada: {custom_date}")
+            i += 1
+        elif arg == "--output" and i + 1 < len(sys.argv):
+            base_output_path = sys.argv[i + 1]
+            print(f"Usando ruta base personalizada: {base_output_path}")
+            i += 1
+        elif arg == "--debug":
+            debug_mode = True
+            print("Modo debug activado")
+        elif arg == "--row" and i + 1 < len(sys.argv):
+            custom_row = int(sys.argv[i + 1])
+            print(f"Usando fila personalizada: {custom_row}")
+            i += 1
+        elif arg == "--conn" and i + 1 < len(sys.argv):
+            connection_index = int(sys.argv[i + 1])
+            print(f"Usando conexion: {connection_index}")
+            i += 1
+        elif arg == "--sess" and i + 1 < len(sys.argv):
+            session_index = int(sys.argv[i + 1])
+            print(f"Usando sesion: {session_index}")
+            i += 1
+        i += 1
     
-    if len(sys.argv) > 2:
-        output_path = sys.argv[2]
-        print(f"📂 Usando ruta personalizada: {output_path}")
-    
-    # Mostrar lógica de fechas
+    # Calcular fecha para scripts que la necesitan
     if use_dynamic_date:
         today = datetime.now()
         weekday = today.weekday()
         if weekday == 0:  # Lunes
-            print("📅 Lógica: Es lunes - ejecutando reportes del sábado")
+            date_str = (today - timedelta(days=2)).strftime("%d.%m.%Y")  # Sábado
+            print("Logica: Es lunes - ejecutando reportes del sabado")
         else:
-            print("📅 Lógica: Ejecutando reportes de ayer")
+            date_str = (today - timedelta(days=1)).strftime("%d.%m.%Y")  # Ayer
+            print("Logica: Ejecutando reportes de ayer")
+    else:
+        date_str = custom_date or (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
+    
+    print(f"Fecha calculada: {date_str}")
+    print(f"Ruta base: {base_output_path}")
+    print(f"Debug: {'ON' if debug_mode else 'OFF'}")
+    print(f"Conexion: {connection_index} (auto)" if connection_index == -1 else f"Conexion: {connection_index}")
+    print(f"Sesion: {session_index} (auto)" if session_index == -1 else f"Sesion: {session_index}")
+    
+    # Crear carpetas de salida
+    crear_carpetas_salida(base_output_path, scripts_config)
     
     results = {}
-    total_scripts = len(scripts)
+    total_scripts = len(scripts_config)
     
-    print(f"\n📊 Ejecutando {total_scripts} scripts...")
+    print(f"\nEjecutando {total_scripts} scripts...")
     print("=" * 80)
     
-    for i, (script_name, script_file) in enumerate(scripts, 1):
-        print(f"\n📋 Procesando {i}/{total_scripts}: {script_name}")
+    for i, script_config in enumerate(scripts_config, 1):
+        script_name = script_config["name"]
+        script_file = script_config["file"]
+        print(f"\nProcesando {i}/{total_scripts}: {script_name}")
         
-        # Preparar argumentos
-        args = [output_path]
-        if script_name in ["REP_PLR", "ZHBO"]:
-            if use_dynamic_date:
-                # Los scripts usarán fecha dinámica automáticamente
-                args = [output_path]
-            elif custom_date:
-                args = [custom_date, output_path]
+        # Preparar argumentos específicos para cada script
+        output_path = os.path.join(base_output_path, script_config["output_subdir"])
+        row_number = custom_row if custom_row is not None else script_config["default_row"]
+        
+        args = [
+            "--output", output_path,
+            "--row", str(row_number),
+            "--conn", str(connection_index),
+            "--sess", str(session_index)
+        ]
+        
+        # Agregar fecha si el script la necesita
+        if script_config["needs_date"]:
+            args.extend(["--date", date_str])
+        
+        # Agregar debug si está activado
+        if debug_mode:
+            args.append("--debug")
         
         # Ejecutar script
         success = ejecutar_script(script_name, script_file, *args)
@@ -112,40 +240,109 @@ def main():
         
         # Pausa entre scripts
         if i < total_scripts:
-            print(f"⏳ Esperando 3 segundos antes del siguiente script...")
+            print(f"Esperando 3 segundos antes del siguiente script...")
             time.sleep(3)
     
     # Resumen final
     successful = sum(1 for success in results.values() if success)
     
     print("\n" + "=" * 80)
-    print("📋 RESUMEN FINAL")
+    print("RESUMEN FINAL")
     print("=" * 80)
-    print(f"✅ Scripts exitosos: {successful}/{total_scripts}")
-    print(f"❌ Scripts fallidos: {total_scripts - successful}/{total_scripts}")
-    print("\n📊 Detalle por script:")
+    print(f"Scripts exitosos: {successful}/{total_scripts}")
+    print(f"Scripts fallidos: {total_scripts - successful}/{total_scripts}")
+    print("\nDetalle por script:")
     
     for script_name, success in results.items():
-        status = "✅" if success else "❌"
-        print(f"  {status} {script_name}")
+        status = "OK" if success else "ERROR"
+        print(f"  {status}: {script_name}")
     
-    print(f"\n⏰ Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"\nHora de finalizacion: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
     
     return successful == total_scripts
 
+def mostrar_ayuda():
+    """
+    Muestra la ayuda del script
+    """
+    print("""
+EJECUTAR TODOS LOS SCRIPTS SAP - AYUDA
+======================================
+
+Este script ejecuta todos los scripts SAP individuales de forma sincronizada:
+- y_dev_45.py
+- y_dev_74.py  
+- y_dev_82.py
+- y_rep_plr.py
+- z_devo_alv.py
+- zred.py
+- zhbo.py
+- zsd_incidencias.py
+
+USO:
+    python ejecutar_todos.py [OPCIONES]
+
+OPCIONES:
+    dynamic                    Usar fecha dinamica automatica (por defecto)
+    --date DD.MM.YYYY         Usar fecha especifica para scripts que la requieren
+    --output RUTA             Ruta base para archivos de salida (por defecto: C:\\data)
+    --row NUMERO              Fila especifica para todos los scripts (sobrescribe valores por defecto)
+    --conn NUMERO             Indice de conexion SAP (por defecto: -1 = auto)
+    --sess NUMERO             Indice de sesion SAP (por defecto: -1 = auto)
+    --debug                   Activar modo debug para todos los scripts
+    --help, -h                Mostrar esta ayuda
+
+EJEMPLOS:
+    # Ejecucion basica con fecha dinamica
+    python ejecutar_todos.py
+    
+    # Con fecha especifica
+    python ejecutar_todos.py --date 15.01.2025
+    
+    # Con ruta personalizada y debug
+    python ejecutar_todos.py --output "D:\\SAP_Data" --debug
+    
+    # Con parametros especificos
+    python ejecutar_todos.py --date 15.01.2025 --row 5 --conn 0 --sess 0
+
+CONFIGURACION POR SCRIPT:
+    Y_REP_PLR:     Fila 11, requiere fecha, subdir: rep_plr
+    Y_DEV_45:      Fila 2,  no requiere fecha, subdir: y_dev_45
+    Y_DEV_74:      Fila 25, requiere fecha, subdir: y_dev_74
+    Y_DEV_82:      Fila 2,  no requiere fecha, subdir: y_dev_82
+    ZHBO:          Fila 1,  requiere fecha, subdir: zhbo
+    ZRED:          Fila 1,  no requiere fecha, subdir: zred
+    Z_DEVO_ALV:    Fila 1,  no requiere fecha, subdir: z_devo_alv
+    ZSD_INCIDENCIAS: Fila 12, no requiere fecha, subdir: zsd_incidencias
+
+CARPETAS:
+    El script crea automaticamente las carpetas de salida si no existen.
+
+REQUISITOS:
+    - SAP Logon abierto y sesion activa
+    - SAP GUI Scripting habilitado
+    - pywin32 instalado (pip install pywin32)
+    - Todos los scripts individuales en el mismo directorio
+""")
+
 if __name__ == "__main__":
     try:
+        # Verificar si se solicita ayuda
+        if len(sys.argv) > 1 and sys.argv[1] in ["--help", "-h", "help"]:
+            mostrar_ayuda()
+            sys.exit(0)
+        
         success = main()
         if success:
-            print("\n🎉 Todos los scripts ejecutados exitosamente")
+            print("\nTodos los scripts ejecutados exitosamente")
             sys.exit(0)
         else:
-            print("\n⚠️  Algunos scripts fallaron")
+            print("\nAlgunos scripts fallaron")
             sys.exit(1)
     except KeyboardInterrupt:
-        print("\n⚠️  Ejecución interrumpida por el usuario")
+        print("\nEjecucion interrumpida por el usuario")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\nError inesperado: {e}")
         sys.exit(1)
