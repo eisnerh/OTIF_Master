@@ -20,30 +20,34 @@ def ensure_dir(p): os.makedirs(p, exist_ok=True)
 def limpiar_sesion_sap(session):
     """
     Limpia la sesión SAP antes de ejecutar el script.
-    - Cierra ventanas abiertas
-    - Regresa al menú principal
-    - Espera a que la sesión esté lista
+    - Versión suave para z_devo_alv que no interfiere con el estado esperado
+    - Solo regresa al menú principal sin cerrar ventanas agresivamente
     """
     try:
-        # Ir al menú principal
-        session.findById("wnd[0]").sendVKey(0)  # Enter
+        # Solo regresar al menú principal de manera suave
         session.findById("wnd[0]").sendCommand("/n")  # Comando para ir al menú principal
         session.findById("wnd[0]").sendVKey(0)  # Enter
+        
+        # Esperar un momento para que la transición se complete
+        time.sleep(1)
+        
+        # Verificar que estamos en el menú principal
+        try:
+            # Si hay ventanas adicionales, cerrarlas suavemente
+            for i in range(1, 3):  # Solo cerrar hasta 2 ventanas adicionales
+                try:
+                    if exists(session, f"wnd[{i}]"):
+                        session.findById(f"wnd[{i}]").close()
+                        time.sleep(0.5)
+                except:
+                    break
+        except:
+            pass
 
-        # Cerrar ventanas adicionales si existen
-        for i in range(1, 10):  # Máximo 10 ventanas
-            try:
-                session.findById(f"wnd[{i}]").close()
-            except:
-                break  # No hay más ventanas
-
-        # Esperar a que la sesión esté lista
-        while not session.findById("wnd[0]/usr").Text:
-            time.sleep(0.5)
-
-        print("✅ Sesión SAP limpiada correctamente.")
+        print("✅ Sesión SAP limpiada correctamente (modo suave).")
     except Exception as e:
         print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+        # No fallar si hay error en la limpieza, continuar con el script
 
 
 def attach_to_sap(conn_idx=-1, sess_idx=-1):

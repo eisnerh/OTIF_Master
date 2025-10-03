@@ -141,7 +141,7 @@ def main():
             "name": "Z_DEVO_ALV",
             "file": "z_devo_alv.py",
             "needs_date": False,
-            "default_row": 1,
+            "default_row": 12,
             "output_subdir": "z_devo_alv"
         },
         {
@@ -247,14 +247,24 @@ def main():
         if debug_mode:
             args.append("--debug")
         
+        # Debug específico para z_devo_alv para diagnosticar problemas
+        if script_name == "Z_DEVO_ALV":
+            args.append("--debug")
+            print(f"🔍 Debug habilitado específicamente para {script_name}")
+        
         # Ejecutar script
         success = ejecutar_script(script_name, script_file, *args)
         results[script_name] = success
         
         # Pausa entre scripts
         if i < total_scripts:
-            print(f"Esperando 3 segundos antes del siguiente script...")
-            time.sleep(3)
+            # Pausa más larga después de z_devo_alv para estabilizar la sesión
+            if script_name == "Z_DEVO_ALV":
+                print(f"Esperando 5 segundos después de {script_name} para estabilizar la sesión...")
+                time.sleep(5)
+            else:
+                print(f"Esperando 3 segundos antes del siguiente script...")
+                time.sleep(3)
     
     # Resumen final
     successful = sum(1 for success in results.values() if success)
@@ -326,7 +336,7 @@ CONFIGURACION POR SCRIPT:
     Y_DEV_82:      Fila 2,  no requiere fecha, subdir: y_dev_82
     ZHBO:          Fila 1,  requiere fecha, subdir: zhbo
     ZRED:          Fila 1,  no requiere fecha, subdir: zred
-    Z_DEVO_ALV:    Fila 1,  no requiere fecha, subdir: z_devo_alv
+    Z_DEVO_ALV:    Fila 12, no requiere fecha, subdir: z_devo_alv
     ZSD_INCIDENCIAS: Fila 12, no requiere fecha, subdir: zsd_incidencias
 
 CARPETAS:
