@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 # Rutas y configuraciones
-carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\9-Septiembre"
+carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\10-Octubre"
 bahias = 'Bahias'
 
 # Generar nombre base automáticamente basado en la fecha actual

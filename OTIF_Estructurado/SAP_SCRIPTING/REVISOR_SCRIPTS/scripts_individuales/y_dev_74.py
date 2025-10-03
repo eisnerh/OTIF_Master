@@ -1,22 +1,17 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Automatiza la transacción Y_DEV_74 (y_dev_42000074) y exporta a Excel usando SAP GUI Scripting (COM).
-Patrón robusto:
-  - Detección dinámica del árbol (GuiTree). Si no existe, se continúa sin seleccionar nodo.
-  - Retorno automático a SAP Easy Access al finalizar.
-  - Modo --debug para listar controles visibles e IDs (ayuda a ajustar IDs en tu entorno).
-
-Requisitos:
-  - SAP GUI Scripting habilitado en cliente y servidor.
-  - pywin32 instalado: pip install pywin32
-  - SAP Logon abierto y sesión activa.
+Y_DEV_74 (homologado)
+---------------------
+• Exporta a Excel usando SAP GUI Scripting (COM / pywin32).
+• Detección dinámica del árbol (GuiTree) + modo --debug con DUMP de controles.
+• Retorno automático a SAP Easy Access al finalizar.
+• Auto-selección de conexión y sesión por defecto (--conn -1, --sess -1).
+• Soporta parámetro de fecha (SP$00002-LOW). Por defecto: AYER (dd.mm.yyyy).
 
 Uso (ejemplos):
-  python y_dev_74.py --output "C:\\data" --filename "y_dev_74.xls" --row 25 --conn 0 --sess 0
-  python y_dev_74.py --date "27.09.2025" --node "F00119" --row 25 --output "C:\\data" --filename "y_dev_74.xls" --conn 0 --sess 0 --debug
+  python y_dev_74_homologado.py --output "C:\\data\\y_dev_74" --row 25 --debug
+  python y_dev_74_homologado.py --tcode y_dev_42000074 --node F00119 --date 27.09.2025 --conn -1 --sess -1
 """
-
 import os
 import sys
 import time
@@ -24,7 +19,7 @@ import argparse
 from datetime import datetime, timedelta
 
 try:
-    import win32com.client
+    import win32com.client  # type: ignore
 except ImportError:
     print("❌ Falta pywin32. Instala con: pip install pywin32")
     sys.exit(1)
@@ -34,34 +29,65 @@ class SAPGuiError(Exception):
     pass
 
 
+# ------------------------------ utilidades base --------------------------------
 def ensure_dir(path: str):
     os.makedirs(path, exist_ok=True)
 
 
-def attach_to_sap(connection_index=0, session_index=0):
-    """Adjunta a la sesión de SAP ya abierta."""
+def attach_to_sap(connection_index: int = -1, session_index: int = -1):
+    """Adjunta a SAP GUI.
+    Si connection_index o session_index son < 0, selecciona automáticamente el último disponible.
+    Devuelve: (application, connection, session, resolved_conn_index, resolved_sess_index)
+    """
     try:
         SapGuiAuto = win32com.client.GetObject("SAPGUI")
     except Exception:
         raise SAPGuiError("No se encontró el objeto SAPGUI. ¿Está abierto SAP Logon?")
-
     try:
         application = SapGuiAuto.GetScriptingEngine
     except Exception:
         raise SAPGuiError("No se pudo obtener el motor de scripting. ¿Scripting habilitado?")
 
+    # Resolver conexión
+    try:
+        conn_count = application.Children.Count
+    except Exception:
+        conn_count = 0
+    if conn_count == 0:
+        raise SAPGuiError("No hay conexiones abiertas en SAP Logon.")
+
+    if connection_index is None or connection_index < 0:
+        connection_index = conn_count - 1  # última
+    if connection_index >= conn_count:
+        raise SAPGuiError(f"No existe la conexión index={connection_index}. Total={conn_count}")
     try:
         connection = application.Children(connection_index)
     except Exception:
         raise SAPGuiError(f"No existe la conexión index={connection_index}.")
+
+    # Resolver sesión
+    try:
+        sess_count = connection.Children.Count
+    except Exception:
+        sess_count = 0
+    if sess_count == 0:
+        raise SAPGuiError(f"La conexión index={connection_index} no tiene sesiones abiertas.")
+
+    if session_index is None or session_index < 0:
+        session_index = sess_count - 1  # última
+    if session_index >= sess_count:
+        raise SAPGuiError(
+            f"No existe la sesión index={session_index} en la conexión {connection_index}. Total={sess_count}"
+        )
     try:
         session = connection.Children(session_index)
     except Exception:
         raise SAPGuiError(f"No existe la sesión index={session_index}.")
-    return application, connection, session
+
+    return application, connection, session, connection_index, session_index
 
 
-def find(session, obj_id, timeout=12.0, interval=0.25):
+def find(session, obj_id, timeout: float = 12.0, interval: float = 0.25):
     """Espera hasta encontrar un control por ID (con timeout)."""
     t0 = time.time()
     while time.time() - t0 < timeout:
@@ -101,7 +127,7 @@ def send_tcode(session, tcode: str):
     wnd0.sendVKey(0)  # Enter
 
 
-# ---------- Descubrimiento dinámico (árbol / debug) --------------------------
+# ------------------------------ árbol dinámico ---------------------------------
 
 def iter_children(obj):
     """Itera hijos de un objeto SAP GUI (seguro para objetos sin Children)."""
@@ -113,8 +139,8 @@ def iter_children(obj):
         yield obj.Children(i)
 
 
-def find_control_by_type(root, target_type: str, timeout=8.0):
-    """Busca en anchura bajo 'root' un control por .Type (p.ej., 'GuiTree')."""
+def find_control_by_type(root, target_type: str, timeout: float = 8.0):
+    """Búsqueda en anchura por .Type (p.ej., 'GuiTree') bajo 'root'."""
     t0 = time.time()
     while time.time() - t0 < timeout:
         queue = [root]
@@ -131,11 +157,7 @@ def find_control_by_type(root, target_type: str, timeout=8.0):
 
 
 def try_get_tree(session):
-    """
-    Intenta obtener el GuiTree principal:
-      1) Por IDs típicos (compatibilidad).
-      2) Por exploración de tipo (GuiTree) bajo wnd[0]/usr.
-    """
+    """Intenta obtener el GuiTree principal por IDs comunes o por tipo (fallback)."""
     candidates = [
         "wnd[0]/usr/cntlIMAGE_CONTAINER/shellcont/shell/shellcont[0]/shell",
         "wnd[0]/usr/cntlTREE_CONTAINER/shellcont/shell/shellcont[0]/shell",
@@ -147,14 +169,12 @@ def try_get_tree(session):
             ctl = session.FindById(cid)
             if getattr(ctl, "Type", "") in ("GuiTree", "GuiShell"):
                 return ctl
-
     usr = find(session, "wnd[0]/usr")
     tree = find_control_by_type(usr, "GuiTree", timeout=6.0)
     return tree  # Puede ser None si no hay árbol en esta transacción
 
 
-def select_tree_node_dynamic(session, node_key: str, debug=False):
-    """Selecciona y abre (doble clic) un nodo de árbol si existe un GuiTree."""
+def select_tree_node_dynamic(session, node_key: str, debug: bool = False):
     tree = try_get_tree(session)
     if not tree:
         if debug:
@@ -172,7 +192,7 @@ def select_tree_node_dynamic(session, node_key: str, debug=False):
         return False
 
 
-def dump_controls(session, wnd="wnd[0]"):
+def dump_controls(session, wnd: str = "wnd[0]"):
     """Lista IDs/Type de controles bajo wnd[0]/usr (diagnóstico con --debug)."""
     print("\n--- DUMP DE CONTROLES (IDs y Types) ---")
     root = find(session, f"{wnd}/usr")
@@ -198,10 +218,9 @@ def dump_controls(session, wnd="wnd[0]"):
             continue
     print("--- FIN DUMP ---\n")
 
-# ---------- Fin dinámico -----------------------------------------------------
 
+# ------------------------------ volver a Easy Access ----------------------------
 
-# === Retorno a SAP Easy Access ===============================================
 def go_to_easy_access(session):
     """Vuelve a SAP Easy Access y maneja pop-ups comunes."""
     ok = find(session, "wnd[0]/tbar[0]/okcd")
@@ -211,11 +230,11 @@ def go_to_easy_access(session):
         press_if_exists(session, f"wnd[{wnd_index}]/tbar[0]/btn[0]")   # Sí/Continuar
         press_if_exists(session, f"wnd[{wnd_index}]/tbar[0]/btn[11]")  # Guardar/Aceptar
         press_if_exists(session, f"wnd[{wnd_index}]/usr/btnSPOP-OPTION1")
-# ==============================================================================
 
+
+# ------------------------------ flujo principal Y_DEV_74 ------------------------
 
 def set_main_date(session, field_id: str, date_str: str):
-    """Setea la fecha en el campo de la dynpro principal (ctxt<field_id>)."""
     ctrl = find(session, f"wnd[0]/usr/ctxt{field_id}")
     ctrl.text = date_str
     try:
@@ -225,15 +244,23 @@ def set_main_date(session, field_id: str, date_str: str):
         pass
 
 
-def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
-                 output_path: str, filename: str, date_str: str,
-                 debug: bool = False, encoding: str = "0000"):
+def run_y_dev_74(
+    session,
+    tcode: str,
+    node_key: str,
+    row_number: int,
+    output_path: str,
+    filename: str,
+    date_str: str,
+    debug: bool = False,
+    encoding: str = "0000",
+):
     """
-    Flujo:
-      - tcode y_dev_42000074
-      - (si hay) árbol -> nodo F00119
-      - botón selección -> limpiar ENAME-LOW -> buscar -> ALV (fila) -> doble clic
-      - setear fecha SP$00002-LOW -> ejecutar -> exportar -> guardar -> verificar -> volver a Easy Access
+    Flujo (homologado):
+    - tcode (por defecto y_dev_42000074)
+    - (si hay) árbol -> abrir nodo (por defecto F00119)
+    - botón selección -> limpiar ENAME-LOW -> buscar -> ALV (fila) -> doble clic
+    - setear fecha SP$00002-LOW -> ejecutar -> exportar -> guardar -> verificar -> volver a Easy Access
     """
     # 1) Ir a la transacción
     send_tcode(session, tcode)
@@ -245,7 +272,7 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
 
     # 3) Botón de selección
     if press_if_exists(session, "wnd[0]/tbar[1]/btn[17]") is False and debug:
-        print("ℹ️ No se encontró el botón de selección [17]; continuando si la dynpro ya está disponible.")
+        print("ℹ️ No se encontró el botón de selección [17]; se continúa si la dynpro ya está disponible.")
 
     # 4) Pop-up: limpiar ENAME-LOW y buscar
     ename = find(session, "wnd[1]/usr/txtENAME-LOW")
@@ -257,9 +284,8 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
         pass
     find(session, "wnd[1]/tbar[0]/btn[8]").press()
 
-    # 5) Seleccionar fila en ALV y doble clic (scroll si hace falta)
+    # 5) Seleccionar fila en ALV y doble clic (con posible scroll)
     alv = find(session, "wnd[1]/usr/cntlALV_CONTAINER_1/shellcont/shell")
-    # Intentar desplazar para garantizar visibilidad de la fila objetivo
     try:
         if row_number > 10:
             alv.firstVisibleRow = max(row_number - 10, 0)
@@ -267,11 +293,7 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
         pass
     alv.currentCellRow = row_number
     alv.selectedRows = str(row_number)
-    try:
-        alv.doubleClickCurrentCell()
-    except Exception:
-        # Alternativa si fuera necesario: alv.doubleClick(row_number, "<colname>")
-        raise
+    alv.doubleClickCurrentCell()
 
     # 6) Setear fecha en dynpro principal
     set_main_date(session, "SP$00002-LOW", date_str)
@@ -290,13 +312,11 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
     # 10) Guardado
     ensure_dir(output_path)
     full_path = os.path.join(output_path, filename)
-    
-    # Eliminar archivo si ya existe para evitar conflictos
+
     if os.path.exists(full_path):
         try:
             os.remove(full_path)
         except PermissionError:
-            # Si no se puede eliminar por permisos, intentar con nombre único
             base_name, ext = os.path.splitext(filename)
             timestamp = datetime.now().strftime('%H%M%S')
             filename = f"{base_name}_{timestamp}{ext}"
@@ -304,6 +324,7 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
 
     find(session, "wnd[1]/usr/ctxtDY_PATH").text = output_path
     find(session, "wnd[1]/usr/ctxtDY_FILENAME").text = filename
+
     enc = find(session, "wnd[1]/usr/ctxtDY_FILE_ENCODING")
     enc.text = encoding
     try:
@@ -311,6 +332,7 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
         enc.caretPosition = len(encoding)
     except Exception:
         pass
+
     find(session, "wnd[1]/tbar[0]/btn[11]").press()
 
     # 11) Pop-ups comunes
@@ -322,7 +344,7 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
     if not os.path.isfile(full_path):
         if debug:
             dump_controls(session, "wnd[0]")
-            press_if_exists(session, "wnd[0]/tbar[0]/btn[3]")  # Back
+        press_if_exists(session, "wnd[0]/tbar[0]/btn[3]")  # Back
         raise SAPGuiError(f"El archivo no se generó: {full_path}")
 
     # 13) Volver a SAP Easy Access
@@ -331,43 +353,47 @@ def run_y_dev_74(session, tcode: str, node_key: str, row_number: int,
     return full_path
 
 
+# ----------------------------------- CLI ---------------------------------------
+
 def parse_args():
-    p = argparse.ArgumentParser(description="Ejecuta Y_DEV_74 y exporta a Excel (robusto).")
+    p = argparse.ArgumentParser(description="Ejecuta Y_DEV_74 y exporta a Excel (robusto/homologado).")
     p.add_argument("--tcode", default="y_dev_42000074", help='Transacción a ejecutar (por defecto: "y_dev_42000074")')
     p.add_argument("--node", default="F00119", help='Nodo del árbol a abrir (por defecto: "F00119")')
     p.add_argument("-r", "--row", type=int, default=25, help="Fila del ALV a seleccionar (por defecto: 25)")
-    p.add_argument("-o", "--output", default=r"C:\data\y_dev_74", help="Ruta de salida (por defecto: C:\\data\\y_dev_74)")
+    p.add_argument("-o", "--output", default=r"C:\\data\\y_dev_74", help="Ruta de salida (por defecto: C:\\data\\y_dev_74)")
     p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("--date", help='Fecha para SP$00002-LOW (formato "dd.mm.yyyy"). Si se omite, usa AYER.')
-    p.add_argument("--conn", type=int, default=0, help="Índice de conexión SAP (por defecto: 0)")
-    p.add_argument("--sess", type=int, default=0, help="Índice de sesión SAP (por defecto: 0)")
+    p.add_argument("--conn", type=int, default=-1, help="Índice de conexión SAP (-1 = auto, por defecto: -1)")
+    p.add_argument("--sess", type=int, default=-1, help="Índice de sesión SAP (-1 = auto, por defecto: -1)")
     p.add_argument("--debug", action="store_true", help="Muestra diagnóstico de controles si hay fallos.")
     return p.parse_args()
 
 
 def main():
     args = parse_args()
+
     date_str = args.date or (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
-    
+
     # Generar nombre de archivo con fecha si no se especifica
     if not args.filename:
         fecha_actual = datetime.now().strftime('%d-%m-%Y')
         args.filename = f"y_dev_74_{fecha_actual}.xls"
-    
+
     # Asegurar que el directorio existe
     os.makedirs(args.output, exist_ok=True)
 
-    print("INICIANDO SCRIPT Y_DEV_74")
+    print("INICIANDO SCRIPT Y_DEV_74 (HOMOLOGADO)")
     print("=" * 60)
     print(f"Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Conexión={args.conn}, Sesión={args.sess}")
-    print(f"TCode: {args.tcode} | Nodo: {args.node} | Fila ALV: {args.row}")
-    print(f"Salida: {args.output}\\{args.filename} | Fecha: {date_str}")
-    print(f"Debug: {'ON' if args.debug else 'OFF'}")
-    print("=" * 60)
 
     try:
-        _, _, session = attach_to_sap(args.conn, args.sess)
+        _, _, session, resolved_conn, resolved_sess = attach_to_sap(args.conn, args.sess)
+        print(f"Conexión={resolved_conn}, Sesión={resolved_sess}")
+        print(f"TCode: {args.tcode} \nNodo: {args.node} \nFila ALV: {args.row}")
+        print(f"Salida: {args.output}\\{args.filename} \nFecha: {date_str}")
+        print(f"Debug: {'ON' if args.debug else 'OFF'}")
+        print("=" * 60)
+
         full_path = run_y_dev_74(
             session,
             tcode=args.tcode,
@@ -378,6 +404,7 @@ def main():
             date_str=date_str,
             debug=args.debug,
         )
+
         print("\n" + "=" * 60)
         print("🎉 PROCESO Y_DEV_74 COMPLETADO EXITOSAMENTE")
         print("=" * 60)
@@ -394,7 +421,7 @@ def main():
         print(f"❌ Error SAP: {e}")
         if args.debug:
             try:
-                _, _, session = attach_to_sap(args.conn, args.sess)
+                _, _, session, _, _ = attach_to_sap(args.conn, args.sess)
                 dump_controls(session, "wnd[0]")
             except Exception:
                 pass
@@ -403,7 +430,7 @@ def main():
         print(f"❌ Error inesperado: {e}")
         if args.debug:
             try:
-                _, _, session = attach_to_sap(args.conn, args.sess)
+                _, _, session, _, _ = attach_to_sap(args.conn, args.sess)
                 dump_controls(session, "wnd[0]")
             except Exception:
                 pass
