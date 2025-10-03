@@ -228,15 +228,11 @@ def run_y_dev_45(session, row_number: int, output_path: str, filename: str,
                  debug: bool = False, encoding: str = "0000"):
     """
     Flujo:
-      - Limpiar sesión SAP
       - tcode y_dev_42000045
       - (si hay) árbol -> nodo F00139
       - botón selección -> limpiar ENAME-LOW -> buscar -> ALV (fila) -> doble clic
       - ejecutar -> exportar -> guardar -> verificar -> volver a Easy Access
     """
-    # 0) Limpiar sesión SAP antes de comenzar
-    limpiar_sesion_sap(session)
-    
     # 1) Ir a la transacción
     send_tcode(session, "y_dev_42000045")
 

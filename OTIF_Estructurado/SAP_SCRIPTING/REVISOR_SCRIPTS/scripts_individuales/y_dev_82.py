@@ -279,15 +279,11 @@ def run_y_dev_82(
 ):
     """
     Flujo (homologado):
-    - Limpiar sesión SAP
     - tcode (por defecto y_dev_42000082)
     - (si hay) árbol -> abrir nodo (por defecto F00139)
     - botón selección -> limpiar ENAME-LOW -> buscar -> ALV (fila) -> doble clic
     - ejecutar -> exportar -> guardar -> verificar -> volver a Easy Access
     """
-    # 0) Limpiar sesión SAP antes de comenzar
-    limpiar_sesion_sap(session)
-    
     # 1) Ir a la transacción
     send_tcode(session, tcode)
 

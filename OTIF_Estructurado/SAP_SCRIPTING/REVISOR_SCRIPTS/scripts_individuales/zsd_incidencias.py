@@ -215,9 +215,6 @@ def export_with_fallback(session, output_path: str, filename: str, encoding: str
 
 def run_zsd_incidencias(session, row_number: int, output_path: str, filename: str,
                          encoding: str = "0000", debug: bool = False):
-    # 0) Limpiar sesión SAP antes de comenzar
-    limpiar_sesion_sap(session)
-    
     # 1) Ir a la transacción
     send_tcode(session, "zsd_incidencias")
 
