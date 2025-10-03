@@ -318,12 +318,16 @@ def run_y_rep_plr(session,
 # ----------------------------------- CLI ---------------------------------------
 
 def parse_args():
+    
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')
+    nombre_archivo = f"REP_PLR-{fecha_actual}.xls"
+
     p = argparse.ArgumentParser(description="Ejecuta Y_REP_PLR (homologado estilo Y_DEV_74) y exporta a Excel.")
     p.add_argument("--tcode", default="zsd_rep_planeamiento", help='Transacción (por defecto: "zsd_rep_planeamiento")')
     p.add_argument("--node", default="F00120", help='Nodo del árbol a abrir (por defecto: "F00120")')
     p.add_argument("-r", "--row", type=int, default=11, help="Fila del ALV a seleccionar (por defecto: 11)")
-    p.add_argument("-o", "--output", default=r"C:\\data", help="Ruta de salida (por defecto: C:\\data)")
-    p.add_argument("-f", "--filename", default="REP_PLR.xls", help="Nombre del archivo (por defecto: REP_PLR.xls)")
+    p.add_argument("-o", "--output", default=r"C:\\data\\rep_plr", help="Ruta de salida (por defecto: C:\\data\\rep_plr)")
+    p.add_argument("-f", "--filename", default=nombre_archivo, help=f"Nombre del archivo (por defecto: {nombre_archivo})")
     p.add_argument("--date", help='Fecha para P_LFDAT-LOW ("dd.mm.yyyy"). Si se omite, usa AYER.')
     p.add_argument("--encoding", default="0000", help='Codificación de archivo (campo DY_FILE_ENCODING).')
     p.add_argument("--conn", type=int, default=-1, help="Índice de conexión SAP (-1 = auto)")
