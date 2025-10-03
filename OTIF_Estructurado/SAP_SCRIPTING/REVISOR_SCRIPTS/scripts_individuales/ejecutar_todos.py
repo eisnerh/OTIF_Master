@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 def ejecutar_script(script_name, script_path, *args):
     """
-    Ejecuta un script Python específico
+    Ejecuta un script Python específico y limpia la sesión SAP después
     
     Args:
         script_name (str): Nombre del script para logging
@@ -34,6 +34,19 @@ def ejecutar_script(script_name, script_path, *args):
             print(f"OK: {script_name} ejecutado exitosamente")
             if result.stdout:
                 print(f"Salida: {result.stdout.strip()}")
+            
+            # Limpiar sesión SAP después del script exitoso
+            print("🧹 Limpiando sesión SAP...")
+            try:
+                cleanup_cmd = [sys.executable, "limpiar_sesion_sap.py"]
+                cleanup_result = subprocess.run(cleanup_cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+                if cleanup_result.returncode == 0:
+                    print("✅ Sesión SAP limpiada correctamente")
+                else:
+                    print(f"⚠️ Advertencia: Error limpiando sesión SAP: {cleanup_result.stderr.strip()}")
+            except Exception as cleanup_error:
+                print(f"⚠️ Advertencia: No se pudo limpiar la sesión SAP: {cleanup_error}")
+            
             return True
         else:
             print(f"ERROR: {script_name}")

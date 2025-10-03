@@ -162,6 +162,9 @@ def go_to_easy_access(session):
 
 
 def run_z_devo_alv(session,tcode,node_key,row_number,output_path,filename,encoding="0000",debug=False):
+    # Limpiar sesión SAP antes de comenzar
+    limpiar_sesion_sap(session)
+    
     send_tcode(session,tcode)
     has_tree=select_tree_node_dynamic(session,node_key,debug=debug)
     if debug and not has_tree: print("INFO: sin nodo (no hay arbol o ID distinto)")

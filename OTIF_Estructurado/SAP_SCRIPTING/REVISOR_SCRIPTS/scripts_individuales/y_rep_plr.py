@@ -253,11 +253,15 @@ def run_y_rep_plr(session,
                   encoding: str = "0000"):
     """
     Flujo equivalente a Y_DEV_74, adaptado a PLR:
+    - Limpiar sesión SAP
     - tcode (zsd_rep_planeamiento)
     - árbol → abrir nodo (F00120)
     - selección → limpiar ENAME-LOW → buscar → ALV (fila) → doble clic
     - setear fecha P_LFDAT-LOW → ejecutar → exportar → guardar → verificar → volver a Easy Access
     """
+    # 0) Limpiar sesión SAP antes de comenzar
+    limpiar_sesion_sap(session)
+    
     # 1) Ir a la transacción
     send_tcode(session, tcode)
 

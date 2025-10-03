@@ -54,6 +54,9 @@ def limpiar_sesion_sap(session):
 
 
 def run_zhbo(session,row_number,output_path,filename,date_str,encoding="0000",debug=False):
+    # Limpiar sesión SAP antes de comenzar
+    limpiar_sesion_sap(session)
+    
     send_tcode(session,"zhbo")
     if press_if_exists(session,"wnd[0]/tbar[1]/btn[17]") is False and debug:
         print("INFO: no boton seleccion [17]")
