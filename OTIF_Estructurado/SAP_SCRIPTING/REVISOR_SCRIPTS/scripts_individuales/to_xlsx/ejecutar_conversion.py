@@ -15,8 +15,6 @@ def main():
     print("Sistema OTIF - Extracciones SAP")
     print("="*60)
     
-    sys.path.append(str(script_principal.parent))
-    
     # Verificar que el script principal existe
     script_principal = Path(r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py")
     if not script_principal.exists():
