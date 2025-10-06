@@ -6,8 +6,8 @@ import time
 
 ## 1. Definir las rutas de tus archivos
 # La 'r' al principio de la cadena de texto es para evitar problemas con las barras invertidas
-ruta_archivo1 = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025\REP PLR ESTATUS ENTREGAS v25 - 1 Semestre.xlsx"
-ruta_archivo2 = r"C:\Users\eisne\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025\REP PLR ESTATUS ENTREGAS v25.xlsx"
+ruta_archivo1 = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025\REP PLR ESTATUS ENTREGAS v25 - 1 Semestre.xlsx"
+ruta_archivo2 = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\YTD\2025\REP PLR ESTATUS ENTREGAS v25.xlsx"
 
 ## 2. Leer el primer archivo y medir el tiempo
 print(f"⌛️ Leyendo el archivo: {os.path.basename(ruta_archivo1)}...")
