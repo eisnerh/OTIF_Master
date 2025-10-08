@@ -25,6 +25,19 @@ NOMBRES_AMIGABLES = {
     "zsd_incidencias.py": "⚠️ Incidencias SD"
 }
 
+# Configuración de argumentos para scripts SAP
+SCRIPTS_SAP_CONFIG = {
+    "y_dev_45.py": ["--conn", "-1", "--sess", "-1"],
+    "y_dev_74.py": ["--conn", "-1", "--sess", "-1"],
+    "y_dev_82.py": ["--conn", "-1", "--sess", "-1"],
+    "y_rep_plr.py": ["--conn", "-1", "--sess", "-1"],
+    "z_devo_alv.py": ["--conn", "-1", "--sess", "-1"],
+    "zhbo.py": ["--conn", "-1", "--sess", "-1"],
+    "zred.py": ["--conn", "-1", "--sess", "-1"],
+    "zresguias.py": ["--conn", "-1", "--sess", "-1"],
+    "zsd_incidencias.py": ["--conn", "-1", "--sess", "-1"]
+}
+
 class MenuAplicacion:
     def __init__(self, root):
         self.root = root
@@ -189,13 +202,13 @@ class MenuAplicacion:
         botones_frame = tk.Frame(container, bg="white")
         botones_frame.pack(fill="both", expand=True, padx=15, pady=(0, 15))
 
-        scripts_generales = [
-        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py",
-        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\reorder_lists_of_excel_files.py",
-        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidado_ultimo_archivo_materiales.py",
-        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\python ejecutar_proceso_completo.py",
-        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidar_zresguias_excel.ipynb",
-        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\carga_roadshow.py"
+scripts_generales = [
+    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py",
+    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\reorder_lists_of_excel_files.py",
+    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidado_ultimo_archivo_materiales.py",
+    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\python ejecutar_proceso_completo.py",
+    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidar_zresguias_excel.ipynb",
+    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\carga_roadshow.py"
 ]
 
         self.crear_grid_botones(botones_frame, scripts_generales, "Action.TButton", 2)
@@ -229,8 +242,8 @@ class MenuAplicacion:
         # Frame para botones en grid
         botones_frame = tk.Frame(container, bg="white")
         botones_frame.pack(fill="both", expand=True, padx=15, pady=(0, 15))
-        
-        scripts_sap = [
+
+scripts_sap = [
     r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\y_dev_45.py",
     r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\y_dev_74.py",
     r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\y_dev_82.py",
@@ -243,6 +256,23 @@ class MenuAplicacion:
 ]
 
         self.crear_grid_botones(botones_frame, scripts_sap, "SAP.TButton", 3)
+        
+        # Botón para ejecutar todos los scripts SAP
+        btn_ejecutar_todos = tk.Button(
+            container,
+            text="🚀 Ejecutar TODOS los Scripts SAP en Secuencia",
+            command=self.ejecutar_todos_sap,
+            font=("Segoe UI", 11, "bold"),
+            bg="#9C27B0",
+            fg="white",
+            activebackground="#7B1FA2",
+            activeforeground="white",
+            relief="flat",
+            padx=20,
+            pady=15,
+            cursor="hand2"
+        )
+        btn_ejecutar_todos.pack(fill="x", padx=15, pady=(10, 15))
         
     def crear_seccion_torre_control(self, parent):
         """Crear sección especial para Torre de Control"""
@@ -329,14 +359,35 @@ class MenuAplicacion:
             )
             return
         
+        # Verificar si es un script SAP y mostrar advertencia
+        nombre_archivo = os.path.basename(ruta_script)
+        if nombre_archivo in SCRIPTS_SAP_CONFIG:
+            respuesta = messagebox.askyesno(
+                "Script SAP",
+                f"⚠️ Vas a ejecutar un script SAP:\n\n{nombre}\n\n"
+                "❗ Asegúrate de que SAP Logon esté abierto y con una sesión activa.\n\n"
+                "¿Deseas continuar?",
+                icon='warning'
+            )
+            if not respuesta:
+                return
+        
         def ejecutar():
             self.script_ejecutandose = True
             self.status_var.set(f"⏳ Ejecutando: {nombre}...")
             self.status_label.config(fg="#f39c12")
             
             try:
+                # Obtener nombre del archivo
+                nombre_archivo = os.path.basename(ruta_script)
+                
+                # Construir comando con argumentos específicos para scripts SAP
+                cmd = ["python", ruta_script]
+                if nombre_archivo in SCRIPTS_SAP_CONFIG:
+                    cmd.extend(SCRIPTS_SAP_CONFIG[nombre_archivo])
+                
                 resultado = subprocess.run(
-                    ["python", ruta_script],
+                    cmd,
                     check=True,
                     capture_output=True,
                     text=True
@@ -354,10 +405,14 @@ class MenuAplicacion:
                 self.status_var.set(f"❌ Error en: {nombre}")
                 self.status_label.config(fg="#e74c3c")
                 
-                messagebox.showerror(
-                    "Error",
-                    f"❌ Error al ejecutar el script:\n\n{nombre}\n\n{str(e)}"
-                )
+                error_msg = f"❌ Error al ejecutar el script:\n\n{nombre}\n\n"
+                error_msg += f"Código de salida: {e.returncode}\n\n"
+                if e.stdout:
+                    error_msg += f"Salida estándar:\n{e.stdout}\n\n"
+                if e.stderr:
+                    error_msg += f"Errores:\n{e.stderr}"
+                
+                messagebox.showerror("Error", error_msg)
             
             except Exception as e:
                 self.status_var.set(f"❌ Error inesperado en: {nombre}")
@@ -371,6 +426,89 @@ class MenuAplicacion:
             finally:
                 self.script_ejecutandose = False
                 # Volver al estado listo después de 3 segundos
+                self.root.after(3000, lambda: self.status_var.set("✅ Sistema Listo"))
+                self.root.after(3000, lambda: self.status_label.config(fg="white"))
+        
+        # Ejecutar en hilo separado
+        thread = threading.Thread(target=ejecutar, daemon=True)
+        thread.start()
+    
+    def ejecutar_todos_sap(self):
+        """Ejecutar todos los scripts SAP en secuencia usando ejecutar_todos.py"""
+        if self.script_ejecutandose:
+            messagebox.showwarning(
+                "Script en Ejecución",
+                "Ya hay un script ejecutándose. Por favor espera a que termine."
+            )
+            return
+        
+        respuesta = messagebox.askyesno(
+            "Ejecutar Todos los Scripts SAP",
+            "⚠️ Vas a ejecutar TODOS los scripts SAP en secuencia:\n\n"
+            "📦 Y_DEV_45, Y_DEV_74, Y_DEV_82\n"
+            "📈 Y_REP_PLR\n"
+            "📋 Z_DEVO_ALV\n"
+            "📊 ZHBO\n"
+            "🔴 ZRED\n"
+            "📄 ZRESGUIAS\n"
+            "⚠️ ZSD_INCIDENCIAS\n\n"
+            "❗ Asegúrate de que SAP Logon esté abierto y con una sesión activa.\n\n"
+            "⏱️ Este proceso puede tomar varios minutos.\n\n"
+            "¿Deseas continuar?",
+            icon='warning'
+        )
+        
+        if not respuesta:
+            return
+        
+        def ejecutar():
+            self.script_ejecutandose = True
+            self.status_var.set("⏳ Ejecutando todos los scripts SAP...")
+            self.status_label.config(fg="#f39c12")
+            
+            try:
+                ruta_ejecutar_todos = r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\ejecutar_todos.py"
+                
+                resultado = subprocess.run(
+                    ["python", ruta_ejecutar_todos],
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
+                
+                self.status_var.set("✅ Todos los scripts SAP completados")
+                self.status_label.config(fg="#27ae60")
+                
+                messagebox.showinfo(
+                    "Éxito",
+                    "✅ Todos los scripts SAP se ejecutaron exitosamente!\n\n"
+                    "Los archivos se guardaron en C:\\data\\SAP_Extraction\\"
+                )
+                
+            except subprocess.CalledProcessError as e:
+                self.status_var.set("❌ Error en ejecución de scripts SAP")
+                self.status_label.config(fg="#e74c3c")
+                
+                error_msg = "❌ Error al ejecutar los scripts SAP:\n\n"
+                error_msg += f"Código de salida: {e.returncode}\n\n"
+                if e.stdout:
+                    error_msg += f"Salida estándar:\n{e.stdout[:500]}\n\n"
+                if e.stderr:
+                    error_msg += f"Errores:\n{e.stderr[:500]}"
+                
+                messagebox.showerror("Error", error_msg)
+            
+            except Exception as e:
+                self.status_var.set("❌ Error inesperado en scripts SAP")
+                self.status_label.config(fg="#e74c3c")
+                
+                messagebox.showerror(
+                    "Error",
+                    f"❌ Error inesperado:\n\n{str(e)}"
+                )
+            
+            finally:
+                self.script_ejecutandose = False
                 self.root.after(3000, lambda: self.status_var.set("✅ Sistema Listo"))
                 self.root.after(3000, lambda: self.status_label.config(fg="white"))
         
