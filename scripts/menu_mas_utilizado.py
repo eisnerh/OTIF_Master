@@ -189,13 +189,13 @@ class MenuAplicacion:
         botones_frame = tk.Frame(container, bg="white")
         botones_frame.pack(fill="both", expand=True, padx=15, pady=(0, 15))
 
-scripts_generales = [
-    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py",
-    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\reorder_lists_of_excel_files.py",
-    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidado_ultimo_archivo_materiales.py",
-    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\python ejecutar_proceso_completo.py",
-    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidar_zresguias_excel.ipynb",
-    r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\carga_roadshow.py"
+        scripts_generales = [
+        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py",
+        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\reorder_lists_of_excel_files.py",
+        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidado_ultimo_archivo_materiales.py",
+        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\python ejecutar_proceso_completo.py",
+        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\consolidar_zresguias_excel.ipynb",
+        r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\ULTIMO_ARCHIVO\carga_roadshow.py"
 ]
 
         self.crear_grid_botones(botones_frame, scripts_generales, "Action.TButton", 2)
@@ -229,8 +229,8 @@ scripts_generales = [
         # Frame para botones en grid
         botones_frame = tk.Frame(container, bg="white")
         botones_frame.pack(fill="both", expand=True, padx=15, pady=(0, 15))
-
-scripts_sap = [
+        
+        scripts_sap = [
     r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\y_dev_45.py",
     r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\y_dev_74.py",
     r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\y_dev_82.py",
