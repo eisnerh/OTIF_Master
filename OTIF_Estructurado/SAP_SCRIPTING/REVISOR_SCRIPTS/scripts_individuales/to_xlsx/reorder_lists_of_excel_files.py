@@ -52,7 +52,7 @@ def fix_dot_dates(series: pd.Series) -> pd.Series:
         if isinstance(val, str):
             s = val.strip()
             if date_re.fullmatch(s):
-                return s.replace('.', '-')
+                return s.replace('.', '/')
         return val
     return series.map(_fix)
 

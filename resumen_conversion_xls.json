@@ -1,10 +1,46 @@
 {
-  "total_carpetas": 2,
-  "total_archivos": 2,
-  "total_exitosos": 2,
+  "total_carpetas": 9,
+  "total_archivos": 10,
+  "total_exitosos": 10,
   "total_fallidos": 0,
-  "total_movidos": 0,
+  "total_movidos": 9,
   "carpetas": [
+    {
+      "carpeta": "rep_plr",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    },
+    {
+      "carpeta": "y_dev_45",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    },
+    {
+      "carpeta": "y_dev_74",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    },
+    {
+      "carpeta": "y_dev_82",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    },
+    {
+      "carpeta": "zhbo",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    },
+    {
+      "carpeta": "zred",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    },
     {
       "carpeta": "Zresguias",
       "exitosos": 1,
@@ -12,18 +48,80 @@
       "total": 1
     },
     {
-      "carpeta": "z_devo_alv",
+      "carpeta": "zsd_incidencias",
       "exitosos": 1,
       "fallidos": 0,
       "total": 1
+    },
+    {
+      "carpeta": "z_devo_alv",
+      "exitosos": 2,
+      "fallidos": 0,
+      "total": 2
     }
   ],
   "archivos_procesados": [
     {
-      "original": "C:\\data\\SAP_Extraction\\Zresguias\\Zresguias_05-10-2025.xls",
-      "convertido": "C:\\data\\SAP_Extraction\\Zresguias\\Zresguias_05-10-2025.xlsx",
-      "filas": 1609,
+      "original": "C:\\data\\SAP_Extraction\\rep_plr\\REP_PLR-2025-10-07.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\rep_plr\\REP_PLR-2025-10-07.xlsx",
+      "filas": 3663,
+      "columnas": 36,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\y_dev_45\\y_dev_45_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\y_dev_45\\y_dev_45_07-10-2025.xlsx",
+      "filas": 3348,
+      "columnas": 13,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\y_dev_74\\y_dev_74_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\y_dev_74\\y_dev_74_07-10-2025.xlsx",
+      "filas": 192,
       "columnas": 25,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\y_dev_82\\y_dev_82_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\y_dev_82\\y_dev_82_07-10-2025.xlsx",
+      "filas": 57457,
+      "columnas": 18,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\zhbo\\zhbo_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\zhbo\\zhbo_07-10-2025.xlsx",
+      "filas": 4328,
+      "columnas": 27,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\zred\\zred_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\zred\\zred_07-10-2025.xlsx",
+      "filas": 380,
+      "columnas": 6,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\Zresguias\\Zresguias_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\Zresguias\\Zresguias_07-10-2025.xlsx",
+      "filas": 2428,
+      "columnas": 25,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\zsd_incidencias\\zsd_incidencias_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\zsd_incidencias\\zsd_incidencias_07-10-2025.xlsx",
+      "filas": 99,
+      "columnas": 20,
       "formato_detectado": "csv_utf16",
       "estructura_adaptada": true
     },
@@ -34,8 +132,62 @@
       "columnas": 27,
       "formato_detectado": "csv_utf16",
       "estructura_adaptada": true
+    },
+    {
+      "original": "C:\\data\\SAP_Extraction\\z_devo_alv\\z_devo_alv_07-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\z_devo_alv\\z_devo_alv_07-10-2025.xlsx",
+      "filas": 2354,
+      "columnas": 27,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
     }
   ],
-  "archivos_movidos": [],
+  "archivos_movidos": [
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\rep_plr\\REP_PLR-2025-10-07.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\rep_plr\\REP_PLR-2025-10-07.xls",
+      "carpeta_origen": "rep_plr"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\y_dev_45\\y_dev_45_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\y_dev_45\\y_dev_45_07-10-2025.xls",
+      "carpeta_origen": "y_dev_45"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\y_dev_74\\y_dev_74_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\y_dev_74\\y_dev_74_07-10-2025.xls",
+      "carpeta_origen": "y_dev_74"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\y_dev_82\\y_dev_82_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\y_dev_82\\y_dev_82_07-10-2025.xls",
+      "carpeta_origen": "y_dev_82"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\zhbo\\zhbo_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\zhbo\\zhbo_07-10-2025.xls",
+      "carpeta_origen": "zhbo"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\zred\\zred_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\zred\\zred_07-10-2025.xls",
+      "carpeta_origen": "zred"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\Zresguias\\Zresguias_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\Zresguias\\Zresguias_07-10-2025.xls",
+      "carpeta_origen": "Zresguias"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\zsd_incidencias\\zsd_incidencias_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\zsd_incidencias\\zsd_incidencias_07-10-2025.xls",
+      "carpeta_origen": "zsd_incidencias"
+    },
+    {
+      "archivo": "C:\\data\\SAP_Extraction\\z_devo_alv\\z_devo_alv_07-10-2025.xls",
+      "destino": "C:\\data\\SAP_Extraction\\XLS_Convertidos\\z_devo_alv\\z_devo_alv_07-10-2025.xls",
+      "carpeta_origen": "z_devo_alv"
+    }
+  ],
   "errores": []
 }
