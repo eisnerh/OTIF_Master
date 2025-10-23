@@ -226,7 +226,7 @@ def main():
     except KeyboardInterrupt:
         print("\nScript interrumpido"); sys.exit(1)
     except SAPGuiError as e:
-        print(f"Error SAP: {e}");
+        print(f"Error SAP: {e}")
         if args.debug:
             try: _,_,session,_,_=attach_to_sap(args.conn,args.sess); dump_controls(session,"wnd[0]")
             except Exception: pass

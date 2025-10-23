@@ -69,7 +69,7 @@ def main():
         "reporte_plr.py",
         "consolidar_datos.py"
     ]
-    
+        
     print(">>> INICIANDO PROCESO DE CONSOLIDACIÓN DE DATOS <<<")
     
     total_start_time = time.time()  # ⏱️ Record the total process start time
