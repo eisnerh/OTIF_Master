@@ -41,11 +41,11 @@ def ejecutar_script(script_name, script_path, *args):
                 cleanup_cmd = [sys.executable, "limpiar_sesion_sap.py"]
                 cleanup_result = subprocess.run(cleanup_cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
                 if cleanup_result.returncode == 0:
-                    print("✅ Sesión SAP limpiada correctamente")
+                    print(" Sesión SAP limpiada correctamente")
                 else:
-                    print(f"⚠️ Advertencia: Error limpiando sesión SAP: {cleanup_result.stderr.strip()}")
+                    print(f" Advertencia: Error limpiando sesión SAP: {cleanup_result.stderr.strip()}")
             except Exception as cleanup_error:
-                print(f"⚠️ Advertencia: No se pudo limpiar la sesión SAP: {cleanup_error}")
+                print(f" Advertencia: No se pudo limpiar la sesión SAP: {cleanup_error}")
             
             return True
         else:
