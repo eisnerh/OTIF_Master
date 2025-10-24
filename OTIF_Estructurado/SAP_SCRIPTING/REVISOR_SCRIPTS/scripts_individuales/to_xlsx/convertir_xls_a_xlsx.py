@@ -519,12 +519,12 @@ def main():
     try:
         # Verificar que pandas esté instalado
         import pandas as pd
-        print("Pandas disponible ✓")
+        print("Pandas disponible [ok]")
         
         # Verificar que openpyxl esté disponible
         try:
             import openpyxl
-            print("OpenPyXL disponible ✓")
+            print("OpenPyXL disponible [ok]")
         except ImportError:
             print("⚠️  OpenPyXL no está instalado. Instalando...")
             os.system("pip install openpyxl")
