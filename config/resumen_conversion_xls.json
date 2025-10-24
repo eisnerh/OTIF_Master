@@ -1,0 +1,27 @@
+{
+  "total_carpetas": 1,
+  "total_archivos": 1,
+  "total_exitosos": 1,
+  "total_fallidos": 0,
+  "total_movidos": 0,
+  "carpetas": [
+    {
+      "carpeta": "z_devo_alv",
+      "exitosos": 1,
+      "fallidos": 0,
+      "total": 1
+    }
+  ],
+  "archivos_procesados": [
+    {
+      "original": "C:\\data\\SAP_Extraction\\z_devo_alv\\z_devo_alv_03-10-2025.xls",
+      "convertido": "C:\\data\\SAP_Extraction\\z_devo_alv\\z_devo_alv_03-10-2025.xlsx",
+      "filas": 3632,
+      "columnas": 27,
+      "formato_detectado": "csv_utf16",
+      "estructura_adaptada": true
+    }
+  ],
+  "archivos_movidos": [],
+  "errores": []
+}

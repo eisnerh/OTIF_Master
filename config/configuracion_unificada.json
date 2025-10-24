@@ -1,0 +1,76 @@
+{
+  "sistema": {
+    "nombre": "OTIF Master",
+    "version": "2.0.0",
+    "descripcion": "Sistema unificado de procesamiento OTIF",
+    "fecha_creacion": "2025-10-24"
+  },
+  "rutas": {
+    "scripts_procesamiento": "scripts/procesamiento/",
+    "scripts_sap": "scripts/sap/",
+    "scripts_notebooks": "scripts/notebooks/",
+    "scripts_utilidades": "scripts/utilidades/",
+    "data": "data/",
+    "output": "output/",
+    "config": "config/",
+    "docs": "docs/"
+  },
+  "scripts_principales": {
+    "procesamiento": [
+      "agrupar_datos_no_entregas_mejorado.py",
+      "agrupar_datos_rep_plr.py", 
+      "agrupar_datos_vol_portafolio.py",
+      "unificar_datos_completos.py",
+      "consolidar_datos.py",
+      "reporte_plr.py",
+      "volumen_procesado_familia.py",
+      "vol_no_entregas.py",
+      "ejecutar_proceso_completo.py",
+      "rs_a_sap_ftp.py",
+      "consolidado_ultimo_archivo_materiales.py",
+      "consolidar_zresguias_plr.py",
+      "carga_roadshow.py",
+      "consolidad_mes_plr.py",
+      "consolidar_archivo_plr_2_parquet.py"
+    ],
+    "sap": [
+      "automatizacion_reportes_sap.py",
+      "ejecutar_diario.py",
+      "instalar_automatizacion.py",
+      "y_dev_45.py",
+      "y_dev_74.py", 
+      "y_dev_82.py",
+      "y_rep_plr.py",
+      "z_devo_alv.py",
+      "zhbo.py",
+      "zred.py",
+      "zresguias.py",
+      "zsd_incidencias.py",
+      "convertir_xls_a_xlsx.py",
+      "reorder_lists_of_excel_files.py",
+      "reorder_excel_file.py",
+      "ejecutar_conversion.py",
+      "loguearse_simple.py",
+      "nuevo_rep_plr.py",
+      "procesar_sap_simple.py",
+      "script_maestro_nuevo.py",
+      "script_maestro_sap_python.py",
+      "ejemplo_uso_script_maestro.py",
+      "instalar_dependencias.py",
+      "ejecutar_todos.py"
+    ],
+    "notebooks": [
+      "consolidar_zresguias_excel.ipynb"
+    ]
+  },
+  "configuracion_web": {
+    "puerto": 5000,
+    "debug": true,
+    "host": "localhost"
+  },
+  "configuracion_procesamiento": {
+    "timeout_script": 300,
+    "timeout_notebook": 600,
+    "limpiar_temporales": true
+  }
+}
