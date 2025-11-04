@@ -1,0 +1,594 @@
+2025-09-29 10:43:46,477 - INFO - ================================================================================
+2025-09-29 10:43:46,486 - INFO - ================================================================================
+2025-09-29 10:43:46,486 - INFO - --------------------------------------------------
+2025-09-29 10:44:04,114 - INFO - --------------------------------------------------
+2025-09-29 10:44:08,480 - INFO - --------------------------------------------------
+2025-09-29 10:44:12,859 - INFO - --------------------------------------------------
+2025-09-29 10:44:17,219 - INFO - --------------------------------------------------
+2025-09-29 10:44:19,259 - INFO - --------------------------------------------------
+2025-09-29 10:44:21,287 - INFO - --------------------------------------------------
+2025-09-29 10:44:23,298 - INFO - --------------------------------------------------
+2025-09-29 10:44:25,318 - INFO - --------------------------------------------------
+2025-09-29 10:44:27,339 - INFO - 
+================================================================================
+2025-09-29 10:44:27,339 - INFO - ================================================================================
+2025-09-29 10:44:27,369 - INFO - --------------------------------------------------
+2025-09-29 10:44:27,377 - INFO - ================================================================================
+2025-09-29 11:37:11,253 - INFO - ================================================================================
+2025-09-29 11:37:11,262 - INFO - ================================================================================
+2025-09-29 11:37:15,930 - INFO - ================================================================================
+2025-09-29 11:37:15,946 - INFO - ================================================================================
+2025-09-29 11:37:15,949 - INFO - --------------------------------------------------
+2025-09-29 11:37:17,968 - INFO - --------------------------------------------------
+2025-09-29 11:37:19,990 - INFO - --------------------------------------------------
+2025-09-29 11:37:22,014 - INFO - --------------------------------------------------
+2025-09-29 11:37:24,036 - INFO - --------------------------------------------------
+2025-09-29 11:37:26,053 - INFO - --------------------------------------------------
+2025-09-29 11:37:28,076 - INFO - --------------------------------------------------
+2025-09-29 11:37:30,091 - INFO - --------------------------------------------------
+2025-09-29 11:37:32,120 - INFO - --------------------------------------------------
+2025-09-29 11:37:34,137 - INFO - 
+================================================================================
+2025-09-29 11:37:34,140 - INFO - ================================================================================
+2025-09-29 11:37:34,161 - INFO - --------------------------------------------------
+2025-09-29 11:37:34,166 - INFO - ================================================================================
+2025-09-29 11:37:34,361 - INFO - ================================================================================
+2025-09-29 11:37:34,363 - INFO - ================================================================================
+2025-09-29 11:37:47,126 - INFO - ================================================================================
+2025-09-29 11:37:47,135 - INFO - ================================================================================
+2025-09-29 11:37:47,138 - INFO - --------------------------------------------------
+2025-09-29 11:37:49,156 - INFO - --------------------------------------------------
+2025-09-29 11:37:51,172 - INFO - --------------------------------------------------
+2025-09-29 11:37:53,198 - INFO - --------------------------------------------------
+2025-09-29 11:37:55,213 - INFO - --------------------------------------------------
+2025-09-29 11:37:57,236 - INFO - --------------------------------------------------
+2025-09-29 11:37:59,263 - INFO - --------------------------------------------------
+2025-09-29 11:38:01,281 - INFO - --------------------------------------------------
+2025-09-29 11:38:03,300 - INFO - --------------------------------------------------
+2025-09-29 11:38:05,323 - INFO - 
+================================================================================
+2025-09-29 11:38:05,325 - INFO - ================================================================================
+2025-09-29 11:38:05,357 - INFO - --------------------------------------------------
+2025-09-29 11:38:05,366 - INFO - ================================================================================
+2025-09-29 11:38:25,057 - INFO - ================================================================================
+2025-09-29 11:38:25,073 - INFO - ================================================================================
+2025-09-29 11:38:25,076 - INFO - --------------------------------------------------
+2025-09-29 11:38:27,088 - INFO - --------------------------------------------------
+2025-09-29 11:38:29,210 - INFO - --------------------------------------------------
+2025-09-29 11:38:31,225 - INFO - --------------------------------------------------
+2025-09-29 11:38:33,259 - INFO - --------------------------------------------------
+2025-09-29 11:38:35,282 - INFO - --------------------------------------------------
+2025-09-29 11:38:37,338 - INFO - --------------------------------------------------
+2025-09-29 11:38:39,365 - INFO - --------------------------------------------------
+2025-09-29 11:38:41,387 - INFO - --------------------------------------------------
+2025-09-29 11:38:43,411 - INFO - 
+================================================================================
+2025-09-29 11:38:43,411 - INFO - ================================================================================
+2025-09-29 11:38:43,434 - INFO - --------------------------------------------------
+2025-09-29 11:38:43,439 - INFO - ================================================================================
+2025-09-29 11:51:42,439 - INFO - 📅 Lunes detectado: Procesando sábado (27.09.2025) y domingo (28.09.2025)
+2025-09-29 11:51:42,439 - INFO - [CONFIG] Cargados 9 reportes desde configuración
+2025-09-29 11:51:42,439 - INFO - [CONEXION] Iniciando conexión con SAP...
+2025-09-29 11:51:44,967 - INFO - ✅ Sesión SAP iniciada correctamente
+2025-09-29 11:51:46,975 - INFO - 🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP
+2025-09-29 11:51:46,975 - INFO - ================================================================================
+2025-09-29 11:51:46,977 - INFO - 📅 Fecha de ejecución: 2025-09-29 11:51:42
+2025-09-29 11:51:46,977 - INFO - [PERIODO] Período de datos: 27.09.2025 - 28.09.2025
+2025-09-29 11:51:46,977 - INFO - [DIRECTORIO] Directorio base de salida: C:\Data\SAP_Automatizado
+2025-09-29 11:51:46,977 - INFO - ================================================================================
+2025-09-29 11:51:46,977 - INFO - 
+[REPORTE] Procesando reporte: mb51
+2025-09-29 11:51:46,977 - INFO - --------------------------------------------------
+2025-09-29 11:51:46,977 - INFO - [REPORTE] Ejecutando reporte: mb51
+2025-09-29 11:51:46,977 - INFO - [FLUJO] Flujo especial: navegacion_alv
+2025-09-29 11:51:46,977 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\mb51
+2025-09-29 11:51:46,990 - INFO - 🔄 Ejecutando transacción directa: mb51
+2025-09-29 11:51:59,311 - ERROR - [ERROR] Error seleccionando reporte mb51: Property '<unknown>.currentCellRow' can not be set.
+2025-09-29 11:51:59,311 - ERROR - [ERROR] Error en transacción directa: Property '<unknown>.currentCellRow' can not be set.
+2025-09-29 11:51:59,311 - ERROR - [ERROR] No se pudo crear el archivo para mb51
+2025-09-29 11:52:01,320 - INFO - 
+[REPORTE] Procesando reporte: rep_plr
+2025-09-29 11:52:01,320 - INFO - --------------------------------------------------
+2025-09-29 11:52:01,320 - INFO - [REPORTE] Ejecutando reporte: rep_plr
+2025-09-29 11:52:01,320 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 11:52:01,320 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\rep_plr
+2025-09-29 11:52:01,333 - INFO - ⭐ Ejecutando desde menú favoritos: zsd_rep_planeamiento
+2025-09-29 11:52:03,540 - ERROR - [ERROR] Error seleccionando reporte favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:03,540 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:03,540 - ERROR - [ERROR] No se pudo crear el archivo para rep_plr
+2025-09-29 11:52:05,545 - INFO - 
+[REPORTE] Procesando reporte: y_dev_45
+2025-09-29 11:52:05,545 - INFO - --------------------------------------------------
+2025-09-29 11:52:05,545 - INFO - [REPORTE] Ejecutando reporte: y_dev_45
+2025-09-29 11:52:05,545 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 11:52:05,545 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_45
+2025-09-29 11:52:05,557 - INFO - ⭐ Ejecutando desde menú favoritos: y_dev_45
+2025-09-29 11:52:05,623 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:05,624 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:05,624 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_45
+2025-09-29 11:52:07,625 - INFO - 
+[REPORTE] Procesando reporte: y_dev_74
+2025-09-29 11:52:07,625 - INFO - --------------------------------------------------
+2025-09-29 11:52:07,625 - INFO - [REPORTE] Ejecutando reporte: y_dev_74
+2025-09-29 11:52:07,628 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 11:52:07,628 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_74
+2025-09-29 11:52:07,628 - INFO - ⭐ Ejecutando desde menú favoritos: y_dev_74
+2025-09-29 11:52:07,704 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:07,704 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:07,705 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_74
+2025-09-29 11:52:09,706 - INFO - 
+[REPORTE] Procesando reporte: y_dev_82
+2025-09-29 11:52:09,706 - INFO - --------------------------------------------------
+2025-09-29 11:52:09,706 - INFO - [REPORTE] Ejecutando reporte: y_dev_82
+2025-09-29 11:52:09,706 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 11:52:09,706 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_82
+2025-09-29 11:52:09,718 - INFO - ⭐ Ejecutando desde menú favoritos: y_dev_82
+2025-09-29 11:52:09,783 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:09,783 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:09,783 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_82
+2025-09-29 11:52:11,788 - INFO - 
+[REPORTE] Procesando reporte: z_devo_alv
+2025-09-29 11:52:11,788 - INFO - --------------------------------------------------
+2025-09-29 11:52:11,788 - INFO - [REPORTE] Ejecutando reporte: z_devo_alv
+2025-09-29 11:52:11,788 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 11:52:11,788 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\z_devo_alv
+2025-09-29 11:52:11,798 - INFO - ⭐ Ejecutando desde menú favoritos: z_devo_alv
+2025-09-29 11:52:11,854 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:11,869 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:11,869 - ERROR - [ERROR] No se pudo crear el archivo para z_devo_alv
+2025-09-29 11:52:13,870 - INFO - 
+[REPORTE] Procesando reporte: zhbo
+2025-09-29 11:52:13,870 - INFO - --------------------------------------------------
+2025-09-29 11:52:13,870 - INFO - [REPORTE] Ejecutando reporte: zhbo
+2025-09-29 11:52:13,870 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 11:52:13,870 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zhbo
+2025-09-29 11:52:13,882 - INFO - ⭐ Ejecutando desde menú favoritos: zhbo
+2025-09-29 11:52:13,943 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:13,943 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:13,943 - ERROR - [ERROR] No se pudo crear el archivo para zhbo
+2025-09-29 11:52:15,952 - INFO - 
+[REPORTE] Procesando reporte: zred
+2025-09-29 11:52:15,952 - INFO - --------------------------------------------------
+2025-09-29 11:52:15,952 - INFO - [REPORTE] Ejecutando reporte: zred
+2025-09-29 11:52:15,952 - INFO - [FLUJO] Flujo especial: transaccion_directa_con_fechas
+2025-09-29 11:52:15,952 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zred
+2025-09-29 11:52:15,963 - INFO - 🔄 Ejecutando transacción directa: zred
+2025-09-29 11:52:25,181 - ERROR - [ERROR] Error configurando fechas rango: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:25,181 - ERROR - [ERROR] Error en transacción directa: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:25,181 - ERROR - [ERROR] No se pudo crear el archivo para zred
+2025-09-29 11:52:27,191 - INFO - 
+[REPORTE] Procesando reporte: zsd_incidencias
+2025-09-29 11:52:27,191 - INFO - --------------------------------------------------
+2025-09-29 11:52:27,191 - INFO - [REPORTE] Ejecutando reporte: zsd_incidencias
+2025-09-29 11:52:27,191 - INFO - [FLUJO] Flujo especial: transaccion_directa
+2025-09-29 11:52:27,191 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zsd_incidencias
+2025-09-29 11:52:27,191 - INFO - 🔄 Ejecutando transacción directa: zsd_incidencias
+2025-09-29 11:52:33,816 - ERROR - [ERROR] Error seleccionando reporte zsd_incidencias: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:33,816 - ERROR - [ERROR] Error en transacción directa: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 11:52:33,816 - ERROR - [ERROR] No se pudo crear el archivo para zsd_incidencias
+2025-09-29 11:52:35,819 - INFO - 
+================================================================================
+2025-09-29 11:52:35,819 - INFO - [RESUMEN] RESUMEN DE EJECUCIÓN
+2025-09-29 11:52:35,819 - INFO - ================================================================================
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido mb51
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido rep_plr
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido y_dev_45
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido y_dev_74
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido y_dev_82
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido z_devo_alv
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido zhbo
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido zred
+2025-09-29 11:52:35,819 - INFO - [FALLIDO] Fallido zsd_incidencias
+2025-09-29 11:52:35,819 - INFO - --------------------------------------------------
+2025-09-29 11:52:35,819 - INFO - [ESTADISTICAS] Total exitosos: 0
+2025-09-29 11:52:35,819 - INFO - [ESTADISTICAS] Total fallidos: 9
+2025-09-29 11:52:35,819 - INFO - [ESTADISTICAS] Porcentaje éxito: 0.0%
+2025-09-29 11:52:35,819 - INFO - ================================================================================
+2025-09-29 11:52:36,066 - INFO - [CONEXION] Sesión SAP cerrada
+2025-09-29 12:17:54,885 - INFO - 📅 Lunes detectado: Procesando sábado (27.09.2025) y domingo (28.09.2025)
+2025-09-29 12:17:54,885 - INFO - [CONFIG] Cargados 8 reportes desde configuración
+2025-09-29 12:17:54,885 - INFO - [CONEXION] Iniciando conexión con SAP...
+2025-09-29 12:17:57,318 - INFO - ✅ Sesión SAP iniciada correctamente
+2025-09-29 12:17:59,322 - INFO - 🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP
+2025-09-29 12:17:59,322 - INFO - ================================================================================
+2025-09-29 12:17:59,322 - INFO - 📅 Fecha de ejecución: 2025-09-29 12:17:54
+2025-09-29 12:17:59,322 - INFO - [PERIODO] Período de datos: 27.09.2025 - 28.09.2025
+2025-09-29 12:17:59,322 - INFO - [DIRECTORIO] Directorio base de salida: C:\Data\SAP_Automatizado
+2025-09-29 12:17:59,322 - INFO - ================================================================================
+2025-09-29 12:17:59,322 - INFO - 
+[REPORTE] Procesando reporte: rep_plr
+2025-09-29 12:17:59,322 - INFO - --------------------------------------------------
+2025-09-29 12:17:59,322 - INFO - [REPORTE] Ejecutando reporte: rep_plr
+2025-09-29 12:17:59,322 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:17:59,322 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\rep_plr
+2025-09-29 12:17:59,330 - INFO - ⭐ Ejecutando desde menú favoritos: zsd_rep_planeamiento
+2025-09-29 12:17:59,330 - ERROR - [ERROR] Error seleccionando reporte favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:17:59,331 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:17:59,332 - ERROR - [ERROR] No se pudo crear el archivo para rep_plr
+2025-09-29 12:18:01,332 - INFO - 
+[REPORTE] Procesando reporte: y_dev_45
+2025-09-29 12:18:01,332 - INFO - --------------------------------------------------
+2025-09-29 12:18:01,332 - INFO - [REPORTE] Ejecutando reporte: y_dev_45
+2025-09-29 12:18:01,332 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:18:01,332 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_45
+2025-09-29 12:18:01,345 - INFO - ⭐ Ejecutando desde menú favoritos: y_dev_45
+2025-09-29 12:18:25,762 - ERROR - [ERROR] Error exportando a Excel: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:25,762 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_45
+2025-09-29 12:18:27,766 - INFO - 
+[REPORTE] Procesando reporte: y_dev_74
+2025-09-29 12:18:27,766 - INFO - --------------------------------------------------
+2025-09-29 12:18:27,766 - INFO - [REPORTE] Ejecutando reporte: y_dev_74
+2025-09-29 12:18:27,766 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 12:18:27,767 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_74
+2025-09-29 12:18:27,767 - INFO - ⭐ Ejecutando desde menú favoritos: y_dev_74
+2025-09-29 12:18:27,778 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:27,778 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:27,778 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_74
+2025-09-29 12:18:29,780 - INFO - 
+[REPORTE] Procesando reporte: y_dev_82
+2025-09-29 12:18:29,781 - INFO - --------------------------------------------------
+2025-09-29 12:18:29,781 - INFO - [REPORTE] Ejecutando reporte: y_dev_82
+2025-09-29 12:18:29,781 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 12:18:29,781 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_82
+2025-09-29 12:18:29,781 - INFO - ⭐ Ejecutando desde menú favoritos: y_dev_82
+2025-09-29 12:18:29,793 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:29,793 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:29,793 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_82
+2025-09-29 12:18:31,797 - INFO - 
+[REPORTE] Procesando reporte: z_devo_alv
+2025-09-29 12:18:31,797 - INFO - --------------------------------------------------
+2025-09-29 12:18:31,797 - INFO - [REPORTE] Ejecutando reporte: z_devo_alv
+2025-09-29 12:18:31,797 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:18:31,797 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\z_devo_alv
+2025-09-29 12:18:31,801 - INFO - ⭐ Ejecutando desde menú favoritos: z_devo_alv
+2025-09-29 12:18:31,805 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:31,805 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:31,805 - ERROR - [ERROR] No se pudo crear el archivo para z_devo_alv
+2025-09-29 12:18:33,812 - INFO - 
+[REPORTE] Procesando reporte: zhbo
+2025-09-29 12:18:33,812 - INFO - --------------------------------------------------
+2025-09-29 12:18:33,812 - INFO - [REPORTE] Ejecutando reporte: zhbo
+2025-09-29 12:18:33,812 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:18:33,812 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zhbo
+2025-09-29 12:18:33,820 - INFO - ⭐ Ejecutando desde menú favoritos: zhbo
+2025-09-29 12:18:33,820 - ERROR - [ERROR] Error expandiendo nodo favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:33,820 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:33,820 - ERROR - [ERROR] No se pudo crear el archivo para zhbo
+2025-09-29 12:18:35,833 - INFO - 
+[REPORTE] Procesando reporte: zred
+2025-09-29 12:18:35,833 - INFO - --------------------------------------------------
+2025-09-29 12:18:35,833 - INFO - [REPORTE] Ejecutando reporte: zred
+2025-09-29 12:18:35,833 - INFO - [FLUJO] Flujo especial: transaccion_directa_con_fechas
+2025-09-29 12:18:35,833 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zred
+2025-09-29 12:18:35,833 - INFO - 🔄 Ejecutando transacción directa: zred
+2025-09-29 12:18:42,438 - ERROR - [ERROR] Error seleccionando reporte zred: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:42,438 - ERROR - [ERROR] Error en transacción directa: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:42,438 - ERROR - [ERROR] No se pudo crear el archivo para zred
+2025-09-29 12:18:44,443 - INFO - 
+[REPORTE] Procesando reporte: zsd_incidencias
+2025-09-29 12:18:44,443 - INFO - --------------------------------------------------
+2025-09-29 12:18:44,443 - INFO - [REPORTE] Ejecutando reporte: zsd_incidencias
+2025-09-29 12:18:44,443 - INFO - [FLUJO] Flujo especial: transaccion_directa
+2025-09-29 12:18:44,444 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zsd_incidencias
+2025-09-29 12:18:44,450 - INFO - 🔄 Ejecutando transacción directa: zsd_incidencias
+2025-09-29 12:18:51,381 - ERROR - [ERROR] Error seleccionando reporte zsd_incidencias: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:51,381 - ERROR - [ERROR] Error en transacción directa: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:18:51,381 - ERROR - [ERROR] No se pudo crear el archivo para zsd_incidencias
+2025-09-29 12:18:53,416 - INFO - 
+================================================================================
+2025-09-29 12:18:53,448 - INFO - [RESUMEN] RESUMEN DE EJECUCIÓN
+2025-09-29 12:18:53,462 - INFO - ================================================================================
+2025-09-29 12:18:53,464 - INFO - [FALLIDO] Fallido rep_plr
+2025-09-29 12:18:53,464 - INFO - [FALLIDO] Fallido y_dev_45
+2025-09-29 12:18:53,500 - INFO - [FALLIDO] Fallido y_dev_74
+2025-09-29 12:18:53,503 - INFO - [FALLIDO] Fallido y_dev_82
+2025-09-29 12:18:53,503 - INFO - [FALLIDO] Fallido z_devo_alv
+2025-09-29 12:18:53,503 - INFO - [FALLIDO] Fallido zhbo
+2025-09-29 12:18:53,503 - INFO - [FALLIDO] Fallido zred
+2025-09-29 12:18:53,503 - INFO - [FALLIDO] Fallido zsd_incidencias
+2025-09-29 12:18:53,507 - INFO - --------------------------------------------------
+2025-09-29 12:18:53,507 - INFO - [ESTADISTICAS] Total exitosos: 0
+2025-09-29 12:18:53,507 - INFO - [ESTADISTICAS] Total fallidos: 8
+2025-09-29 12:18:53,507 - INFO - [ESTADISTICAS] Porcentaje éxito: 0.0%
+2025-09-29 12:18:53,507 - INFO - ================================================================================
+2025-09-29 12:18:54,252 - INFO - [CONEXION] Sesión SAP cerrada
+2025-09-29 12:46:04,021 - INFO - 📅 Lunes detectado: Procesando sábado (27.09.2025) y domingo (28.09.2025)
+2025-09-29 12:46:04,021 - INFO - [CONFIG] Cargados 8 reportes desde configuración
+2025-09-29 12:46:04,024 - INFO - [CONEXION] Iniciando conexión con SAP...
+2025-09-29 12:46:06,446 - INFO - ✅ Sesión SAP iniciada correctamente
+2025-09-29 12:46:08,447 - INFO - 🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP
+2025-09-29 12:46:08,447 - INFO - ================================================================================
+2025-09-29 12:46:08,447 - INFO - 📅 Fecha de ejecución: 2025-09-29 12:46:04
+2025-09-29 12:46:08,447 - INFO - [PERIODO] Período de datos: 27.09.2025 - 28.09.2025
+2025-09-29 12:46:08,447 - INFO - [DIRECTORIO] Directorio base de salida: C:\Data\SAP_Automatizado
+2025-09-29 12:46:08,447 - INFO - ================================================================================
+2025-09-29 12:46:08,447 - INFO - 
+[REPORTE] Procesando reporte: rep_plr
+2025-09-29 12:46:08,447 - INFO - --------------------------------------------------
+2025-09-29 12:46:08,447 - INFO - [REPORTE] Ejecutando reporte: rep_plr
+2025-09-29 12:46:08,447 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:46:08,454 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\rep_plr
+2025-09-29 12:46:08,462 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: zsd_rep_planeamiento
+2025-09-29 12:46:08,462 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:46:08,462 - ERROR - [ERROR] No se pudo crear el archivo para rep_plr
+2025-09-29 12:46:10,465 - INFO - 
+[REPORTE] Procesando reporte: y_dev_45
+2025-09-29 12:46:10,465 - INFO - --------------------------------------------------
+2025-09-29 12:46:10,465 - INFO - [REPORTE] Ejecutando reporte: y_dev_45
+2025-09-29 12:46:10,465 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:46:10,465 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_45
+2025-09-29 12:46:10,469 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_45
+2025-09-29 12:46:10,469 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:46:10,469 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_45
+2025-09-29 12:46:12,484 - INFO - 
+[REPORTE] Procesando reporte: y_dev_74
+2025-09-29 12:46:12,484 - INFO - --------------------------------------------------
+2025-09-29 12:46:12,484 - INFO - [REPORTE] Ejecutando reporte: y_dev_74
+2025-09-29 12:46:12,484 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 12:46:12,484 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_74
+2025-09-29 12:46:12,493 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_74
+2025-09-29 12:46:12,495 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:46:12,495 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_74
+2025-09-29 12:46:14,496 - INFO - 
+[REPORTE] Procesando reporte: y_dev_82
+2025-09-29 12:46:14,496 - INFO - --------------------------------------------------
+2025-09-29 12:46:14,496 - INFO - [REPORTE] Ejecutando reporte: y_dev_82
+2025-09-29 12:46:14,496 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 12:46:14,498 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_82
+2025-09-29 12:46:14,501 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_82
+2025-09-29 12:46:14,507 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:46:14,508 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_82
+2025-09-29 12:46:16,509 - INFO - 
+[REPORTE] Procesando reporte: z_devo_alv
+2025-09-29 12:46:16,509 - INFO - --------------------------------------------------
+2025-09-29 12:46:16,509 - INFO - [REPORTE] Ejecutando reporte: z_devo_alv
+2025-09-29 12:46:16,509 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:46:16,509 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\z_devo_alv
+2025-09-29 12:46:16,525 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: z_devo_alv
+2025-09-29 12:46:16,525 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:46:16,525 - ERROR - [ERROR] No se pudo crear el archivo para z_devo_alv
+2025-09-29 12:46:18,532 - INFO - 
+[REPORTE] Procesando reporte: zhbo
+2025-09-29 12:46:18,532 - INFO - --------------------------------------------------
+2025-09-29 12:46:18,532 - INFO - [REPORTE] Ejecutando reporte: zhbo
+2025-09-29 12:46:18,532 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:46:18,532 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zhbo
+2025-09-29 12:46:18,532 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: zhbo
+2025-09-29 12:46:18,532 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:46:18,532 - ERROR - [ERROR] No se pudo crear el archivo para zhbo
+2025-09-29 12:46:20,541 - INFO - 
+[REPORTE] Procesando reporte: zred
+2025-09-29 12:46:20,541 - INFO - --------------------------------------------------
+2025-09-29 12:46:20,542 - INFO - [REPORTE] Ejecutando reporte: zred
+2025-09-29 12:46:20,542 - INFO - [FLUJO] Flujo especial: transaccion_directa_con_fechas
+2025-09-29 12:46:20,544 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zred
+2025-09-29 12:46:20,553 - INFO - 🔄 Ejecutando transacción directa: zred
+2025-09-29 12:46:25,652 - ERROR - [ERROR] Error en transacción directa: 'AutomatizacionSAP' object has no attribute 'seleccionar_reporte_zred'
+2025-09-29 12:46:25,652 - ERROR - [ERROR] No se pudo crear el archivo para zred
+2025-09-29 12:46:27,654 - INFO - 
+[REPORTE] Procesando reporte: zsd_incidencias
+2025-09-29 12:46:27,654 - INFO - --------------------------------------------------
+2025-09-29 12:46:27,654 - INFO - [REPORTE] Ejecutando reporte: zsd_incidencias
+2025-09-29 12:46:27,654 - INFO - [FLUJO] Flujo especial: transaccion_directa
+2025-09-29 12:46:27,654 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zsd_incidencias
+2025-09-29 12:46:27,658 - INFO - 🔄 Ejecutando transacción directa: zsd_incidencias
+2025-09-29 12:46:32,177 - ERROR - [ERROR] Error en transacción directa: 'AutomatizacionSAP' object has no attribute 'seleccionar_reporte_zsd_incidencias'
+2025-09-29 12:46:32,178 - ERROR - [ERROR] No se pudo crear el archivo para zsd_incidencias
+2025-09-29 12:46:34,179 - INFO - 
+================================================================================
+2025-09-29 12:46:34,179 - INFO - [RESUMEN] RESUMEN DE EJECUCIÓN
+2025-09-29 12:46:34,179 - INFO - ================================================================================
+2025-09-29 12:46:34,179 - INFO - [FALLIDO] Fallido rep_plr
+2025-09-29 12:46:34,179 - INFO - [FALLIDO] Fallido y_dev_45
+2025-09-29 12:46:34,179 - INFO - [FALLIDO] Fallido y_dev_74
+2025-09-29 12:46:34,179 - INFO - [FALLIDO] Fallido y_dev_82
+2025-09-29 12:46:34,184 - INFO - [FALLIDO] Fallido z_devo_alv
+2025-09-29 12:46:34,184 - INFO - [FALLIDO] Fallido zhbo
+2025-09-29 12:46:34,184 - INFO - [FALLIDO] Fallido zred
+2025-09-29 12:46:34,185 - INFO - [FALLIDO] Fallido zsd_incidencias
+2025-09-29 12:46:34,187 - INFO - --------------------------------------------------
+2025-09-29 12:46:34,187 - INFO - [ESTADISTICAS] Total exitosos: 0
+2025-09-29 12:46:34,187 - INFO - [ESTADISTICAS] Total fallidos: 8
+2025-09-29 12:46:34,188 - INFO - [ESTADISTICAS] Porcentaje éxito: 0.0%
+2025-09-29 12:46:34,188 - INFO - ================================================================================
+2025-09-29 12:46:34,196 - INFO - [CONEXION] Sesión SAP cerrada
+2025-09-29 12:47:52,355 - INFO - 📅 Lunes detectado: Procesando sábado (27.09.2025) y domingo (28.09.2025)
+2025-09-29 12:47:52,355 - INFO - [CONFIG] Cargados 8 reportes desde configuración
+2025-09-29 12:47:52,355 - INFO - [CONEXION] Iniciando conexión con SAP...
+2025-09-29 12:47:54,618 - INFO - ✅ Sesión SAP iniciada correctamente
+2025-09-29 12:47:56,625 - INFO - 🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP
+2025-09-29 12:47:56,625 - INFO - ================================================================================
+2025-09-29 12:47:56,625 - INFO - 📅 Fecha de ejecución: 2025-09-29 12:47:52
+2025-09-29 12:47:56,625 - INFO - [PERIODO] Período de datos: 27.09.2025 - 28.09.2025
+2025-09-29 12:47:56,626 - INFO - [DIRECTORIO] Directorio base de salida: C:\Data\SAP_Automatizado
+2025-09-29 12:47:56,626 - INFO - ================================================================================
+2025-09-29 12:47:56,626 - INFO - 
+[REPORTE] Procesando reporte: rep_plr
+2025-09-29 12:47:56,626 - INFO - --------------------------------------------------
+2025-09-29 12:47:56,626 - INFO - [REPORTE] Ejecutando reporte: rep_plr
+2025-09-29 12:47:56,626 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:47:56,626 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\rep_plr
+2025-09-29 12:47:56,626 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: zsd_rep_planeamiento
+2025-09-29 12:47:56,626 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:47:56,626 - ERROR - [ERROR] No se pudo crear el archivo para rep_plr
+2025-09-29 12:47:58,634 - INFO - 
+[REPORTE] Procesando reporte: y_dev_45
+2025-09-29 12:47:58,634 - INFO - --------------------------------------------------
+2025-09-29 12:47:58,634 - INFO - [REPORTE] Ejecutando reporte: y_dev_45
+2025-09-29 12:47:58,634 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:47:58,635 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_45
+2025-09-29 12:47:58,635 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_45
+2025-09-29 12:47:58,635 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:47:58,635 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_45
+2025-09-29 12:48:00,644 - INFO - 
+[REPORTE] Procesando reporte: y_dev_74
+2025-09-29 12:48:00,644 - INFO - --------------------------------------------------
+2025-09-29 12:48:00,644 - INFO - [REPORTE] Ejecutando reporte: y_dev_74
+2025-09-29 12:48:00,644 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 12:48:00,644 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_74
+2025-09-29 12:48:00,644 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_74
+2025-09-29 12:48:00,644 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:48:00,644 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_74
+2025-09-29 12:48:02,654 - INFO - 
+[REPORTE] Procesando reporte: y_dev_82
+2025-09-29 12:48:02,654 - INFO - --------------------------------------------------
+2025-09-29 12:48:02,654 - INFO - [REPORTE] Ejecutando reporte: y_dev_82
+2025-09-29 12:48:02,654 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 12:48:02,654 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_82
+2025-09-29 12:48:02,670 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_82
+2025-09-29 12:48:02,671 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:48:02,672 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_82
+2025-09-29 12:48:04,673 - INFO - 
+[REPORTE] Procesando reporte: z_devo_alv
+2025-09-29 12:48:04,673 - INFO - --------------------------------------------------
+2025-09-29 12:48:04,673 - INFO - [REPORTE] Ejecutando reporte: z_devo_alv
+2025-09-29 12:48:04,673 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:48:04,673 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\z_devo_alv
+2025-09-29 12:48:04,689 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: z_devo_alv
+2025-09-29 12:48:04,691 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:48:04,691 - ERROR - [ERROR] No se pudo crear el archivo para z_devo_alv
+2025-09-29 12:48:06,692 - INFO - 
+[REPORTE] Procesando reporte: zhbo
+2025-09-29 12:48:06,692 - INFO - --------------------------------------------------
+2025-09-29 12:48:06,692 - INFO - [REPORTE] Ejecutando reporte: zhbo
+2025-09-29 12:48:06,692 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 12:48:06,692 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zhbo
+2025-09-29 12:48:06,706 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: zhbo
+2025-09-29 12:48:06,708 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 12:48:06,708 - ERROR - [ERROR] No se pudo crear el archivo para zhbo
+2025-09-29 12:48:08,710 - INFO - 
+[REPORTE] Procesando reporte: zred
+2025-09-29 12:48:08,710 - INFO - --------------------------------------------------
+2025-09-29 12:48:08,710 - INFO - [REPORTE] Ejecutando reporte: zred
+2025-09-29 12:48:08,710 - INFO - [FLUJO] Flujo especial: transaccion_directa_con_fechas
+2025-09-29 12:48:08,710 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zred
+2025-09-29 12:48:08,725 - INFO - 🔄 Ejecutando transacción directa: zred
+2025-09-29 12:48:13,841 - ERROR - [ERROR] Error en transacción directa: 'AutomatizacionSAP' object has no attribute 'seleccionar_reporte_zred'
+2025-09-29 12:48:13,841 - ERROR - [ERROR] No se pudo crear el archivo para zred
+2025-09-29 12:48:15,843 - INFO - 
+[REPORTE] Procesando reporte: zsd_incidencias
+2025-09-29 12:48:15,843 - INFO - --------------------------------------------------
+2025-09-29 12:48:15,843 - INFO - [REPORTE] Ejecutando reporte: zsd_incidencias
+2025-09-29 12:48:15,843 - INFO - [FLUJO] Flujo especial: transaccion_directa
+2025-09-29 12:48:15,843 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zsd_incidencias
+2025-09-29 12:48:15,843 - INFO - 🔄 Ejecutando transacción directa: zsd_incidencias
+2025-09-29 12:48:20,358 - ERROR - [ERROR] Error en transacción directa: 'AutomatizacionSAP' object has no attribute 'seleccionar_reporte_zsd_incidencias'
+2025-09-29 12:48:20,358 - ERROR - [ERROR] No se pudo crear el archivo para zsd_incidencias
+2025-09-29 12:48:22,360 - INFO - 
+================================================================================
+2025-09-29 12:48:22,361 - INFO - [RESUMEN] RESUMEN DE EJECUCIÓN
+2025-09-29 12:48:22,361 - INFO - ================================================================================
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido rep_plr
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido y_dev_45
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido y_dev_74
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido y_dev_82
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido z_devo_alv
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido zhbo
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido zred
+2025-09-29 12:48:22,361 - INFO - [FALLIDO] Fallido zsd_incidencias
+2025-09-29 12:48:22,361 - INFO - --------------------------------------------------
+2025-09-29 12:48:22,361 - INFO - [ESTADISTICAS] Total exitosos: 0
+2025-09-29 12:48:22,361 - INFO - [ESTADISTICAS] Total fallidos: 8
+2025-09-29 12:48:22,361 - INFO - [ESTADISTICAS] Porcentaje éxito: 0.0%
+2025-09-29 12:48:22,361 - INFO - ================================================================================
+2025-09-29 12:48:22,370 - INFO - [CONEXION] Sesión SAP cerrada
+2025-09-29 13:50:27,414 - INFO - 📅 Lunes detectado: Procesando sábado (27.09.2025) y domingo (28.09.2025)
+2025-09-29 13:50:27,428 - INFO - [CONFIG] Cargados 8 reportes desde configuración
+2025-09-29 13:50:27,429 - INFO - [CONEXION] Iniciando conexión con SAP...
+2025-09-29 13:50:29,672 - INFO - ✅ Sesión SAP iniciada correctamente
+2025-09-29 13:50:31,673 - INFO - 🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP
+2025-09-29 13:50:31,673 - INFO - ================================================================================
+2025-09-29 13:50:31,674 - INFO - 📅 Fecha de ejecución: 2025-09-29 13:50:27
+2025-09-29 13:50:31,674 - INFO - [PERIODO] Período de datos: 27.09.2025 - 28.09.2025
+2025-09-29 13:50:31,675 - INFO - [DIRECTORIO] Directorio base de salida: C:\Data\SAP_Automatizado
+2025-09-29 13:50:31,675 - INFO - ================================================================================
+2025-09-29 13:50:31,676 - INFO - 
+[REPORTE] Procesando reporte: rep_plr
+2025-09-29 13:50:31,676 - INFO - --------------------------------------------------
+2025-09-29 13:50:31,677 - INFO - [REPORTE] Ejecutando reporte: rep_plr
+2025-09-29 13:50:31,677 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 13:50:31,678 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\rep_plr
+2025-09-29 13:50:31,685 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: zsd_rep_planeamiento
+2025-09-29 13:50:31,686 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 13:50:31,687 - ERROR - [ERROR] No se pudo crear el archivo para rep_plr
+2025-09-29 13:50:33,688 - INFO - 
+[REPORTE] Procesando reporte: y_dev_45
+2025-09-29 13:50:33,688 - INFO - --------------------------------------------------
+2025-09-29 13:50:33,689 - INFO - [REPORTE] Ejecutando reporte: y_dev_45
+2025-09-29 13:50:33,689 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 13:50:33,691 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_45
+2025-09-29 13:50:33,700 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_45
+2025-09-29 13:50:33,701 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 13:50:33,701 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_45
+2025-09-29 13:50:35,703 - INFO - 
+[REPORTE] Procesando reporte: y_dev_74
+2025-09-29 13:50:35,703 - INFO - --------------------------------------------------
+2025-09-29 13:50:35,703 - INFO - [REPORTE] Ejecutando reporte: y_dev_74
+2025-09-29 13:50:35,703 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 13:50:35,704 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_74
+2025-09-29 13:50:35,710 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_74
+2025-09-29 13:50:35,711 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 13:50:35,712 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_74
+2025-09-29 13:50:37,713 - INFO - 
+[REPORTE] Procesando reporte: y_dev_82
+2025-09-29 13:50:37,713 - INFO - --------------------------------------------------
+2025-09-29 13:50:37,713 - INFO - [REPORTE] Ejecutando reporte: y_dev_82
+2025-09-29 13:50:37,713 - INFO - [FLUJO] Flujo especial: menu_favoritos_con_fecha
+2025-09-29 13:50:37,715 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\y_dev_82
+2025-09-29 13:50:37,721 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: y_dev_82
+2025-09-29 13:50:37,722 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 13:50:37,723 - ERROR - [ERROR] No se pudo crear el archivo para y_dev_82
+2025-09-29 13:50:39,724 - INFO - 
+[REPORTE] Procesando reporte: z_devo_alv
+2025-09-29 13:50:39,724 - INFO - --------------------------------------------------
+2025-09-29 13:50:39,724 - INFO - [REPORTE] Ejecutando reporte: z_devo_alv
+2025-09-29 13:50:39,724 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 13:50:39,725 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\z_devo_alv
+2025-09-29 13:50:39,729 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: z_devo_alv
+2025-09-29 13:50:39,730 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 13:50:39,731 - ERROR - [ERROR] No se pudo crear el archivo para z_devo_alv
+2025-09-29 13:50:41,732 - INFO - 
+[REPORTE] Procesando reporte: zhbo
+2025-09-29 13:50:41,732 - INFO - --------------------------------------------------
+2025-09-29 13:50:41,733 - INFO - [REPORTE] Ejecutando reporte: zhbo
+2025-09-29 13:50:41,733 - INFO - [FLUJO] Flujo especial: menu_favoritos
+2025-09-29 13:50:41,734 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zhbo
+2025-09-29 13:50:41,738 - INFO - [FAVORITOS] Ejecutando desde menú favoritos: zhbo
+2025-09-29 13:50:41,740 - ERROR - [ERROR] Error en menú favoritos: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-29 13:50:41,743 - ERROR - [ERROR] No se pudo crear el archivo para zhbo
+2025-09-29 13:50:43,745 - INFO - 
+[REPORTE] Procesando reporte: zred
+2025-09-29 13:50:43,745 - INFO - --------------------------------------------------
+2025-09-29 13:50:43,745 - INFO - [REPORTE] Ejecutando reporte: zred
+2025-09-29 13:50:43,745 - INFO - [FLUJO] Flujo especial: transaccion_directa_con_fechas
+2025-09-29 13:50:43,746 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zred
+2025-09-29 13:50:43,752 - INFO - 🔄 Ejecutando transacción directa: zred
+2025-09-29 13:50:48,744 - ERROR - [ERROR] Error en transacción directa: 'AutomatizacionSAP' object has no attribute 'seleccionar_reporte_zred'
+2025-09-29 13:50:48,744 - ERROR - [ERROR] No se pudo crear el archivo para zred
+2025-09-29 13:50:50,746 - INFO - 
+[REPORTE] Procesando reporte: zsd_incidencias
+2025-09-29 13:50:50,746 - INFO - --------------------------------------------------
+2025-09-29 13:50:50,747 - INFO - [REPORTE] Ejecutando reporte: zsd_incidencias
+2025-09-29 13:50:50,747 - INFO - [FLUJO] Flujo especial: transaccion_directa
+2025-09-29 13:50:50,748 - INFO - [DIRECTORIO] Directorio del reporte: C:\Data\SAP_Automatizado\zsd_incidencias
+2025-09-29 13:50:50,753 - INFO - 🔄 Ejecutando transacción directa: zsd_incidencias
+2025-09-29 13:50:55,176 - ERROR - [ERROR] Error en transacción directa: 'AutomatizacionSAP' object has no attribute 'seleccionar_reporte_zsd_incidencias'
+2025-09-29 13:50:55,177 - ERROR - [ERROR] No se pudo crear el archivo para zsd_incidencias
+2025-09-29 13:50:57,178 - INFO - 
+================================================================================
+2025-09-29 13:50:57,178 - INFO - [RESUMEN] RESUMEN DE EJECUCIÓN
+2025-09-29 13:50:57,178 - INFO - ================================================================================
+2025-09-29 13:50:57,180 - INFO - [FALLIDO] Fallido rep_plr
+2025-09-29 13:50:57,180 - INFO - [FALLIDO] Fallido y_dev_45
+2025-09-29 13:50:57,180 - INFO - [FALLIDO] Fallido y_dev_74
+2025-09-29 13:50:57,181 - INFO - [FALLIDO] Fallido y_dev_82
+2025-09-29 13:50:57,181 - INFO - [FALLIDO] Fallido z_devo_alv
+2025-09-29 13:50:57,181 - INFO - [FALLIDO] Fallido zhbo
+2025-09-29 13:50:57,181 - INFO - [FALLIDO] Fallido zred
+2025-09-29 13:50:57,182 - INFO - [FALLIDO] Fallido zsd_incidencias
+2025-09-29 13:50:57,182 - INFO - --------------------------------------------------
+2025-09-29 13:50:57,182 - INFO - [ESTADISTICAS] Total exitosos: 0
+2025-09-29 13:50:57,183 - INFO - [ESTADISTICAS] Total fallidos: 8
+2025-09-29 13:50:57,183 - INFO - [ESTADISTICAS] Porcentaje éxito: 0.0%
+2025-09-29 13:50:57,183 - INFO - ================================================================================
+2025-09-29 13:50:57,188 - INFO - [CONEXION] Sesión SAP cerrada
