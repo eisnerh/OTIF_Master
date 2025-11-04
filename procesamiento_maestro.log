@@ -1,0 +1,6 @@
+2025-08-25 16:49:54,392 - INFO - 🎯 INICIANDO PROCESAMIENTO MAESTRO OTIF
+2025-08-25 16:49:54,393 - INFO - ============================================================
+2025-08-25 16:49:54,393 - INFO - 🔍 Verificando estructura de carpetas...
+2025-08-25 16:49:54,393 - INFO - ✅ Carpeta encontrada: scripts
+2025-08-25 16:49:54,393 - ERROR - ❌ Carpeta no encontrada: Data\Rep PLR
+2025-08-25 16:49:54,393 - ERROR - ❌ Error en la estructura de carpetas. Abortando.

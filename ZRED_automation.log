@@ -1,0 +1,12 @@
+2025-09-30 14:17:49,785 - INFO - Conectando a SAP GUI...
+2025-09-30 14:17:49,831 - INFO - Conexión SAP establecida correctamente
+2025-09-30 14:17:49,832 - INFO - Navegando a transacción: zred
+2025-09-30 14:17:50,175 - INFO - Seleccionando fila: 1
+2025-09-30 14:17:50,176 - ERROR - Error seleccionando fila 1: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-30 14:17:50,180 - INFO - Limpieza completada
+2025-09-30 14:17:57,003 - INFO - Conectando a SAP GUI...
+2025-09-30 14:17:57,052 - INFO - Conexión SAP establecida correctamente
+2025-09-30 14:17:57,053 - INFO - Navegando a transacción: zred
+2025-09-30 14:17:57,375 - INFO - Seleccionando fila: 1
+2025-09-30 14:17:57,377 - ERROR - Error seleccionando fila 1: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-30 14:17:57,384 - INFO - Limpieza completada

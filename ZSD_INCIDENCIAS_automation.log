@@ -1,0 +1,18 @@
+2025-09-30 14:17:07,479 - INFO - Conectando a SAP GUI...
+2025-09-30 14:17:07,531 - INFO - Conexión SAP establecida correctamente
+2025-09-30 14:17:07,531 - INFO - Navegando a transacción: zsd_incidencias
+2025-09-30 14:17:07,858 - INFO - Seleccionando fila: 12
+2025-09-30 14:17:07,859 - ERROR - Error seleccionando fila 12: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-30 14:17:07,862 - INFO - Limpieza completada
+2025-09-30 14:34:10,031 - INFO - Conectando a SAP GUI...
+2025-09-30 14:34:10,079 - INFO - Conexión SAP establecida correctamente
+2025-09-30 14:34:10,080 - INFO - Navegando a transacción: zsd_incidencias
+2025-09-30 14:34:10,459 - INFO - Seleccionando fila: 12
+2025-09-30 14:34:10,468 - ERROR - Error seleccionando fila 12: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-30 14:34:10,470 - INFO - Intentando continuar sin selección específica...
+2025-09-30 14:34:10,470 - INFO - Ejecutando reporte...
+2025-09-30 14:34:10,474 - INFO - Seleccionando celda en grilla...
+2025-09-30 14:34:10,477 - ERROR - Error seleccionando celda en grilla: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-30 14:34:10,477 - INFO - Exportando a Excel: data_incidencias.xls
+2025-09-30 14:34:10,480 - ERROR - Error exportando archivo data_incidencias.xls: (-2147352567, 'Ocurrió una excepción.', (619, 'SAP Frontend Server', 'The control could not be found by id.', 'C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\sapfront.HLP', 393215, 0), None)
+2025-09-30 14:34:10,485 - INFO - Limpieza completada
