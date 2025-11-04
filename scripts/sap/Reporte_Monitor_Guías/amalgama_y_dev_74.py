@@ -276,6 +276,7 @@ def run_once(cfg: RunConfig) -> Path:
     drop_first_5_rows_inplace(xlsx_path)
 
     # Generar reporte con gráficos y enviar correo
+    # Usa el archivo Excel procesado (después de TXT->XLSX y eliminar primeras 5 filas)
     try:
         logger.info("Generando reporte con gráficos...")
         import subprocess

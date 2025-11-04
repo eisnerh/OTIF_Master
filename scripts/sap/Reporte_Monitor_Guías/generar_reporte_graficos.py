@@ -22,9 +22,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 import pandas as pd
-import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')  # Para generar gráficos sin interfaz gráfica
+import matplotlib.pyplot as plt
 import seaborn as sns
 import configparser
 
