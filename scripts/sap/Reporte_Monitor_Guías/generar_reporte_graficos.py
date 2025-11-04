@@ -274,7 +274,7 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
 def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: str) -> bool:
     """Envía correo con gráficos adjuntos."""
     if not email_config.get('email_from') or not email_config.get('email_to'):
-        print("⚠️  Configuración de email incompleta. No se enviará correo.")
+        print("ADVERTENCIA: Configuración de email incompleta. No se enviará correo.")
         return False
     
     try:
@@ -305,10 +305,10 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
         server.send_message(msg)
         server.quit()
         
-        print(f"✅ Correo enviado exitosamente a: {', '.join(email_config['email_to'])}")
+        print(f"OK: Correo enviado exitosamente a: {', '.join(email_config['email_to'])}")
         return True
     except Exception as e:
-        print(f"❌ Error al enviar correo: {e}")
+        print(f"ERROR: Error al enviar correo: {e}")
         return False
 
 def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
@@ -320,24 +320,24 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
             output_dir = Path(r"C:/data/SAP_Extraction/y_dev_74")
             archivos_xlsx = list(output_dir.glob("*_processed.xlsx"))
             if not archivos_xlsx:
-                print(f"❌ No se encontraron archivos *_processed.xlsx en {output_dir}")
+                print(f"ERROR: No se encontraron archivos *_processed.xlsx en {output_dir}")
                 return 1
             xlsx_path = max(archivos_xlsx, key=lambda p: p.stat().st_mtime)
         
-        print(f"📄 Procesando archivo: {xlsx_path}")
+        print(f"Procesando archivo: {xlsx_path}")
         
         # Leer datos
         df = leer_excel_procesado(xlsx_path)
-        print(f"✅ Archivo leído: {len(df)} líneas")
+        print(f"OK: Archivo leído: {len(df)} líneas")
         
         # Contar por zona y hora
         conteo_df = contar_por_zona_y_hora(df)
-        print(f"✅ Conteo realizado para {len(conteo_df)} combinaciones zona/hora")
+        print(f"OK: Conteo realizado para {len(conteo_df)} combinaciones zona/hora")
         
         # Generar gráficos
         graficos_dir = xlsx_path.parent / "graficos"
         rutas_graficos = generar_graficos(conteo_df, graficos_dir)
-        print(f"✅ Gráficos generados: {len(rutas_graficos)} archivos")
+        print(f"OK: Gráficos generados: {len(rutas_graficos)} archivos")
         
         # Crear resumen HTML
         resumen_html = crear_resumen_html(conteo_df)
@@ -347,11 +347,11 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
             email_config = cargar_configuracion_email()
             enviar_correo(email_config, rutas_graficos, resumen_html)
         
-        print("✅ Proceso completado exitosamente")
+        print("OK: Proceso completado exitosamente")
         return 0
         
     except Exception as e:
-        print(f"❌ Error en el proceso: {e}")
+        print(f"ERROR: Error en el proceso: {e}")
         import traceback
         traceback.print_exc()
         return 1
