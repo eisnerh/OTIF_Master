@@ -275,6 +275,29 @@ def run_once(cfg: RunConfig) -> Path:
     # Eliminar primeras 5 filas del Excel
     drop_first_5_rows_inplace(xlsx_path)
 
+    # Generar reporte con gráficos y enviar correo
+    try:
+        logger.info("Generando reporte con gráficos...")
+        import subprocess
+        script_graficos = Path(__file__).parent / "generar_reporte_graficos.py"
+        if script_graficos.exists():
+            result = subprocess.run(
+                [sys.executable, str(script_graficos), "--archivo", str(xlsx_path)],
+                capture_output=True,
+                text=True,
+                timeout=300
+            )
+            if result.returncode == 0:
+                logger.info("✅ Reporte con gráficos generado y correo enviado")
+            else:
+                logger.warning(f"⚠️  El script de gráficos terminó con código {result.returncode}")
+                if result.stderr:
+                    logger.warning(f"Error: {result.stderr}")
+        else:
+            logger.warning("⚠️  No se encontró el script generar_reporte_graficos.py")
+    except Exception as e:
+        logger.warning(f"⚠️  Error al generar reporte con gráficos: {e}")
+
     return txt_path
 
 def main() -> int:

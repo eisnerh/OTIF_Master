@@ -161,6 +161,67 @@ El script genera logs automáticamente. Revisa la consola o los archivos de sali
 2. Si no existe, copia `credentials.ini.example` y renómbralo a `credentials.ini`
 3. Completa los valores en `credentials.ini`
 
+## 📊 Generación de Reportes con Gráficos y Envío de Correo
+
+El script `generar_reporte_graficos.py` genera automáticamente reportes con gráficos de tendencia por hora y zona, y envía un correo con los resultados.
+
+### Funcionalidades
+
+1. **Agrupación de Zonas**: 
+   - **RURAL**: GUA, NIC, PUN, SCA, CNL, LIM, LIB, SIS, ZTP, ZTN, ZTL
+   - **VINOS**: CT02
+   - **HA**: SPE
+   - **GAM**: Resto de zonas
+
+2. **Análisis por Hora**: Cuenta las líneas por zona agrupada y por hora del día
+
+3. **Gráficos Generados**:
+   - Gráfico combinado con todas las zonas
+   - Gráficos individuales por cada zona
+
+4. **Envío de Correo**: Incluye gráficos adjuntos y resumen HTML con estadísticas
+
+### Configuración de Email
+
+Edita el archivo `credentials.ini` y agrega la sección `[EMAIL]`:
+
+```ini
+[EMAIL]
+smtp_server = smtp.gmail.com
+smtp_port = 587
+email_from = tu_email@gmail.com
+email_password = tu_contraseña_o_app_password
+email_to = destinatario1@example.com, destinatario2@example.com
+```
+
+**Nota para Gmail**: Si usas Gmail, necesitas generar una "Contraseña de aplicación" en lugar de tu contraseña normal:
+1. Ve a tu cuenta de Google → Seguridad
+2. Activa la verificación en 2 pasos
+3. Genera una "Contraseña de aplicación"
+4. Usa esa contraseña en `email_password`
+
+### Ejecución
+
+El script se ejecuta automáticamente después de procesar el archivo Excel cuando se ejecuta `amalgama_y_dev_74.py`.
+
+También puedes ejecutarlo manualmente:
+
+```bash
+python generar_reporte_graficos.py --archivo "ruta/al/archivo_processed.xlsx"
+```
+
+O sin enviar correo:
+
+```bash
+python generar_reporte_graficos.py --archivo "ruta/al/archivo_processed.xlsx" --no-email
+```
+
+### Requisitos Adicionales
+
+```bash
+pip install matplotlib seaborn
+```
+
 ## 📞 Soporte
 
 Si tienes problemas con la automatización, revisa:
