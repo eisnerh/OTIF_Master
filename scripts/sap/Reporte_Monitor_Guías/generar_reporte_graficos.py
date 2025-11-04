@@ -83,67 +83,60 @@ def leer_excel_procesado(xlsx_path: Path) -> pd.DataFrame:
         if df.empty:
             raise ValueError("El archivo Excel está vacío")
         
-        # La zona está en la columna 0 (primera columna después del procesamiento)
-        # Renombrar columnas para facilitar el trabajo
-        num_cols = len(df.columns)
-        df.columns = [f'Col_{i}' for i in range(num_cols)]
+        # Verificar que tenemos suficientes columnas
+        if len(df.columns) < 9:
+            raise ValueError(f"El archivo tiene menos de 9 columnas. Columnas encontradas: {len(df.columns)}")
         
-        # Columna de zona (columna 1 original = índice 0 después de eliminar columnas A y C)
-        columna_zona = 'Col_0'
+        # Columna B = índice 1 (zona)
+        # Columna I = índice 8 (hora)
+        columna_zona_idx = 1  # Columna B
+        columna_hora_idx = 8  # Columna I
         
-        # Buscar columna de hora - nombres comunes o patrones
-        nombres_posibles_hora = ['Hora', 'Hora Guía', 'Creado el', 'F. Creado', 'Carga HHD']
-        columna_hora = None
+        # Extraer zona
+        df['Zona'] = df.iloc[:, columna_zona_idx]
         
-        # Primero buscar por nombres comunes (si el archivo tiene headers)
-        for i, col in enumerate(df.columns):
-            # Verificar si alguna fila tiene estos nombres
-            sample = df[col].astype(str).str.strip().head(10)
-            if any(nombre.lower() in str(val).lower() for nombre in nombres_posibles_hora for val in sample):
-                columna_hora = col
-                break
-        
-        # Si no encontramos por nombre, buscar por patrones de hora
-        if columna_hora is None:
-            for col in df.columns:
-                sample_values = df[col].dropna().head(50).astype(str)
-                # Buscar patrones de hora (HH:MM o HH:MM:SS) o fecha/hora
-                hora_count = sum(1 for v in sample_values if ':' in str(v) and len(str(v)) > 0)
-                if hora_count > len(sample_values) * 0.3:  # Al menos 30% tiene formato de hora
-                    columna_hora = col
-                    break
-        
-        # Extraer hora
-        if columna_hora:
-            # Intentar parsear como datetime
-            df['Hora'] = pd.to_datetime(df[columna_hora], errors='coerce').dt.strftime('%H:00')
-            # Si no funciona, intentar extraer hora de string
-            if df['Hora'].isna().all():
-                # Buscar patrones HH:MM en strings
-                def extraer_hora(val):
-                    if pd.isna(val):
-                        return None
-                    val_str = str(val)
-                    match = re.search(r'(\d{1,2}):(\d{2})', val_str)
-                    if match:
-                        return f"{int(match.group(1)):02d}:00"
-                    return None
-                df['Hora'] = df[columna_hora].apply(extraer_hora)
+        # Extraer hora de la columna I
+        def extraer_hora(val):
+            """Extrae la hora de diferentes formatos posibles."""
+            if pd.isna(val):
+                return None
+            val_str = str(val).strip()
+            if not val_str or val_str == 'nan':
+                return None
             
-            df['Hora'] = df['Hora'].fillna(datetime.now().strftime('%H:00'))
-        else:
-            # Si no encontramos hora, usar la hora actual
-            print("⚠️  No se encontró columna de hora, se usará la hora actual")
-            df['Hora'] = datetime.now().strftime('%H:00')
+            # Intentar parsear como datetime
+            try:
+                dt = pd.to_datetime(val_str, errors='coerce')
+                if pd.notna(dt):
+                    return dt.strftime('%H:00')
+            except:
+                pass
+            
+            # Buscar patrones HH:MM o HH:MM:SS en strings
+            match = re.search(r'(\d{1,2}):(\d{2})', val_str)
+            if match:
+                hora = int(match.group(1))
+                if 0 <= hora <= 23:
+                    return f"{hora:02d}:00"
+            
+            return None
+        
+        df['Hora'] = df.iloc[:, columna_hora_idx].apply(extraer_hora)
+        
+        # Filtrar filas con hora válida
+        df = df[df['Hora'].notna()].copy()
+        
+        if df.empty:
+            raise ValueError("No se encontraron filas con hora válida en la columna I")
         
         # Mapear zona
-        df['Zona_Grupo'] = df[columna_zona].apply(mapear_zona)
+        df['Zona_Grupo'] = df['Zona'].apply(mapear_zona)
         
         # Limpiar datos - eliminar filas sin zona válida
         df = df[df['Zona_Grupo'] != 'SIN_ZONA'].copy()
         
-        # Filtrar horas válidas
-        df = df[df['Hora'].notna()].copy()
+        if df.empty:
+            raise ValueError("No se encontraron filas con zona válida en la columna B")
         
         return df
     except Exception as e:
