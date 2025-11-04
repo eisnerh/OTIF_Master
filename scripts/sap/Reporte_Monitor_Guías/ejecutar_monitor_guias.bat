@@ -12,11 +12,19 @@ REM Obtener la ruta del directorio donde está este script
 set SCRIPT_DIR=%~dp0
 cd /d "%SCRIPT_DIR%"
 
+REM Configurar la ruta de Python (ajustar según tu instalación)
+REM Opción 1: Usar la ruta completa de Anaconda (recomendado)
+set PYTHON_EXE=C:\ProgramData\anaconda3\python.exe
+
+REM Opción 2: Si Python está en el PATH, usar simplemente "python"
+REM set PYTHON_EXE=python
+
 REM Verificar que Python esté disponible
-python --version >nul 2>&1
+"%PYTHON_EXE%" --version >nul 2>&1
 if errorlevel 1 (
-    echo ERROR: Python no está instalado o no está en el PATH
-    echo Por favor instala Python y asegúrate de que esté en el PATH
+    echo ERROR: Python no está disponible en la ruta especificada: %PYTHON_EXE%
+    echo Por favor verifica la ruta de Python en este archivo .bat
+    pause
     exit /b 1
 )
 
@@ -30,8 +38,9 @@ if not exist "credentials.ini" (
 REM Ejecutar el script Python
 echo Ejecutando script de Monitor Guías...
 echo Fecha/Hora: %date% %time%
+echo Usando Python: %PYTHON_EXE%
 echo.
-python amalgama_y_dev_74.py
+"%PYTHON_EXE%" amalgama_y_dev_74.py
 
 REM Capturar el código de salida
 set EXIT_CODE=%errorlevel%
@@ -47,6 +56,9 @@ if %EXIT_CODE% equ 0 (
     echo ERROR: La ejecución falló con código %EXIT_CODE%
     echo ========================================
 )
+
+REM Pausar para ver los resultados (presiona cualquier tecla para cerrar)
+pause
 
 REM Salir con el código de error del script Python
 exit /b %EXIT_CODE%
