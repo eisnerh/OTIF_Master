@@ -20,14 +20,45 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+import configparser
 import pandas as pd
 
-# ---------------------- CONFIGURACIÓN RÁPIDA (EDITA AQUÍ) ----------------------
-SAP_SYSTEM  = "SAP R/3 Productivo [FIFCOR3]"
-SAP_CLIENT  = "700"
-SAP_USER    = "elopez21334"
-SAP_PASS    = "UnoaUno.221045"  # <-- EDITA
-SAP_LANG    = "ES"
+def load_credentials() -> dict:
+    """Carga credenciales desde credentials.ini ubicado junto a este script.
+
+    Formato esperado:
+    [AUTH]
+    sap_system = SAP R/3 Productivo [FIFCOR3]
+    sap_client = 700
+    sap_user = usuario
+    sap_password = contraseña
+    sap_language = ES
+    """
+    config = configparser.ConfigParser()
+    creds_path = Path(__file__).parent / "credentials.ini"
+    if not creds_path.exists():
+        raise FileNotFoundError(
+            f"No se encontró '{creds_path}'. Crea el archivo a partir de 'credentials.ini.example'."
+        )
+    config.read(creds_path, encoding="utf-8")
+    if "AUTH" not in config:
+        raise ValueError("El archivo credentials.ini no contiene la sección [AUTH].")
+    auth = config["AUTH"]
+    required = ["sap_system", "sap_client", "sap_user", "sap_password"]
+    creds = {k: auth.get(k, "").strip() for k in required}
+    creds["sap_language"] = auth.get("sap_language", "ES").strip() or "ES"
+    missing = [k for k, v in creds.items() if k != "sap_language" and not v]
+    if missing:
+        raise ValueError(f"Faltan claves en credentials.ini: {', '.join(missing)}")
+    return creds
+
+# ---------------------- CONFIGURACIÓN (sin credenciales embebidas) -------------
+_CREDS = load_credentials()
+SAP_SYSTEM  = _CREDS["sap_system"]
+SAP_CLIENT  = _CREDS["sap_client"]
+SAP_USER    = _CREDS["sap_user"]
+SAP_PASS    = _CREDS["sap_password"]
+SAP_LANG    = _CREDS.get("sap_language", "ES") or "ES"
 
 TCODE       = "y_dev_42000074"
 NODE_KEY    = "F00119"
