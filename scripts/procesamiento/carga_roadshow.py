@@ -2,7 +2,7 @@ import os
 import ftplib
 import shutil
 from datetime import datetime
-
+###
 # --- Configuración ---
 # Directorios
 DIRECTORIO_TRABAJO = r"C:\SAP\CARGARS"

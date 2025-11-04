@@ -21,7 +21,7 @@ from datetime import datetime, timedelta
 try:
     import win32com.client  # type: ignore
 except ImportError:
-    print("❌ Falta pywin32. Instala con: pip install pywin32")
+    print(" Falta pywin32. Instala con: pip install pywin32")
     sys.exit(1)
 
 
@@ -179,9 +179,9 @@ def limpiar_sesion_sap(session):
         while not session.findById("wnd[0]/usr").Text:
             time.sleep(0.5)
 
-        print("✅ Sesión SAP limpiada correctamente.")
+        print(" Sesión SAP limpiada correctamente.")
     except Exception as e:
-        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+        print(f" Error al limpiar la sesión SAP: {e}")
 
 
 def try_get_tree(session):
@@ -206,17 +206,17 @@ def select_tree_node_dynamic(session, node_key: str, debug: bool = False):
     tree = try_get_tree(session)
     if not tree:
         if debug:
-            print("ℹ️ No se detectó GuiTree; se continuará sin seleccionar nodo.")
+            print(" No se detectó GuiTree; se continuará sin seleccionar nodo.")
         return False
     try:
         tree.selectedNode = node_key
         tree.doubleClickNode(node_key)
         if debug:
-            print(f"✅ Nodo del árbol abierto: {node_key}")
+            print(f" Nodo del árbol abierto: {node_key}")
         return True
     except Exception as e:
         if debug:
-            print(f"⚠️ No se pudo abrir el nodo {node_key}: {e}")
+            print(f" No se pudo abrir el nodo {node_key}: {e}")
         return False
 
 
@@ -296,11 +296,11 @@ def run_y_dev_74(
     # 2) Intentar seleccionar nodo del árbol (fallback si no hay)
     has_tree = select_tree_node_dynamic(session, node_key=node_key, debug=debug)
     if debug and not has_tree:
-        print("🔎 No se seleccionó nodo (no hay árbol o no coincide el ID).")
+        print(" No se seleccionó nodo (no hay árbol o no coincide el ID).")
 
     # 3) Botón de selección
     if press_if_exists(session, "wnd[0]/tbar[1]/btn[17]") is False and debug:
-        print("ℹ️ No se encontró el botón de selección [17]; se continúa si la dynpro ya está disponible.")
+        print(" No se encontró el botón de selección [17]; se continúa si la dynpro ya está disponible.")
 
     # 4) Pop-up: limpiar ENAME-LOW y buscar
     ename = find(session, "wnd[1]/usr/txtENAME-LOW")
@@ -434,19 +434,19 @@ def main():
         )
 
         print("\n" + "=" * 60)
-        print("🎉 PROCESO Y_DEV_74 COMPLETADO EXITOSAMENTE")
+        print(" PROCESO Y_DEV_74 COMPLETADO EXITOSAMENTE")
         print("=" * 60)
-        print(f"📁 Archivo generado: {os.path.basename(full_path)}")
-        print(f"📂 Ubicación: {os.path.dirname(full_path)}")
-        print(f"⏰ Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f" Archivo generado: {os.path.basename(full_path)}")
+        print(f" Ubicación: {os.path.dirname(full_path)}")
+        print(f" Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
         sys.exit(0)
 
     except KeyboardInterrupt:
-        print("\n⚠️ Script interrumpido por el usuario")
+        print("\n Script interrumpido por el usuario")
         sys.exit(1)
     except SAPGuiError as e:
-        print(f"❌ Error SAP: {e}")
+        print(f" Error SAP: {e}")
         if args.debug:
             try:
                 _, _, session, _, _ = attach_to_sap(args.conn, args.sess)
@@ -455,7 +455,7 @@ def main():
                 pass
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f" Error inesperado: {e}")
         if args.debug:
             try:
                 _, _, session, _, _ = attach_to_sap(args.conn, args.sess)

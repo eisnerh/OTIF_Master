@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 try:
     import win32com.client
 except ImportError:
-    print("❌ Falta pywin32. Instala con: pip install pywin32"); sys.exit(1)
+    print(" Falta pywin32. Instala con: pip install pywin32"); sys.exit(1)
 
 class SAPGuiError(Exception): pass
 
@@ -48,9 +48,9 @@ def limpiar_sesion_sap(session):
         while not session.findById("wnd[0]/usr").Text:
             time.sleep(0.5)
 
-        print("✅ Sesión SAP limpiada correctamente.")
+        print(" Sesión SAP limpiada correctamente.")
     except Exception as e:
-        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+        print(f" Error al limpiar la sesión SAP: {e}")
 
 
 def run_zhbo(session,row_number,output_path,filename,date_str,encoding="0000",debug=False):

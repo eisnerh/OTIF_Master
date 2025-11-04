@@ -7,7 +7,7 @@ from datetime import datetime
 try:
     import win32com.client  # type: ignore
 except ImportError:
-    print("❌ Falta pywin32. Instala con: pip install pywin32")
+    print(" Falta pywin32. Instala con: pip install pywin32")
     # No salimos aquí porque el archivo podría ser solo para lectura/descarga.
 
 
@@ -43,9 +43,9 @@ def limpiar_sesion_sap(session):
         while not session.findById("wnd[0]/usr").Text:
             time.sleep(0.5)
 
-        print("✅ Sesión SAP limpiada correctamente.")
+        print(" Sesión SAP limpiada correctamente.")
     except Exception as e:
-        print(f"⚠️ Error al limpiar la sesión SAP: {e}")
+        print(f" Error al limpiar la sesión SAP: {e}")
 
 
 def attach_to_sap(connection_index: int = -1, session_index: int = -1):
@@ -220,7 +220,7 @@ def run_zsd_incidencias(session, row_number: int, output_path: str, filename: st
 
     # 2) Botón de selección (si aplica)
     if press_if_exists(session, "wnd[0]/tbar[1]/btn[17]") is False and debug:
-        print("ℹ️ No se encontró el botón de selección [17]; puede que ya estés en la dynpro de selección.")
+        print(" No se encontró el botón de selección [17]; puede que ya estés en la dynpro de selección.")
 
     # 3) Limpiar ENAME-LOW y Buscar
     ename = find(session, "wnd[1]/usr/txtENAME-LOW")
@@ -331,19 +331,19 @@ def main():
         )
 
         print("\n" + "=" * 60)
-        print("🎉 PROCESO ZSD_INCIDENCIAS COMPLETADO")
+        print(" PROCESO ZSD_INCIDENCIAS COMPLETADO")
         print("=" * 60)
-        print(f"📁 Archivo generado: {os.path.basename(full_path)}")
-        print(f"📂 Ubicación: {os.path.dirname(full_path)}")
-        print(f"⏰ Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f" Archivo generado: {os.path.basename(full_path)}")
+        print(f" Ubicación: {os.path.dirname(full_path)}")
+        print(f" Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
         sys.exit(0)
 
     except KeyboardInterrupt:
-        print("\n⚠️ Script interrumpido por el usuario")
+        print("\n Script interrumpido por el usuario")
         sys.exit(1)
     except SAPGuiError as e:
-        print(f"❌ Error SAP: {e}")
+        print(f" Error SAP: {e}")
         if args.debug:
             try:
                 _, _, session, _, _ = attach_to_sap(args.conn, args.sess)
@@ -352,7 +352,7 @@ def main():
                 pass
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f" Error inesperado: {e}")
         if args.debug:
             try:
                 _, _, session, _, _ = attach_to_sap(args.conn, args.sess)

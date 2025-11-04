@@ -2,7 +2,7 @@ import subprocess
 import sys
 import os
 import time
-
+####
 def ejecutar_script(nombre_script):
     """
     Ejecuta un script de Python usando el mismo intérprete que este script.

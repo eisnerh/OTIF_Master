@@ -5,7 +5,7 @@ import time
 sap_system = "SAP R/3 Productivo [FIFCOR3]"  # Nombre del sistema en SAP Logon
 mandante = "700"
 usuario = "elopez21334"
-password = "Thunderx.2367"
+password = "UnoaUno.221045"
 
 try:
     # Conectar al SAP GUI

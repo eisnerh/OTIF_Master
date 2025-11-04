@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 try:
     import win32com.client  # type: ignore
 except ImportError:
-    print("❌ Falta pywin32. Instala con: pip install pywin32")
+    print(" Falta pywin32. Instala con: pip install pywin32")
     sys.exit(1)
 
 class SAPGuiError(Exception):
@@ -198,7 +198,7 @@ def run_zresguias(session,
 
     # 2) Botón de selección
     if press_if_exists(session, "wnd[0]/tbar[1]/btn[17]") is False and debug:
-        print("ℹ️ No se encontró el botón de selección [17]; puede que ya estés en la dynpro de selección.")
+        print(" No se encontró el botón de selección [17]; puede que ya estés en la dynpro de selección.")
 
     # 3) Pop-up: limpiar ENAME-LOW y buscar
     ename = find(session, "wnd[1]/usr/txtENAME-LOW")
@@ -323,18 +323,18 @@ def main():
         )
 
         print("\n" + "=" * 60)
-        print("🎉 PROCESO ZRESGUIAS COMPLETADO")
+        print(" PROCESO ZRESGUIAS COMPLETADO")
         print("=" * 60)
-        print(f"📁 Archivo generado: {os.path.basename(full_path)}")
-        print(f"📂 Ubicación: {os.path.dirname(full_path)}")
-        print(f"⏰ Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f" Archivo generado: {os.path.basename(full_path)}")
+        print(f" Ubicación: {os.path.dirname(full_path)}")
+        print(f" Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
         sys.exit(0)
 
     except KeyboardInterrupt:
-        print("\n⚠️ Script interrumpido por el usuario"); sys.exit(1)
+        print("\n Script interrumpido por el usuario"); sys.exit(1)
     except SAPGuiError as e:
-        print(f"❌ Error SAP: {e}")
+        print(f" Error SAP: {e}")
         if args.debug:
             try:
                 _, _, session, _, _ = attach_to_sap(args.conn, args.sess)
@@ -343,7 +343,7 @@ def main():
                 pass
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f" Error inesperado: {e}")
         if args.debug:
             try:
                 _, _, session, _, _ = attach_to_sap(args.conn, args.sess)

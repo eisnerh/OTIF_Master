@@ -13,7 +13,7 @@ import pandas as pd
 import traceback
 
 # Config por defecto: si usas siempre el mismo YAML, déjalo aquí
-DEFAULT_CONFIG_PATH = r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\lista_excel_files.yaml"
+DEFAULT_CONFIG_PATH = r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\config\lista_excel_files.yaml"
 
 # ----------------- Utiles de nombres/fechas -----------------
 def _strip_accents(s: str) -> str:

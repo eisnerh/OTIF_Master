@@ -25,15 +25,16 @@ def mostrar_banner():
     print("           SISTEMA OTIF MASTER - MENU PRINCIPAL UNIFICADO")
     print("="*70)
     print()
+    print("   1. Ejecutar notebook consolidar zresguias")
+    print("   2. Carga roadshow")
+    print("   3. Consolidado ultimo archivo materiales")
+    print("   4. Ejecutar proceso completo SAP")
+    print("   5. Reordenar archivos Excel")
 
 def mostrar_menu_principal():
     """Muestra el menu principal unificado"""
-    print("PROCESAMIENTO DE DATOS OTIF:")
-    print("  1. Ejecutar TODO el procesamiento OTIF")
-    print("  2. Procesar solo NO ENTREGAS")
-    print("  3. Procesar solo REP PLR")
-    print("  4. Procesar solo VOL PORTAFOLIO")
-    print("  5. Unificar todos los datos")
+    print("  12. Agrupacion de datos VOL PORTAFOLIO")
+    print("  15. Unificacion de todos los datos")
     print()
     print("SCRIPTS ESTRUCTURADOS:")
     print("  6. Consolidar datos")
@@ -44,10 +45,10 @@ def mostrar_menu_principal():
     print()
     print("AUTOMATIZACION SAP:")
     print("  11. Automatizacion reportes SAP")
-    print("  12. Ejecutar proceso completo SAP")
+
     print("  13. Scripts individuales SAP (Submenu)")
     print("  14. Convertir XLS a XLSX")
-    print("  15. Reordenar archivos Excel")
+
     print()
     print("SCRIPTS ULTIMO ARCHIVO:")
     print("  16. Consolidado ultimo archivo materiales")
@@ -56,7 +57,7 @@ def mostrar_menu_principal():
     print("  19. Consolidar mes PLR")
     print()
     print("JUPYTER NOTEBOOKS:")
-    print("  20. Ejecutar notebook consolidar zresguias")
+
     print("  21. Buscar notebooks disponibles")
     print()
     print("VERIFICACION Y MONITOREO:")
@@ -482,19 +483,19 @@ def main():
             if opcion == "0":
                 print("Hasta luego!")
                 break
-            elif opcion == "1":
+            elif opcion == "20":
                 ejecutar_todo()
                 pausa()
-            elif opcion == "2":
+            elif opcion == "18":
                 ejecutar_script("agrupar_datos_no_entregas_mejorado.py", "Agrupacion de datos NO ENTREGAS")
                 pausa()
-            elif opcion == "3":
+            elif opcion == "16":
                 ejecutar_script("agrupar_datos_rep_plr.py", "Agrupacion de datos REP PLR")
                 pausa()
-            elif opcion == "4":
+            elif opcion == "12":
                 ejecutar_script("agrupar_datos_vol_portafolio.py", "Agrupacion de datos VOL PORTAFOLIO")
                 pausa()
-            elif opcion == "5":
+            elif opcion == "15":
                 ejecutar_script("unificar_datos_completos.py", "Unificacion de todos los datos")
                 pausa()
             elif opcion == "6":
@@ -515,7 +516,7 @@ def main():
             elif opcion == "11":
                 ejecutar_script("", "Automatizacion reportes SAP", "scripts/sap/automatizacion_reportes_sap.py")
                 pausa()
-            elif opcion == "12":
+            elif opcion == "4":
                 ejecutar_script("", "Ejecutar proceso completo SAP", "scripts/procesamiento/ejecutar_proceso_completo.py")
                 pausa()
             elif opcion == "13":
@@ -523,22 +524,22 @@ def main():
             elif opcion == "14":
                 ejecutar_script("", "Convertir XLS a XLSX", "scripts/sap/convertir_xls_a_xlsx.py")
                 pausa()
-            elif opcion == "15":
+            elif opcion == "5":
                 ejecutar_script("", "Reordenar archivos Excel", "scripts/sap/reorder_lists_of_excel_files.py")
                 pausa()
-            elif opcion == "16":
+            elif opcion == "3":
                 ejecutar_script("", "Consolidado ultimo archivo materiales", "scripts/procesamiento/consolidado_ultimo_archivo_materiales.py")
                 pausa()
             elif opcion == "17":
                 ejecutar_script("", "Consolidar zresguias", "scripts/procesamiento/consolidar_zresguias_plr.py")
                 pausa()
-            elif opcion == "18":
+            elif opcion == "2":
                 ejecutar_script("", "Carga roadshow", "scripts/procesamiento/carga_roadshow.py")
                 pausa()
             elif opcion == "19":
                 ejecutar_script("", "Consolidar mes PLR", "scripts/procesamiento/consolidad_mes_plr.py")
                 pausa()
-            elif opcion == "20":
+            elif opcion == "1":
                 ejecutar_notebook("scripts/notebooks/consolidar_zresguias_excel.ipynb", "Consolidar zresguias Excel")
                 pausa()
             elif opcion == "21":
