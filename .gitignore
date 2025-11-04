@@ -389,3 +389,21 @@ $RECYCLE.BIN/
 !*.example
 !*.template
 !*.sample
+*.xlsx
+OTIF_Estructurado/hc_consolidado/hc_consolidado.py
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC CAR.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC CEN.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC CMN.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC CNL.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC COY.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC GUA.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC LIB.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC LIM.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC NES.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC NIC.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC OES.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC PUN.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC SCA.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC SIS.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC SJE.xlsm
+OTIF_Estructurado/hc_consolidado/temp_archivos_procesamiento/HC VYD.xlsm
