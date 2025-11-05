@@ -206,35 +206,6 @@ def generar_graficos(conteo_df: pd.DataFrame, output_dir: Path) -> List[Path]:
     plt.rcParams['figure.figsize'] = (12, 6)
     plt.rcParams['font.size'] = 10
     
-    # Gráfico combinado - todas las zonas
-    fig, ax = plt.subplots(figsize=(14, 8))
-    for zona in sorted(zonas):
-        datos_zona = conteo_df[conteo_df['Zona_Grupo'] == zona].copy()
-        if not datos_zona.empty:
-            # Ordenar por hora
-            datos_zona = datos_zona.sort_values('Hora')
-            ax.plot(datos_zona['Hora'], datos_zona['Cantidad'], 
-                   marker='o', linewidth=2, markersize=8, label=zona)
-            
-            # Agregar etiquetas con valores en cada punto
-            for _, row in datos_zona.iterrows():
-                ax.text(row['Hora'], row['Cantidad'], f" {int(row['Cantidad'])}", 
-                       fontsize=9, ha='left', va='bottom', fontweight='bold')
-    
-    ax.set_xlabel('Hora', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Cantidad de Guías', fontsize=12, fontweight='bold')
-    ax.set_title('Tendencia de Guías por Hora - Todas las Zonas', 
-                fontsize=14, fontweight='bold', pad=20)
-    ax.legend(title='Zona', title_fontsize=11, fontsize=10, loc='best')
-    ax.grid(True, alpha=0.3)
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    
-    ruta_combinado = output_dir / 'grafico_todas_zonas.png'
-    plt.savefig(ruta_combinado, dpi=300, bbox_inches='tight')
-    plt.close()
-    rutas_graficos.append(ruta_combinado)
-    
     # Gráficos individuales por zona
     for zona in sorted(zonas):
         datos_zona = conteo_df[conteo_df['Zona_Grupo'] == zona].copy()
@@ -443,13 +414,34 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
         rutas_graficos = generar_graficos(conteo_df, graficos_dir)
         print(f"OK: Gráficos generados: {len(rutas_graficos)} archivos")
         
-        # Buscar dashboard regional si existe
-        dashboard_regional = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
-        if dashboard_regional:
-            # Agregar el más reciente a la lista de gráficos
-            dashboard_path = max(dashboard_regional, key=lambda p: p.stat().st_mtime)
-            rutas_graficos.append(dashboard_path)
-            print(f"OK: Dashboard regional encontrado: {dashboard_path.name}")
+        # Esperar y buscar dashboard regional (debe haberse generado antes)
+        print("Esperando dashboard regional...")
+        import time
+        max_intentos = 10
+        dashboard_path = None
+        
+        for intento in range(max_intentos):
+            time.sleep(1)  # Esperar 1 segundo entre intentos
+            dashboard_regional = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
+            if dashboard_regional:
+                # Obtener el más reciente (generado en los últimos 5 minutos)
+                ahora = time.time()
+                dashboards_recientes = [
+                    d for d in dashboard_regional 
+                    if (ahora - d.stat().st_mtime) < 300  # 5 minutos
+                ]
+                if dashboards_recientes:
+                    dashboard_path = max(dashboards_recientes, key=lambda p: p.stat().st_mtime)
+                    print(f"OK: Dashboard regional encontrado: {dashboard_path.name}")
+                    print(f"    Tamaño: {dashboard_path.stat().st_size / 1024:.1f} KB")
+                    print(f"    Generado hace: {int(ahora - dashboard_path.stat().st_mtime)} segundos")
+                    break
+        
+        if dashboard_path:
+            # Insertar al inicio de la lista para que sea el primer adjunto
+            rutas_graficos.insert(0, dashboard_path)
+        else:
+            print("ADVERTENCIA: No se encontró dashboard regional reciente. Continuando sin él...")
         
         # Crear resumen HTML
         resumen_html = crear_resumen_html(conteo_df)

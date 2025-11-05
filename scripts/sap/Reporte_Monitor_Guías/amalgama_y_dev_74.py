@@ -314,12 +314,18 @@ def run_once(cfg: RunConfig) -> Path:
             )
             if result.returncode == 0:
                 logger.info("[OK] Dashboard regional generado exitosamente")
+                # Esperar a que el archivo esté completamente escrito
+                time.sleep(2)
                 # Buscar el archivo PNG generado
                 dashboard_png = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
                 if dashboard_png:
-                    logger.info(f"[ARCHIVO] Dashboard: {dashboard_png[-1]}")
+                    dashboard_mas_reciente = max(dashboard_png, key=lambda p: p.stat().st_mtime)
+                    logger.info(f"[ARCHIVO] Dashboard: {dashboard_mas_reciente.name}")
+                    logger.info(f"[INFO] Tamaño: {dashboard_mas_reciente.stat().st_size / 1024:.1f} KB")
             else:
                 logger.warning(f"[ADVERTENCIA] Error al generar dashboard: {result.stderr}")
+                if result.stdout:
+                    logger.info(f"Output: {result.stdout}")
         else:
             logger.warning("[ADVERTENCIA] No se encontró el script generar_dashboard_regional.py")
     except Exception as e:
