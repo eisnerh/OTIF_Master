@@ -193,10 +193,15 @@ def generar_graficos(conteo_df: pd.DataFrame, output_dir: Path) -> List[Path]:
             datos_zona = datos_zona.sort_values('Hora')
             ax.plot(datos_zona['Hora'], datos_zona['Cantidad'], 
                    marker='o', linewidth=2, markersize=8, label=zona)
+            
+            # Agregar etiquetas con valores en cada punto
+            for _, row in datos_zona.iterrows():
+                ax.text(row['Hora'], row['Cantidad'], f" {int(row['Cantidad'])}", 
+                       fontsize=9, ha='left', va='bottom', fontweight='bold')
     
     ax.set_xlabel('Hora', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Cantidad de Líneas', fontsize=12, fontweight='bold')
-    ax.set_title('Tendencia de Líneas por Hora - Todas las Zonas', 
+    ax.set_ylabel('Cantidad de Guías', fontsize=12, fontweight='bold')
+    ax.set_title('Tendencia de Guías por Hora - Todas las Zonas', 
                 fontsize=14, fontweight='bold', pad=20)
     ax.legend(title='Zona', title_fontsize=11, fontsize=10, loc='best')
     ax.grid(True, alpha=0.3)
@@ -222,9 +227,15 @@ def generar_graficos(conteo_df: pd.DataFrame, output_dir: Path) -> List[Path]:
                color=sns.color_palette("husl", len(zonas))[list(zonas).index(zona)])
         ax.fill_between(datos_zona['Hora'], datos_zona['Cantidad'], alpha=0.3)
         
+        # Agregar etiquetas con valores en cada punto
+        for _, row in datos_zona.iterrows():
+            ax.text(row['Hora'], row['Cantidad'], f" {int(row['Cantidad'])}", 
+                   fontsize=10, ha='left', va='bottom', fontweight='bold',
+                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7, edgecolor='gray', linewidth=0.5))
+        
         ax.set_xlabel('Hora', fontsize=11, fontweight='bold')
-        ax.set_ylabel('Cantidad de Líneas', fontsize=11, fontweight='bold')
-        ax.set_title(f'Tendencia de Líneas por Hora - Zona {zona}', 
+        ax.set_ylabel('Cantidad de Guías', fontsize=11, fontweight='bold')
+        ax.set_title(f'Tendencia de Guías por Hora - Zona {zona}', 
                     fontsize=13, fontweight='bold', pad=15)
         ax.grid(True, alpha=0.3)
         plt.xticks(rotation=45, ha='right')
