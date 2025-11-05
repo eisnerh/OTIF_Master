@@ -263,13 +263,13 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             <h1>📊 Reporte de Monitor de Guías por Zona</h1>
             <p class="fecha">Fecha de generación: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
             
-            <div class="total">Total de líneas procesadas: {total_lineas:,}</div>
+            <div class="total">Total de Guías procesadas: {total_lineas:,}</div>
             
             <h2>Resumen por Zona</h2>
             <table>
                 <tr>
                     <th>Zona</th>
-                    <th>Total de Líneas</th>
+                    <th>Total de Guías</th>
                     <th>Porcentaje</th>
                 </tr>
     """
@@ -288,7 +288,7 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             </table>
             
             <h2>Detalle por Hora</h2>
-            <p>Los gráficos adjuntos muestran la tendencia de líneas por hora para cada zona.</p>
+            <p>Los gráficos adjuntos muestran la tendencia de guías por hora para cada región.</p>
         </div>
     </body>
     </html>
