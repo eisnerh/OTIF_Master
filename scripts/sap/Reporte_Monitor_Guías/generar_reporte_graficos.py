@@ -52,14 +52,16 @@ def cargar_configuracion_email() -> dict:
     config = configparser.ConfigParser()
     creds_path = Path(__file__).parent / "credentials.ini"
     
+    # Valores por defecto (se pueden sobrescribir con credentials.ini o variables de entorno)
     email_config = {
         'smtp_server': os.getenv('SMTP_SERVER', 'smtp.gmail.com'),
         'smtp_port': int(os.getenv('SMTP_PORT', '587')),
-        'email_from': os.getenv('EMAIL_FROM', 'eisner.lopez@gmail.com'),
-        'email_password': os.getenv('EMAIL_PASSWORD', 'lnqh wqkd dsoo jsvd'),
-        'email_to': os.getenv('EMAIL_TO', 'eisner.lopez@fifco.com').split(',') if os.getenv('EMAIL_TO') else [],
+        'email_from': os.getenv('EMAIL_FROM', ''),
+        'email_password': os.getenv('EMAIL_PASSWORD', ''),
+        'email_to': [],
     }
     
+    # Cargar desde credentials.ini si existe (prioridad más alta)
     if creds_path.exists():
         config.read(creds_path, encoding="utf-8")
         if "EMAIL" in config:
@@ -71,6 +73,12 @@ def cargar_configuracion_email() -> dict:
             email_to_str = email_section.get('email_to', '')
             if email_to_str:
                 email_config['email_to'] = [e.strip() for e in email_to_str.split(',')]
+    
+    # Si no hay email_to desde credentials.ini, usar variable de entorno
+    if not email_config['email_to']:
+        email_to_env = os.getenv('EMAIL_TO', '')
+        if email_to_env:
+            email_config['email_to'] = [e.strip() for e in email_to_env.split(',')]
     
     return email_config
 
