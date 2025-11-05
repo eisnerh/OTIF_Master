@@ -32,12 +32,12 @@ REGIONES_CONFIG = {
         'nombre': 'RURAL'
     },
     'GAM': {
-        'zonas': [],  # Se llenará con zonas que no sean de otras regiones
+        'zonas': ['ALJ', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO'],  # Se llenará con zonas que no sean de otras regiones
         'color': '#1565C0',  # Azul
         'nombre': 'GAM'
     },
     'VINOS': {
-        'zonas': ['CT02'],
+        'zonas': ['VYD'],
         'color': '#6A1B9A',  # Púrpura
         'nombre': 'VINOS (CT02)'
     },
@@ -45,11 +45,6 @@ REGIONES_CONFIG = {
         'zonas': ['SPE'],
         'color': '#F57C00',  # Naranja
         'nombre': 'HA (SPE)'
-    },
-    'CT01': {
-        'zonas': ['CT01'],
-        'color': '#C62828',  # Rojo
-        'nombre': 'CT01'
     }
 }
 
@@ -186,7 +181,7 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
     # ==================== FILA 1: KPIs PRINCIPALES ====================
     print("[GRAFICO] Generando KPIs principales...")
     
-    regiones_orden = ['RURAL', 'GAM', 'VINOS', 'HA', 'CT01']
+    regiones_orden = ['RURAL', 'GAM', 'VINOS', 'HA']
     for i, region in enumerate(regiones_orden):
         ax = fig.add_subplot(gs[0, i])
         cantidad = stats_por_region.get(region, 0)
