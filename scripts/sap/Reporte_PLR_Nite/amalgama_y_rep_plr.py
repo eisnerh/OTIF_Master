@@ -363,30 +363,30 @@ def run_once(cfg: RunConfig) -> Path:
     # Verificación final (ya no hace limpieza adicional)
     clean_excel_file(xlsx_path, rows_to_drop=0)
 
-    # Generar reporte gráfico
+    # Generar dashboard regional
     try:
-        logger.info("[GRAFICO] Generando reporte grafico para WhatsApp...")
+        logger.info("[GRAFICO] Generando dashboard regional por zonas...")
         import subprocess
-        script_grafico = Path(__file__).parent / "generar_reporte_grafico.py"
-        if script_grafico.exists():
+        script_dashboard = Path(__file__).parent / "generar_dashboard_regional.py"
+        if script_dashboard.exists():
             result = subprocess.run(
-                [sys.executable, str(script_grafico), "--archivo", str(xlsx_path)],
+                [sys.executable, str(script_dashboard), "--archivo", str(xlsx_path)],
                 capture_output=True,
                 text=True,
                 timeout=300
             )
             if result.returncode == 0:
-                logger.info("[OK] Reporte grafico generado exitosamente")
+                logger.info("[OK] Dashboard regional generado exitosamente")
                 # Buscar el archivo PNG generado
-                reporte_png = list(xlsx_path.parent.glob("reporte_grafico_*.png"))
-                if reporte_png:
-                    logger.info(f"[ARCHIVO] Reporte PNG: {reporte_png[-1]}")
+                dashboard_png = list(xlsx_path.parent.glob("dashboard_regional_plr_*.png"))
+                if dashboard_png:
+                    logger.info(f"[ARCHIVO] Dashboard: {dashboard_png[-1]}")
             else:
-                logger.warning(f"[ADVERTENCIA] Error al generar reporte grafico: {result.stderr}")
+                logger.warning(f"[ADVERTENCIA] Error al generar dashboard: {result.stderr}")
         else:
-            logger.warning("[ADVERTENCIA] Script de graficos no encontrado")
+            logger.warning("[ADVERTENCIA] Script de dashboard no encontrado")
     except Exception as e:
-        logger.warning(f"[ADVERTENCIA] Error al generar reporte grafico: {e}")
+        logger.warning(f"[ADVERTENCIA] Error al generar dashboard regional: {e}")
 
     logger.info("=" * 60)
     logger.info("[EXITO] PROCESO PLR_NITE COMPLETADO EXITOSAMENTE")

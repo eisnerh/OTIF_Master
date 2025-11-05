@@ -29,24 +29,36 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import configparser
 
-# Configuración de zonas
-ZONAS_RURAL = ['GUA', 'NIC', 'PUN', 'SCA', 'CNL', 'LIM', 'LIB', 'SIS', 'ZTP', 'ZTN', 'ZTL']
-ZONA_VINOS = 'CT02'
-ZONA_HA = 'SPE'
+# Importar configuración centralizada de regiones
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-def mapear_zona(zona: str) -> str:
-    """Mapea una zona individual a su grupo correspondiente."""
-    if pd.isna(zona) or zona == '':
-        return 'SIN_ZONA'
-    zona_upper = str(zona).strip().upper()
-    if zona_upper in ZONAS_RURAL:
-        return 'RURAL'
-    elif zona_upper == ZONA_VINOS:
-        return 'VINOS'
-    elif zona_upper == ZONA_HA:
-        return 'HA'
-    else:
-        return 'GAM'
+try:
+    from configuracion_regiones import (
+        REGIONES_CONFIG,
+        ZONAS_RURAL,
+        mapear_zona_a_region as mapear_zona
+    )
+    print("[OK] Configuracion de regiones cargada")
+except ImportError:
+    # Fallback si no se encuentra el módulo
+    ZONAS_RURAL = ['CNL', 'GUA', 'LIB', 'LIM', 'NIC', 'PUN', 'SCA', 'SIS', 'ZTL', 'ZTN', 'ZTP']
+    ZONAS_GAM = ['AL', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO']
+    
+    def mapear_zona(zona: str) -> str:
+        """Mapea una zona individual a su grupo correspondiente."""
+        if pd.isna(zona) or zona == '':
+            return 'SIN_ZONA'
+        zona_upper = str(zona).strip().upper()
+        if zona_upper in ZONAS_RURAL:
+            return 'RURAL'
+        elif zona_upper in ZONAS_GAM:
+            return 'GAM'
+        elif zona_upper == 'SPE':
+            return 'CT01'
+        elif zona_upper == 'VYD':
+            return 'CT02'
+        else:
+            return 'SIN_ZONA'
 
 def cargar_configuracion_email() -> dict:
     """Carga configuración de email desde credentials.ini o variables de entorno."""
@@ -308,16 +320,24 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
     html += """
             </table>
             
-            <h2>Gráficos Adjuntos</h2>
+            <h2>Archivos Adjuntos</h2>
             <ul>
-                <li><strong>Dashboard Regional</strong>: Vista completa por regiones (RURAL, GAM, VINOS, HA, CT01) con distribución por zona</li>
-                <li><strong>Gráficos por Zona</strong>: Tendencias horarias para cada zona agrupada</li>
-                <li><strong>Archivo Excel</strong>: Datos procesados completos</li>
+                <li><strong>Dashboard Regional</strong>: Vista completa por regiones (RURAL, GAM, VINOS, HA, CT01)
+                    <ul>
+                        <li>KPIs por región con valores y porcentajes</li>
+                        <li>Tablas zona x hora (heatmaps) por cada región</li>
+                        <li>Gráfico comparativo entre regiones</li>
+                    </ul>
+                </li>
+                <li><strong>Gráficos por Zona Agrupada</strong>: Tendencias horarias (RURAL, GAM, VINOS, HA)</li>
+                <li><strong>Archivo Excel</strong>: Datos procesados completos para análisis adicional</li>
             </ul>
             
-            <p style="margin-top: 20px; padding: 10px; background-color: #E3F2FD; border-left: 4px solid #2196F3;">
-                <strong>Nota:</strong> El Dashboard Regional incluye KPIs, distribución por zonas, 
-                tendencias horarias y comparativos entre todas las regiones.
+            <h2>Cómo leer el Dashboard Regional</h2>
+            <p style="margin-top: 10px; padding: 10px; background-color: #FFF3E0; border-left: 4px solid #FF9800;">
+                <strong>Tarjetas KPI:</strong> Muestran el total de guías por región y su porcentaje del total.<br>
+                <strong>Tablas Zona x Hora:</strong> Cada celda muestra la cantidad de guías por zona en cada hora del día (código de colores: amarillo=bajo, rojo=alto).<br>
+                <strong>Gráfico Comparativo:</strong> Compara el volumen total entre todas las regiones.
             </p>
         </div>
     </body>
@@ -337,15 +357,34 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
         msg = MIMEMultipart('related')
         msg['From'] = email_config['email_from']
         msg['To'] = ', '.join(email_config['email_to'])
-        msg['Subject'] = f"Reporte Monitor Guías - {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        msg['Subject'] = f"Dashboard Monitor de Guias - Analisis Regional - {datetime.now().strftime('%Y-%m-%d %H:%M')}"
         
         # Agregar HTML
         msg_alternative = MIMEMultipart('alternative')
         msg.attach(msg_alternative)
         msg_alternative.attach(MIMEText(resumen_html, 'html'))
         
-        # Adjuntar gráficos
+        # Adjuntar gráficos (priorizar dashboard regional primero)
+        graficos_ordenados = []
+        dashboard_regional = None
+        
         for ruta_grafico in rutas_graficos:
+            if 'dashboard_regional' in ruta_grafico.name:
+                dashboard_regional = ruta_grafico
+            else:
+                graficos_ordenados.append(ruta_grafico)
+        
+        # Adjuntar dashboard regional primero
+        if dashboard_regional and dashboard_regional.exists():
+            with open(dashboard_regional, 'rb') as f:
+                img = MIMEImage(f.read())
+                img.add_header('Content-Disposition', 'attachment', 
+                             filename=dashboard_regional.name)
+                msg.attach(img)
+            print(f"OK: Dashboard regional adjuntado: {dashboard_regional.name}")
+        
+        # Luego los demás gráficos
+        for ruta_grafico in graficos_ordenados:
             if ruta_grafico.exists():
                 with open(ruta_grafico, 'rb') as f:
                     img = MIMEImage(f.read())
