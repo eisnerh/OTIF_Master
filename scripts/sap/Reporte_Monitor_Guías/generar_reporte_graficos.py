@@ -308,8 +308,17 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
     html += """
             </table>
             
-            <h2>Detalle por Hora</h2>
-            <p>Los gráficos adjuntos muestran la tendencia de guías por hora para cada región.</p>
+            <h2>Gráficos Adjuntos</h2>
+            <ul>
+                <li><strong>Dashboard Regional</strong>: Vista completa por regiones (RURAL, GAM, VINOS, HA, CT01) con distribución por zona</li>
+                <li><strong>Gráficos por Zona</strong>: Tendencias horarias para cada zona agrupada</li>
+                <li><strong>Archivo Excel</strong>: Datos procesados completos</li>
+            </ul>
+            
+            <p style="margin-top: 20px; padding: 10px; background-color: #E3F2FD; border-left: 4px solid #2196F3;">
+                <strong>Nota:</strong> El Dashboard Regional incluye KPIs, distribución por zonas, 
+                tendencias horarias y comparativos entre todas las regiones.
+            </p>
         </div>
     </body>
     </html>
@@ -394,6 +403,14 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
         graficos_dir = xlsx_path.parent / "graficos"
         rutas_graficos = generar_graficos(conteo_df, graficos_dir)
         print(f"OK: Gráficos generados: {len(rutas_graficos)} archivos")
+        
+        # Buscar dashboard regional si existe
+        dashboard_regional = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
+        if dashboard_regional:
+            # Agregar el más reciente a la lista de gráficos
+            dashboard_path = max(dashboard_regional, key=lambda p: p.stat().st_mtime)
+            rutas_graficos.append(dashboard_path)
+            print(f"OK: Dashboard regional encontrado: {dashboard_path.name}")
         
         # Crear resumen HTML
         resumen_html = crear_resumen_html(conteo_df)

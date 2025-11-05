@@ -299,6 +299,31 @@ def run_once(cfg: RunConfig) -> Path:
             logger.warning("[ADVERTENCIA]  No se encontró el script generar_reporte_graficos.py")
     except Exception as e:
         logger.warning(f"[ADVERTENCIA]  Error al generar reporte con gráficos: {e}")
+    
+    # Generar dashboard regional
+    try:
+        logger.info("Generando dashboard regional por zonas...")
+        import subprocess
+        script_dashboard = Path(__file__).parent / "generar_dashboard_regional.py"
+        if script_dashboard.exists():
+            result = subprocess.run(
+                [sys.executable, str(script_dashboard), "--archivo", str(xlsx_path)],
+                capture_output=True,
+                text=True,
+                timeout=300
+            )
+            if result.returncode == 0:
+                logger.info("[OK] Dashboard regional generado exitosamente")
+                # Buscar el archivo PNG generado
+                dashboard_png = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
+                if dashboard_png:
+                    logger.info(f"[ARCHIVO] Dashboard: {dashboard_png[-1]}")
+            else:
+                logger.warning(f"[ADVERTENCIA] Error al generar dashboard: {result.stderr}")
+        else:
+            logger.warning("[ADVERTENCIA] No se encontró el script generar_dashboard_regional.py")
+    except Exception as e:
+        logger.warning(f"[ADVERTENCIA] Error al generar dashboard regional: {e}")
 
     return txt_path
 
