@@ -70,8 +70,8 @@ TCODE       = "y_dev_42000074"
 NODE_KEY    = "F00119"
 ROW_NUMBER  = 25
 OUTPUT_DIR  = Path(r"C:/data/SAP_Extraction/y_dev_74")
-# DATE_STR    = datetime.now().strftime("%d.%m.%Y")
-DATE_STR = (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
+DATE_STR    = datetime.now().strftime("%d.%m.%Y")
+# DATE_STR = (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
 FILENAME    = "Monitor_Guias.txt"  # nombre del TXT exportado
 # --------------------------------------------------------------------------------
 
