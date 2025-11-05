@@ -14,7 +14,7 @@ def print_header(text):
     print("=" * 60)
 
 def print_check(text, passed):
-    symbol = "✅" if passed else "❌"
+    symbol = "[OK]" if passed else "[ERROR]"
     print(f"{symbol} {text}")
 
 def check_python_version():
@@ -128,22 +128,22 @@ def check_script_files():
 def main():
     print_header("Verificación de Instalación - Reporte PLR NITE")
     
-    print("\n🔍 Verificando versión de Python...")
+    print("\n[BUSCAR] Verificando versión de Python...")
     py_ok = check_python_version()
     
-    print("\n🔍 Verificando dependencias de Python...")
+    print("\n[BUSCAR] Verificando dependencias de Python...")
     deps_ok = check_dependencies()
     
-    print("\n🔍 Verificando archivos del proyecto...")
+    print("\n[BUSCAR] Verificando archivos del proyecto...")
     files_ok = check_script_files()
     
-    print("\n🔍 Verificando credenciales SAP...")
+    print("\n[BUSCAR] Verificando credenciales SAP...")
     creds_ok = check_credentials_file()
     
-    print("\n🔍 Verificando SAP GUI...")
+    print("\n[BUSCAR] Verificando SAP GUI...")
     sap_ok = check_sap_gui()
     
-    print("\n🔍 Verificando directorio de salida...")
+    print("\n[BUSCAR] Verificando directorio de salida...")
     output_ok = check_output_directory()
     
     # Resumen final
@@ -161,21 +161,21 @@ def main():
     passed_count = sum(1 for _, passed in all_checks if passed)
     total_count = len(all_checks)
     
-    print(f"\n✅ Verificaciones pasadas: {passed_count}/{total_count}")
+    print(f"\n[OK] Verificaciones pasadas: {passed_count}/{total_count}")
     
     if passed_count == total_count:
-        print("\n" + "🎉" * 20)
-        print("¡TODO LISTO! El sistema está configurado correctamente.")
+        print("\n" + "=" * 60)
+        print("[EXITO] TODO LISTO! El sistema esta configurado correctamente.")
         print("Ejecuta 'ejecutar_rep_plr.bat' para generar el reporte.")
-        print("🎉" * 20)
+        print("=" * 60)
         return 0
     else:
-        print("\n" + "⚠️ " * 20)
-        print("HAY PROBLEMAS. Revisa los mensajes anteriores y corrige los errores.")
-        print("⚠️ " * 20)
+        print("\n" + "=" * 60)
+        print("[ADVERTENCIA] HAY PROBLEMAS. Revisa los mensajes anteriores y corrige los errores.")
+        print("=" * 60)
         
         # Mostrar pasos sugeridos
-        print("\n📝 Pasos sugeridos:")
+        print("\n[INFO] Pasos sugeridos:")
         if not deps_ok:
             print("1. Instalar dependencias: pip install pandas openpyxl pywin32")
         if not creds_ok:
@@ -189,10 +189,10 @@ def main():
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except KeyboardInterrupt:
-        print("\n\n⚠️  Verificación interrumpida por el usuario")
+    except KeyboardInterrupt:        
+        print("\n\n[ADVERTENCIA] Verificacion interrumpida por el usuario")
         sys.exit(1)
     except Exception as e:
-        print(f"\n\n❌ Error inesperado: {e}")
+        print(f"\n\n[ERROR] Error inesperado: {e}")
         sys.exit(1)
 

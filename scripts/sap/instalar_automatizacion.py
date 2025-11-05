@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-🛠️ SCRIPT DE INSTALACIÓN Y CONFIGURACIÓN
+ SCRIPT DE INSTALACIÓN Y CONFIGURACIÓN
 ========================================
 
 Este script automatiza la instalación y configuración del sistema
 de automatización de reportes SAP.
 
 Funcionalidades:
-✅ Verificación de requisitos del sistema
-✅ Instalación de dependencias
-✅ Configuración de directorios
-✅ Creación de tarea programada en Windows
-✅ Configuración de permisos
-✅ Pruebas de conectividad SAP
+[OK] Verificación de requisitos del sistema
+[OK] Instalación de dependencias
+[OK] Configuración de directorios
+[OK] Creación de tarea programada en Windows
+[OK] Configuración de permisos
+[OK] Pruebas de conectividad SAP
 """
 
 import os
@@ -33,20 +33,20 @@ class InstaladorAutomatizacion:
         """
         Verifica la versión de Python
         """
-        print("🐍 Verificando Python...")
+        print(" Verificando Python...")
         version = sys.version_info
         if version.major >= 3 and version.minor >= 8:
-            print(f"✅ Python {version.major}.{version.minor}.{version.micro} - Compatible")
+            print(f"[OK] Python {version.major}.{version.minor}.{version.micro} - Compatible")
             return True
         else:
-            print(f"❌ Python {version.major}.{version.minor}.{version.micro} - Se requiere Python 3.8+")
+            print(f"[ERROR] Python {version.major}.{version.minor}.{version.micro} - Se requiere Python 3.8+")
             return False
     
     def instalar_dependencias(self):
         """
         Instala las dependencias requeridas
         """
-        print("📦 Instalando dependencias...")
+        print(" Instalando dependencias...")
         
         dependencias = [
             'pandas>=1.5.0',
@@ -59,9 +59,9 @@ class InstaladorAutomatizacion:
             try:
                 print(f"   Instalando {dep}...")
                 subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep])
-                print(f"   ✅ {dep} instalado correctamente")
+                print(f"   [OK] {dep} instalado correctamente")
             except subprocess.CalledProcessError as e:
-                print(f"   ❌ Error instalando {dep}: {e}")
+                print(f"   [ERROR] Error instalando {dep}: {e}")
                 return False
         
         return True
@@ -70,7 +70,7 @@ class InstaladorAutomatizacion:
         """
         Crea la estructura de directorios necesaria
         """
-        print("📁 Creando estructura de directorios...")
+        print("[CARPETA] Creando estructura de directorios...")
         
         directorios = [
             self.directorio_base,
@@ -83,9 +83,9 @@ class InstaladorAutomatizacion:
         for directorio in directorios:
             try:
                 os.makedirs(directorio, exist_ok=True)
-                print(f"   ✅ Directorio creado: {directorio}")
+                print(f"   [OK] Directorio creado: {directorio}")
             except Exception as e:
-                print(f"   ❌ Error creando directorio {directorio}: {e}")
+                print(f"   [ERROR] Error creando directorio {directorio}: {e}")
                 return False
         
         return True
@@ -94,7 +94,7 @@ class InstaladorAutomatizacion:
         """
         Copia los archivos necesarios al directorio de instalación
         """
-        print("📋 Copiando archivos de configuración...")
+        print("[LISTA] Copiando archivos de configuración...")
         
         archivos_copiar = [
             'automatizacion_reportes_sap.py',
@@ -110,11 +110,11 @@ class InstaladorAutomatizacion:
                 if os.path.exists(origen):
                     import shutil
                     shutil.copy2(origen, destino)
-                    print(f"   ✅ Archivo copiado: {archivo}")
+                    print(f"   [OK] Archivo copiado: {archivo}")
                 else:
-                    print(f"   ⚠️ Archivo no encontrado: {archivo}")
+                    print(f"   [ADVERTENCIA] Archivo no encontrado: {archivo}")
             except Exception as e:
-                print(f"   ❌ Error copiando {archivo}: {e}")
+                print(f"   [ERROR] Error copiando {archivo}: {e}")
                 return False
         
         return True
@@ -123,18 +123,18 @@ class InstaladorAutomatizacion:
         """
         Verifica que SAP GUI esté disponible
         """
-        print("🔍 Verificando SAP GUI...")
+        print("[BUSCAR] Verificando SAP GUI...")
         
         try:
             sap_gui_auto = win32com.client.GetObject("SAPGUI")
             if sap_gui_auto:
-                print("   ✅ SAP GUI detectado y disponible")
+                print("   [OK] SAP GUI detectado y disponible")
                 return True
             else:
-                print("   ❌ SAP GUI no está disponible")
+                print("   [ERROR] SAP GUI no está disponible")
                 return False
         except Exception as e:
-            print(f"   ❌ Error verificando SAP GUI: {e}")
+            print(f"   [ERROR] Error verificando SAP GUI: {e}")
             return False
     
     def crear_tarea_programada(self):
@@ -161,25 +161,25 @@ Register-ScheduledTask -TaskName 'SAP_Reportes_Automaticos' -Action $Action -Tri
                                   capture_output=True, text=True)
             
             if result.returncode == 0:
-                print("   ✅ Tarea programada creada exitosamente")
-                print("   📅 Programada para ejecutarse diariamente a las 08:00")
+                print("   [OK] Tarea programada creada exitosamente")
+                print("   [FECHA] Programada para ejecutarse diariamente a las 08:00")
                 return True
             else:
-                print(f"   ❌ Error creando tarea programada: {result.stderr}")
+                print(f"   [ERROR] Error creando tarea programada: {result.stderr}")
                 return False
                 
         except Exception as e:
-            print(f"   ❌ Error configurando tarea programada: {e}")
+            print(f"   [ERROR] Error configurando tarea programada: {e}")
             return False
     
     def crear_script_inicio_rapido(self):
         """
         Crea un script para ejecución manual rápida
         """
-        print("🚀 Creando script de inicio rápido...")
+        print("[INICIO] Creando script de inicio rápido...")
         
         script_content = f'''@echo off
-echo 🚀 Iniciando extracción de reportes SAP...
+echo [INICIO] Iniciando extracción de reportes SAP...
 echo.
 cd /d "{self.directorio_base}"
 python ejecutar_diario.py
@@ -192,47 +192,47 @@ pause >nul
             script_path = os.path.join(self.directorio_base, 'ejecutar_ahora.bat')
             with open(script_path, 'w', encoding='utf-8') as f:
                 f.write(script_content)
-            print(f"   ✅ Script creado: {script_path}")
+            print(f"   [OK] Script creado: {script_path}")
             return True
         except Exception as e:
-            print(f"   ❌ Error creando script: {e}")
+            print(f"   [ERROR] Error creando script: {e}")
             return False
     
     def crear_documentacion(self):
         """
         Crea documentación de uso
         """
-        print("📚 Creando documentación...")
+        print("[DOCUMENTACION] Creando documentación...")
         
-        doc_content = f"""# 🚀 AUTOMATIZACIÓN DE REPORTES SAP
+        doc_content = f"""# [INICIO] AUTOMATIZACIÓN DE REPORTES SAP
 
-## 📋 Descripción
+## [LISTA] Descripción
 Sistema automatizado para la extracción diaria de 9 reportes de SAP con procesamiento para Power BI.
 
-## 📁 Estructura de Archivos
+## [CARPETA] Estructura de Archivos
 ```
 {self.directorio_base}/
-├── automatizacion_reportes_sap.py    # Script principal
-├── ejecutar_diario.py                # Script de ejecución diaria
-├── configuracion_reportes.json       # Configuración
-├── ejecutar_ahora.bat                # Ejecución manual
-├── Logs/                             # Archivos de log
-├── Backup/                           # Respaldos
-├── Reportes/                         # Reportes originales
-└── PowerBI/                          # Archivos para Power BI
+ automatizacion_reportes_sap.py    # Script principal
+ ejecutar_diario.py                # Script de ejecución diaria
+ configuracion_reportes.json       # Configuración
+ ejecutar_ahora.bat                # Ejecución manual
+ Logs/                             # Archivos de log
+ Backup/                           # Respaldos
+ Reportes/                         # Reportes originales
+ PowerBI/                          # Archivos para Power BI
 ```
 
-## 🕐 Ejecución Automática
+## [HORA] Ejecución Automática
 - **Programada**: Diariamente a las 08:00
 - **Lógica de fechas**: 
   - Lunes: Procesa sábado y domingo
   - Otros días: Procesa día anterior
 
-## 🚀 Ejecución Manual
+## [INICIO] Ejecución Manual
 1. Doble clic en `ejecutar_ahora.bat`
 2. O ejecutar: `python ejecutar_diario.py`
 
-## 📊 Reportes Incluidos
+## [DASHBOARD] Reportes Incluidos
 1. **mb51** - Movimientos de material
 2. **rep_plr** - Planificación logística
 3. **y_dev_45** - Desarrollo 45
@@ -243,7 +243,7 @@ Sistema automatizado para la extracción diaria de 9 reportes de SAP con procesa
 8. **zred** - Red
 9. **zsd_incidencias** - Incidencias SD
 
-## 📁 Archivos Generados
+## [CARPETA] Archivos Generados
 Para cada reporte se generan:
 - `[reporte]_[fecha].xls` - Archivo original SAP
 - `[reporte]_[fecha]_PowerBI.xlsx` - Excel para Power BI
@@ -251,23 +251,23 @@ Para cada reporte se generan:
 - `[reporte]_[fecha]_PowerBI.parquet` - Parquet (recomendado)
 - `[reporte]_[fecha]_Metadata.json` - Metadatos
 
-## 🔧 Configuración
+## [CONFIGURACION] Configuración
 Editar `configuracion_reportes.json` para:
 - Cambiar credenciales SAP
 - Modificar directorios
 - Activar/desactivar reportes
 - Ajustar tiempos de espera
 
-## 📋 Logs
+## [LISTA] Logs
 Los logs se guardan en: `{self.directorio_base}\\Logs\\`
 
-## ❗ Requisitos
+##  Requisitos
 - Python 3.8+
 - SAP GUI
 - Windows (Task Scheduler)
 - Dependencias Python instaladas
 
-## 🆘 Soporte
+##  Soporte
 Para problemas o consultas, revisar los logs en la carpeta Logs.
 """
         
@@ -275,17 +275,17 @@ Para problemas o consultas, revisar los logs en la carpeta Logs.
             doc_path = os.path.join(self.directorio_base, 'README.md')
             with open(doc_path, 'w', encoding='utf-8') as f:
                 f.write(doc_content)
-            print(f"   ✅ Documentación creada: {doc_path}")
+            print(f"   [OK] Documentación creada: {doc_path}")
             return True
         except Exception as e:
-            print(f"   ❌ Error creando documentación: {e}")
+            print(f"   [ERROR] Error creando documentación: {e}")
             return False
     
     def realizar_prueba(self):
         """
         Realiza una prueba básica del sistema
         """
-        print("🧪 Realizando prueba básica...")
+        print(" Realizando prueba básica...")
         
         try:
             # Importar y probar el módulo principal
@@ -294,27 +294,27 @@ Para problemas o consultas, revisar los logs en la carpeta Logs.
             
             # Crear instancia
             automatizacion = AutomatizacionSAP()
-            print("   ✅ Módulo principal importado correctamente")
+            print("   [OK] Módulo principal importado correctamente")
             
             # Verificar configuración
             if automatizacion.reportes_config:
-                print(f"   ✅ Configuración cargada: {len(automatizacion.reportes_config)} reportes")
+                print(f"   [OK] Configuración cargada: {len(automatizacion.reportes_config)} reportes")
             else:
-                print("   ❌ Error en configuración")
+                print("   [ERROR] Error en configuración")
                 return False
             
-            print("   ✅ Prueba básica completada")
+            print("   [OK] Prueba básica completada")
             return True
             
         except Exception as e:
-            print(f"   ❌ Error en prueba básica: {e}")
+            print(f"   [ERROR] Error en prueba básica: {e}")
             return False
     
     def instalar(self):
         """
         Ejecuta la instalación completa
         """
-        print("🛠️ INICIANDO INSTALACIÓN DE AUTOMATIZACIÓN SAP")
+        print(" INICIANDO INSTALACIÓN DE AUTOMATIZACIÓN SAP")
         print("=" * 60)
         
         pasos = [
@@ -333,30 +333,30 @@ Para problemas o consultas, revisar los logs en la carpeta Logs.
         fallidos = 0
         
         for paso, funcion in pasos:
-            print(f"\n📋 {paso}...")
+            print(f"\n[LISTA] {paso}...")
             try:
                 if funcion():
                     exitosos += 1
                 else:
                     fallidos += 1
             except Exception as e:
-                print(f"   ❌ Error inesperado: {e}")
+                print(f"   [ERROR] Error inesperado: {e}")
                 fallidos += 1
         
         # Resumen final
         print("\n" + "=" * 60)
-        print("📊 RESUMEN DE INSTALACIÓN")
+        print("[DASHBOARD] RESUMEN DE INSTALACIÓN")
         print("=" * 60)
-        print(f"✅ Pasos exitosos: {exitosos}")
-        print(f"❌ Pasos fallidos: {fallidos}")
-        print(f"📈 Porcentaje éxito: {(exitosos/(exitosos+fallidos)*100):.1f}%")
+        print(f"[OK] Pasos exitosos: {exitosos}")
+        print(f"[ERROR] Pasos fallidos: {fallidos}")
+        print(f"[GRAFICO] Porcentaje éxito: {(exitosos/(exitosos+fallidos)*100):.1f}%")
         
         if fallidos == 0:
-            print("\n🎉 INSTALACIÓN COMPLETADA EXITOSAMENTE")
-            print(f"📁 Directorio de instalación: {self.directorio_base}")
-            print("🚀 Puedes ejecutar 'ejecutar_ahora.bat' para probar")
+            print("\n[EXITO] INSTALACIÓN COMPLETADA EXITOSAMENTE")
+            print(f"[CARPETA] Directorio de instalación: {self.directorio_base}")
+            print("[INICIO] Puedes ejecutar 'ejecutar_ahora.bat' para probar")
         else:
-            print(f"\n⚠️ INSTALACIÓN COMPLETADA CON {fallidos} ERRORES")
+            print(f"\n[ADVERTENCIA] INSTALACIÓN COMPLETADA CON {fallidos} ERRORES")
             print("Revisa los mensajes anteriores para más detalles")
         
         print("=" * 60)

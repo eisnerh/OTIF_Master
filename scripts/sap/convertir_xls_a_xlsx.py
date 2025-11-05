@@ -526,7 +526,7 @@ def main():
             import openpyxl
             print("OpenPyXL disponible [ok]")
         except ImportError:
-            print("⚠️  OpenPyXL no está instalado. Instalando...")
+            print("[ADVERTENCIA]  OpenPyXL no está instalado. Instalando...")
             os.system("pip install openpyxl")
         
         # Crear instancia del convertidor

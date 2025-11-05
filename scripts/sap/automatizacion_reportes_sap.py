@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🚀 SCRIPT MAESTRO DE AUTOMATIZACIÓN SAP
+[INICIO] SCRIPT MAESTRO DE AUTOMATIZACIÓN SAP
 =====================================
 
 Este script automatiza la extracción de 8 reportes de SAP:
@@ -14,12 +14,12 @@ Este script automatiza la extracción de 8 reportes de SAP:
 - zsd_incidencias: Reporte de incidencias SD
 
 Funcionalidades:
-✅ Login automático en SAP
-✅ Extracción de todos los reportes
-✅ Lógica de fechas (sábado-domingo para lunes)
-✅ Nombres de archivos con fecha de ejecución
-✅ Procesamiento para Power BI
-✅ Manejo de errores y logs
+[OK] Login automático en SAP
+[OK] Extracción de todos los reportes
+[OK] Lógica de fechas (sábado-domingo para lunes)
+[OK] Nombres de archivos con fecha de ejecución
+[OK] Procesamiento para Power BI
+[OK] Manejo de errores y logs
 """
 
 import win32com.client
@@ -111,12 +111,12 @@ class AutomatizacionSAP:
             # Procesar sábado y domingo
             fecha_fin = hoy - timedelta(days=1)  # Domingo
             fecha_inicio = hoy - timedelta(days=2)  # Sábado
-            logger.info(f"📅 Lunes detectado: Procesando sábado ({fecha_inicio.strftime('%d.%m.%Y')}) y domingo ({fecha_fin.strftime('%d.%m.%Y')})")
+            logger.info(f"[FECHA] Lunes detectado: Procesando sábado ({fecha_inicio.strftime('%d.%m.%Y')}) y domingo ({fecha_fin.strftime('%d.%m.%Y')})")
         else:
             # Procesar el día anterior
             fecha_inicio = hoy - timedelta(days=1)
             fecha_fin = fecha_inicio
-            logger.info(f"📅 Día {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'][hoy.weekday()]}: Procesando día anterior ({fecha_inicio.strftime('%d.%m.%Y')})")
+            logger.info(f"[FECHA] Día {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'][hoy.weekday()]}: Procesando día anterior ({fecha_inicio.strftime('%d.%m.%Y')})")
         
         return fecha_inicio, fecha_fin
 
@@ -141,7 +141,7 @@ class AutomatizacionSAP:
             self.session.findById("wnd[0]/usr/txtRSYST-LANGU").text = "ES"
             self.session.findById("wnd[0]").sendVKey(0)
             
-            logger.info("✅ Sesión SAP iniciada correctamente")
+            logger.info("[OK] Sesión SAP iniciada correctamente")
             time.sleep(2)  # Esperar estabilización
             return True
             
@@ -154,7 +154,7 @@ class AutomatizacionSAP:
         Ejecuta reportes que usan transacciones directas (zred, zsd_incidencias)
         """
         try:
-            logger.info(f"🔄 Ejecutando transacción directa: {config['transaccion']}")
+            logger.info(f" Ejecutando transacción directa: {config['transaccion']}")
             
             # Ir a la transacción
             self.session.findById("wnd[0]/tbar[0]/okcd").text = config['transaccion']
@@ -411,14 +411,14 @@ class AutomatizacionSAP:
             # Configurar fecha de inicio
             campo_inicio = f"wnd[0]/usr/ctxt{config['campo_fecha_inicio']}"
             self.session.findById(campo_inicio).text = self.fecha_inicio.strftime('%d.%m.%Y')
-            logger.info(f"📅 Fecha inicio configurada: {self.fecha_inicio.strftime('%d.%m.%Y')}")
+            logger.info(f"[FECHA] Fecha inicio configurada: {self.fecha_inicio.strftime('%d.%m.%Y')}")
             
             # Configurar fecha de fin
             campo_fin = f"wnd[0]/usr/ctxt{config['campo_fecha_fin']}"
             self.session.findById(campo_fin).text = self.fecha_fin.strftime('%d.%m.%Y')
             self.session.findById(campo_fin).setFocus()
             self.session.findById(campo_fin).caretPosition = 10
-            logger.info(f"📅 Fecha fin configurada: {self.fecha_fin.strftime('%d.%m.%Y')}")
+            logger.info(f"[FECHA] Fecha fin configurada: {self.fecha_fin.strftime('%d.%m.%Y')}")
             
             time.sleep(1)
             
@@ -463,11 +463,11 @@ class AutomatizacionSAP:
             # Verificar que el archivo se creó
             if exito and os.path.exists(ruta_completa):
                 tamaño = os.path.getsize(ruta_completa)
-                logger.info(f"✅ Reporte {nombre_reporte} exportado exitosamente: {nombre_archivo} ({tamaño:,} bytes)")
+                logger.info(f"[OK] Reporte {nombre_reporte} exportado exitosamente: {nombre_archivo} ({tamaño:,} bytes)")
                 
                 # Procesar para Power BI en el mismo directorio
                 if self.procesar_archivo_para_powerbi(ruta_completa, reporte_dir):
-                    logger.info(f"✅ Archivos Power BI generados para {nombre_reporte}")
+                    logger.info(f"[OK] Archivos Power BI generados para {nombre_reporte}")
                 
                 return True
             else:
@@ -494,7 +494,7 @@ class AutomatizacionSAP:
             if config['campo_fecha_fin']:
                 self.session.findById(f"wnd[0]/usr/ctxt{config['campo_fecha_fin']}").text = fecha_fin_str
             
-            logger.info(f"📅 Fechas configuradas: {fecha_inicio_str} - {fecha_fin_str}")
+            logger.info(f"[FECHA] Fechas configuradas: {fecha_inicio_str} - {fecha_fin_str}")
             
         except Exception as e:
             logger.error(f"[ERROR] Error configurando fechas: {e}")
@@ -544,7 +544,7 @@ class AutomatizacionSAP:
                 try:
                     with open(ruta_archivo, 'r', encoding=encoding) as f:
                         lines = f.readlines()
-                    logger.info(f"📄 Archivo leído con encoding: {encoding}")
+                    logger.info(f"[ARCHIVO] Archivo leído con encoding: {encoding}")
                     break
                 except Exception:
                     continue
@@ -553,7 +553,7 @@ class AutomatizacionSAP:
                 logger.error(f"[ERROR] No se pudo leer el archivo con ningún encoding")
                 return False
             
-            logger.info(f"📄 Total de líneas en archivo: {len(lines)}")
+            logger.info(f"[ARCHIVO] Total de líneas en archivo: {len(lines)}")
             
             # Buscar la línea de encabezados (línea con tabs que contiene títulos de columnas)
             header_line_idx = None
@@ -565,7 +565,7 @@ class AutomatizacionSAP:
                 # Detectar fecha del reporte (primera línea con formato de fecha)
                 if fecha_reporte is None and ('2025' in line_stripped or '2024' in line_stripped):
                     fecha_reporte = line_stripped
-                    logger.info(f"📅 Fecha del reporte detectada: {fecha_reporte}")
+                    logger.info(f"[FECHA] Fecha del reporte detectada: {fecha_reporte}")
                 
                 # Detectar línea de encabezados (contiene tabs y no está vacía)
                 if '\t' in line_stripped and line_stripped and not line_stripped.startswith(' '):
@@ -613,7 +613,7 @@ class AutomatizacionSAP:
             logger.info(f"[DATOS] Filas de datos encontradas: {len(data_rows)}")
             
             if not data_rows:
-                logger.warning("⚠️ No se encontraron datos en el archivo")
+                logger.warning("[ADVERTENCIA] No se encontraron datos en el archivo")
                 # Crear DataFrame vacío con los encabezados
                 df = pd.DataFrame(columns=headers)
             else:
@@ -626,7 +626,7 @@ class AutomatizacionSAP:
             # Limpiar nombres de columnas (remover espacios extra, caracteres especiales)
             df.columns = [col.strip().replace('\n', '').replace('\r', '') for col in df.columns]
             
-            logger.info(f"✅ DataFrame creado: {df.shape[0]} filas, {df.shape[1]} columnas")
+            logger.info(f"[OK] DataFrame creado: {df.shape[0]} filas, {df.shape[1]} columnas")
             
             # Determinar directorio de destino
             if directorio_destino is None:
@@ -643,19 +643,19 @@ class AutomatizacionSAP:
                 df.to_excel(excel_path, index=False, engine='openpyxl')
                 logger.info(f"[ARCHIVO] Excel guardado: {excel_path}")
             except Exception as e:
-                logger.warning(f"⚠️ Error guardando Excel: {e}")
+                logger.warning(f"[ADVERTENCIA] Error guardando Excel: {e}")
             
             try:
                 df.to_csv(csv_path, index=False, encoding='utf-8')
                 logger.info(f"[ARCHIVO] CSV guardado: {csv_path}")
             except Exception as e:
-                logger.warning(f"⚠️ Error guardando CSV: {e}")
+                logger.warning(f"[ADVERTENCIA] Error guardando CSV: {e}")
             
             try:
                 df.to_parquet(parquet_path, index=False)
                 logger.info(f"[ARCHIVO] Parquet guardado: {parquet_path}")
             except Exception as e:
-                logger.warning(f"⚠️ Error guardando Parquet: {e}")
+                logger.warning(f"[ADVERTENCIA] Error guardando Parquet: {e}")
             
             # Crear metadatos detallados
             metadata = {
@@ -679,7 +679,7 @@ class AutomatizacionSAP:
             with open(metadata_path, 'w', encoding='utf-8') as f:
                 json.dump(metadata, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"✅ Archivo Power BI procesado exitosamente: {base_name}")
+            logger.info(f"[OK] Archivo Power BI procesado exitosamente: {base_name}")
             logger.info(f"[ARCHIVO] Archivos generados:")
             logger.info(f"   • Excel: {excel_path}")
             logger.info(f"   • CSV: {csv_path}")
@@ -696,9 +696,9 @@ class AutomatizacionSAP:
         """
         Ejecuta todos los reportes configurados
         """
-        logger.info("🚀 INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP")
+        logger.info("[INICIO] INICIANDO AUTOMATIZACIÓN COMPLETA DE REPORTES SAP")
         logger.info("=" * 80)
-        logger.info(f"📅 Fecha de ejecución: {self.fecha_ejecucion.strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.info(f"[FECHA] Fecha de ejecución: {self.fecha_ejecucion.strftime('%Y-%m-%d %H:%M:%S')}")
         logger.info(f"[PERIODO] Período de datos: {self.fecha_inicio.strftime('%d.%m.%Y')} - {self.fecha_fin.strftime('%d.%m.%Y')}")
         logger.info(f"[DIRECTORIO] Directorio base de salida: {self.output_base_dir}")
         logger.info("=" * 80)
@@ -713,7 +713,7 @@ class AutomatizacionSAP:
             exito = self.ejecutar_reporte(nombre_reporte, config)
             
             if exito:
-                resultados[nombre_reporte] = "✅ Exitoso"
+                resultados[nombre_reporte] = "[OK] Exitoso"
             else:
                 resultados[nombre_reporte] = "[FALLIDO] Fallido"
             
@@ -730,7 +730,7 @@ class AutomatizacionSAP:
         
         for reporte, resultado in resultados.items():
             logger.info(f"{resultado} {reporte}")
-            if "✅" in resultado:
+            if "[OK]" in resultado:
                 exitosos += 1
             else:
                 fallidos += 1
@@ -752,7 +752,7 @@ class AutomatizacionSAP:
                 self.session.findById("wnd[0]/tbar[0]/btn[15]").press()
                 logger.info("[CONEXION] Sesión SAP cerrada")
         except Exception as e:
-            logger.warning(f"⚠️ Error cerrando sesión SAP: {e}")
+            logger.warning(f"[ADVERTENCIA] Error cerrando sesión SAP: {e}")
 
     def main(self):
         """
@@ -782,11 +782,11 @@ if __name__ == "__main__":
     try:
         exito = automatizacion.main()
         if exito:
-            print("\n🎉 AUTOMATIZACIÓN COMPLETADA EXITOSAMENTE")
+            print("\n[EXITO] AUTOMATIZACIÓN COMPLETADA EXITOSAMENTE")
             print("[ARCHIVO] Archivos generados en:", automatizacion.output_base_dir)
         else:
             print("\n[ERROR] AUTOMATIZACIÓN FALLÓ")
     except KeyboardInterrupt:
-        print("\n⚠️ Proceso interrumpido por el usuario")
+        print("\n[ADVERTENCIA] Proceso interrumpido por el usuario")
     except Exception as e:
         print(f"\n[ERROR] Error inesperado: {e}")

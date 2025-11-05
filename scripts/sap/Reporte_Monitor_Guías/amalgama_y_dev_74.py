@@ -290,15 +290,15 @@ def run_once(cfg: RunConfig) -> Path:
                 timeout=300
             )
             if result.returncode == 0:
-                logger.info("✅ Reporte con gráficos generado y correo enviado")
+                logger.info("[OK] Reporte con gráficos generado y correo enviado")
             else:
-                logger.warning(f"⚠️  El script de gráficos terminó con código {result.returncode}")
+                logger.warning(f"[ADVERTENCIA]  El script de gráficos terminó con código {result.returncode}")
                 if result.stderr:
                     logger.warning(f"Error: {result.stderr}")
         else:
-            logger.warning("⚠️  No se encontró el script generar_reporte_graficos.py")
+            logger.warning("[ADVERTENCIA]  No se encontró el script generar_reporte_graficos.py")
     except Exception as e:
-        logger.warning(f"⚠️  Error al generar reporte con gráficos: {e}")
+        logger.warning(f"[ADVERTENCIA]  Error al generar reporte con gráficos: {e}")
 
     return txt_path
 

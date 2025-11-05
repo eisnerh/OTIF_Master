@@ -18,20 +18,20 @@ def main():
     # Verificar que el script principal existe
     script_principal = Path(r"C:\Users\ELOPEZ21334\anaconda_projects\OTIF_Master\OTIF_Estructurado\SAP_SCRIPTING\REVISOR_SCRIPTS\scripts_individuales\to_xlsx\convertir_xls_a_xlsx.py")
     if not script_principal.exists():
-        print("❌ Error: No se encontró el script 'convertir_xls_a_xlsx.py'")
+        print("[ERROR] Error: No se encontró el script 'convertir_xls_a_xlsx.py'")
         print("   Asegúrate de que esté en el mismo directorio.")
         return 1
     
     # Verificar que la carpeta de datos existe
     carpeta_datos = Path(r"C:\data\SAP_Extraction")
     if not carpeta_datos.exists():
-        print("❌ Error: No se encontró la carpeta 'C:\data\SAP_Extraction'")
+        print("[ERROR] Error: No se encontró la carpeta 'C:\data\SAP_Extraction'")
         print("   Asegúrate de ejecutar el script desde el directorio raíz del proyecto.")
         return 1
     
-    print("✅ Verificaciones completadas")
-    print("📁 Carpeta de datos encontrada:", carpeta_datos)
-    print("🚀 Iniciando conversión...")
+    print("[OK] Verificaciones completadas")
+    print("[CARPETA] Carpeta de datos encontrada:", carpeta_datos)
+    print("[INICIO] Iniciando conversión...")
     print()
     
     try:
@@ -45,20 +45,20 @@ def main():
         resumen = convertidor.procesar_todos()
         
         print()
-        print("🎉 ¡Conversión completada!")
-        print(f"📊 Archivos procesados: {resumen['total_archivos']}")
-        print(f"✅ Exitosos: {resumen['total_exitosos']}")
-        print(f"❌ Fallidos: {resumen['total_fallidos']}")
+        print("[EXITO] ¡Conversión completada!")
+        print(f"[DASHBOARD] Archivos procesados: {resumen['total_archivos']}")
+        print(f"[OK] Exitosos: {resumen['total_exitosos']}")
+        print(f"[ERROR] Fallidos: {resumen['total_fallidos']}")
         
         if resumen['total_fallidos'] > 0:
-            print("\n⚠️  Algunos archivos fallaron. Revisa el log para más detalles.")
+            print("\n[ADVERTENCIA]  Algunos archivos fallaron. Revisa el log para más detalles.")
             return 1
         else:
-            print("\n🎯 ¡Todos los archivos se convirtieron exitosamente!")
+            print("\n[OBJETIVO] ¡Todos los archivos se convirtieron exitosamente!")
             return 0
             
     except Exception as e:
-        print(f"❌ Error durante la conversión: {str(e)}")
+        print(f"[ERROR] Error durante la conversión: {str(e)}")
         return 1
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ def ejemplo_1_ejecutar_todas_las_transacciones():
     """
     Ejemplo 1: Ejecutar todas las transacciones configuradas
     """
-    print("🔹 Ejemplo 1: Ejecutar todas las transacciones")
+    print(" Ejemplo 1: Ejecutar todas las transacciones")
     print("-" * 50)
     
     # Crear instancia del automatizador
@@ -24,7 +24,7 @@ def ejemplo_1_ejecutar_todas_las_transacciones():
     
     # Mostrar resultados
     for transaction, success in results.items():
-        status = "✅" if success else "❌"
+        status = "[OK]" if success else "[ERROR]"
         print(f"{status} {transaction}")
     
     return results
@@ -33,7 +33,7 @@ def ejemplo_2_ejecutar_transacciones_especificas():
     """
     Ejemplo 2: Ejecutar solo transacciones específicas
     """
-    print("\n🔹 Ejemplo 2: Ejecutar transacciones específicas")
+    print("\n Ejemplo 2: Ejecutar transacciones específicas")
     print("-" * 50)
     
     # Lista de transacciones específicas
@@ -54,7 +54,7 @@ def ejemplo_2_ejecutar_transacciones_especificas():
     
     # Mostrar resultados
     for transaction, success in results.items():
-        status = "✅" if success else "❌"
+        status = "[OK]" if success else "[ERROR]"
         print(f"{status} {transaction}")
     
     return results
@@ -63,12 +63,12 @@ def ejemplo_3_fecha_personalizada():
     """
     Ejemplo 3: Ejecutar con fecha personalizada
     """
-    print("\n🔹 Ejemplo 3: Ejecutar con fecha personalizada")
+    print("\n Ejemplo 3: Ejecutar con fecha personalizada")
     print("-" * 50)
     
     # Fecha personalizada (hace 7 días)
     fecha_personalizada = (datetime.now() - timedelta(days=7)).strftime("%d.%m.%Y")
-    print(f"📅 Fecha personalizada: {fecha_personalizada}")
+    print(f"[FECHA] Fecha personalizada: {fecha_personalizada}")
     
     sap_auto = SAPAutomation()
     
@@ -85,7 +85,7 @@ def ejemplo_4_verificar_archivos():
     """
     Ejemplo 4: Solo verificar archivos existentes
     """
-    print("\n🔹 Ejemplo 4: Verificar archivos generados")
+    print("\n Ejemplo 4: Verificar archivos generados")
     print("-" * 50)
     
     sap_auto = SAPAutomation()
@@ -94,9 +94,9 @@ def ejemplo_4_verificar_archivos():
     archivos_ok = sap_auto.verify_output_files()
     
     if archivos_ok:
-        print("✅ Todos los archivos están presentes")
+        print("[OK] Todos los archivos están presentes")
     else:
-        print("❌ Algunos archivos faltan")
+        print("[ERROR] Algunos archivos faltan")
     
     return archivos_ok
 
@@ -104,7 +104,7 @@ def ejemplo_5_configuracion_personalizada():
     """
     Ejemplo 5: Usar configuración personalizada
     """
-    print("\n🔹 Ejemplo 5: Configuración personalizada")
+    print("\n Ejemplo 5: Configuración personalizada")
     print("-" * 50)
     
     # Crear configuración personalizada
@@ -143,25 +143,25 @@ def ejemplo_6_solo_conectar():
     """
     Ejemplo 6: Solo conectar a SAP sin ejecutar transacciones
     """
-    print("\n🔹 Ejemplo 6: Solo conectar a SAP")
+    print("\n Ejemplo 6: Solo conectar a SAP")
     print("-" * 50)
     
     sap_auto = SAPAutomation()
     
     # Solo conectar
     if sap_auto.connect_sap():
-        print("✅ Conexión SAP establecida")
-        print("💡 Puedes usar sap_auto.session para interactuar manualmente")
+        print("[OK] Conexión SAP establecida")
+        print(" Puedes usar sap_auto.session para interactuar manualmente")
         return True
     else:
-        print("❌ No se pudo conectar a SAP")
+        print("[ERROR] No se pudo conectar a SAP")
         return False
 
 def menu_principal():
     """
     Menú principal con opciones de ejemplo
     """
-    print("🚀 EJEMPLOS DE USO - SCRIPT MAESTRO SAP")
+    print("[INICIO] EJEMPLOS DE USO - SCRIPT MAESTRO SAP")
     print("=" * 60)
     print("1. Ejecutar todas las transacciones")
     print("2. Ejecutar transacciones específicas")
@@ -174,7 +174,7 @@ def menu_principal():
     
     while True:
         try:
-            opcion = input("\n🔹 Selecciona una opción (1-7): ").strip()
+            opcion = input("\n Selecciona una opción (1-7): ").strip()
             
             if opcion == "1":
                 ejemplo_1_ejecutar_todas_las_transacciones()
@@ -189,16 +189,16 @@ def menu_principal():
             elif opcion == "6":
                 ejemplo_6_solo_conectar()
             elif opcion == "7":
-                print("👋 ¡Hasta luego!")
+                print(" ¡Hasta luego!")
                 break
             else:
-                print("❌ Opción inválida. Selecciona 1-7.")
+                print("[ERROR] Opción inválida. Selecciona 1-7.")
                 
         except KeyboardInterrupt:
-            print("\n👋 ¡Hasta luego!")
+            print("\n ¡Hasta luego!")
             break
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"[ERROR] Error: {e}")
 
 if __name__ == "__main__":
     # Ejecutar menú principal

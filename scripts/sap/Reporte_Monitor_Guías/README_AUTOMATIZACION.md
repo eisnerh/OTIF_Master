@@ -2,14 +2,14 @@
 
 Este documento explica cómo configurar la ejecución automática del script `amalgama_y_dev_74.py` cada hora.
 
-## 📋 Requisitos Previos
+## [LISTA] Requisitos Previos
 
 1. **Python instalado** y disponible en el PATH
 2. **Archivo `credentials.ini`** configurado correctamente
 3. **SAP GUI** instalado y configurado
 4. **Permisos de administrador** para crear tareas programadas (solo la primera vez)
 
-## 🚀 Opción 1: Configuración Automática (Recomendada)
+## [INICIO] Opción 1: Configuración Automática (Recomendada)
 
 ### Paso 1: Ejecutar el script de configuración
 
@@ -37,7 +37,7 @@ Si quieres cambiar el horario, puedes ejecutar:
 .\configurar_tarea_programada.ps1 -SoloHorarioLaboral:$false
 ```
 
-## 🛠️ Opción 2: Configuración Manual
+##  Opción 2: Configuración Manual
 
 ### Paso 1: Abrir el Programador de Tareas
 
@@ -74,19 +74,19 @@ Si quieres cambiar el horario, puedes ejecutar:
 ### Paso 5: Configurar condiciones y opciones
 
 En la pestaña **"Condiciones"**:
-- ✅ Marca **"Iniciar la tarea solo si el equipo está conectado a la alimentación de CA"** (opcional)
-- ✅ Marca **"Activar la tarea si el equipo está en modo de suspensión"** (opcional)
+- [OK] Marca **"Iniciar la tarea solo si el equipo está conectado a la alimentación de CA"** (opcional)
+- [OK] Marca **"Activar la tarea si el equipo está en modo de suspensión"** (opcional)
 
 En la pestaña **"Configuración"**:
-- ✅ Marca **"Permitir ejecutar la tarea a petición"**
-- ✅ Marca **"Si la tarea ya se está ejecutando, aplicar la regla siguiente"** → Selecciona **"No iniciar una nueva instancia"**
+- [OK] Marca **"Permitir ejecutar la tarea a petición"**
+- [OK] Marca **"Si la tarea ya se está ejecutando, aplicar la regla siguiente"** → Selecciona **"No iniciar una nueva instancia"**
 
 ### Paso 6: Guardar
 
 1. Haz clic en **"Aceptar"**
 2. Ingresa tu contraseña de Windows si se solicita
 
-## 📝 Ejecución Manual
+## [NOTA] Ejecución Manual
 
 Si quieres ejecutar el script manualmente sin esperar a la tarea programada:
 
@@ -100,7 +100,7 @@ O directamente con Python:
 python amalgama_y_dev_74.py
 ```
 
-## 🔍 Verificar la Tarea Programada
+## [BUSCAR] Verificar la Tarea Programada
 
 ### Desde el Programador de Tareas
 
@@ -115,7 +115,7 @@ python amalgama_y_dev_74.py
 Get-ScheduledTask -TaskName "OTIF_Monitor_Guias_Hourly"
 ```
 
-## 🗑️ Eliminar la Tarea Programada
+## [ELIMINAR] Eliminar la Tarea Programada
 
 ### Desde PowerShell
 
@@ -129,18 +129,18 @@ Unregister-ScheduledTask -TaskName "OTIF_Monitor_Guias_Hourly" -Confirm:$false
 2. Busca la tarea `OTIF_Monitor_Guias_Hourly`
 3. Haz clic derecho → **"Eliminar"**
 
-## 📊 Verificar Logs
+## [DASHBOARD] Verificar Logs
 
 El script genera logs automáticamente. Revisa la consola o los archivos de salida para verificar que la ejecución fue exitosa.
 
-## ⚠️ Notas Importantes
+## [ADVERTENCIA] Notas Importantes
 
 1. **SAP GUI debe estar instalado**: El script requiere SAP GUI para funcionar
 2. **El equipo debe estar encendido**: La tarea programada solo se ejecuta si el equipo está encendido
 3. **Credenciales**: Asegúrate de que `credentials.ini` esté configurado correctamente
 4. **Permisos**: La primera ejecución del script de configuración requiere permisos de administrador
 
-## 🐛 Solución de Problemas
+## [ERROR] Solución de Problemas
 
 ### La tarea no se ejecuta
 
@@ -161,7 +161,7 @@ El script genera logs automáticamente. Revisa la consola o los archivos de sali
 2. Si no existe, copia `credentials.ini.example` y renómbralo a `credentials.ini`
 3. Completa los valores en `credentials.ini`
 
-## 📊 Generación de Reportes con Gráficos y Envío de Correo
+## [DASHBOARD] Generación de Reportes con Gráficos y Envío de Correo
 
 El script `generar_reporte_graficos.py` genera automáticamente reportes con gráficos de tendencia por hora y zona, y envía un correo con los resultados.
 
@@ -222,7 +222,7 @@ python generar_reporte_graficos.py --archivo "ruta/al/archivo_processed.xlsx" --
 pip install matplotlib seaborn
 ```
 
-## 📞 Soporte
+## [CONTACTO] Soporte
 
 Si tienes problemas con la automatización, revisa:
 - Los logs del script

@@ -169,7 +169,7 @@ def run_tcode_and_export(session, tcode: str, export_full_path: str, report_date
         alv.doubleClickCurrentCell()
         wait_until_not_busy(session)
     except Exception as e:
-        ts_print(f"⚠️ Aviso: No se pudo completar la selección por ALV exactamente como en el script original: {e}")
+        ts_print(f"[ADVERTENCIA] Aviso: No se pudo completar la selección por ALV exactamente como en el script original: {e}")
         ts_print("Se continuará con los siguientes pasos si la pantalla lo permite…")
 
     # Colocar fecha de entrega (matchcode calendario)
@@ -192,7 +192,7 @@ def run_tcode_and_export(session, tcode: str, export_full_path: str, report_date
         cal.focusDate = report_date_yyyymmdd
         cal.selectionInterval = f"{report_date_yyyymmdd},{report_date_yyyymmdd}"
     except Exception as e:
-        ts_print(f"⚠️ Aviso: No se pudo fijar la fecha mediante calendario: {e}. Intentando escribir la fecha directamente…")
+        ts_print(f"[ADVERTENCIA] Aviso: No se pudo fijar la fecha mediante calendario: {e}. Intentando escribir la fecha directamente…")
         try:
             fld = safe_find(session, "wnd[0]/usr/ctxtP_LFDAT-LOW")
             # Convertir YYYYMMDD a DD.MM.YYYY si el campo espera ese formato
@@ -378,23 +378,23 @@ def save_powerbi_files(df: pd.DataFrame, excel_path: str, csv_path: str, parquet
     try:
         with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
             df.to_excel(writer, index=False, sheet_name="Datos")
-        ts_print(f"✅ Guardado Excel: {excel_path}")
+        ts_print(f"[OK] Guardado Excel: {excel_path}")
     except Exception as e:
-        ts_print(f"⚠️ No se pudo guardar Excel: {e}")
+        ts_print(f"[ADVERTENCIA] No se pudo guardar Excel: {e}")
 
     # CSV
     try:
         df.to_csv(csv_path, index=False, encoding="utf-8-sig")
-        ts_print(f"✅ Guardado CSV: {csv_path}")
+        ts_print(f"[OK] Guardado CSV: {csv_path}")
     except Exception as e:
-        ts_print(f"⚠️ No se pudo guardar CSV: {e}")
+        ts_print(f"[ADVERTENCIA] No se pudo guardar CSV: {e}")
 
     # Parquet
     try:
         df.to_parquet(parquet_path, index=False)
-        ts_print(f"✅ Guardado Parquet: {parquet_path}")
+        ts_print(f"[OK] Guardado Parquet: {parquet_path}")
     except Exception as e:
-        ts_print(f"⚠️ No se pudo guardar Parquet: {e}")
+        ts_print(f"[ADVERTENCIA] No se pudo guardar Parquet: {e}")
 
 # --------------------------- MAIN ----------------------------
 
@@ -436,7 +436,7 @@ def main(force_run: bool = False):
     ts_print("Guardando salidas para Power BI…")
     save_powerbi_files(df, EXCEL_OUT, CSV_OUT, PARQUET_OUT)
 
-    ts_print("✅ Proceso completado correctamente.")
+    ts_print("[OK] Proceso completado correctamente.")
     return 0
 
 if __name__ == "__main__":
@@ -447,5 +447,5 @@ if __name__ == "__main__":
     try:
         sys.exit(main(force_run=force))
     except Exception as e:
-        ts_print(f"❌ Error: {e}")
+        ts_print(f"[ERROR] Error: {e}")
         sys.exit(1)

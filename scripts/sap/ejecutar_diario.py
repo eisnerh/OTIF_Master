@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🕐 SCRIPT DE EJECUCIÓN DIARIA
+[HORA] SCRIPT DE EJECUCIÓN DIARIA
 ============================
 
 Este script está diseñado para ejecutarse diariamente y extraer
@@ -13,11 +13,11 @@ Uso:
 - Genera logs detallados de la ejecución
 
 Funcionalidades:
-✅ Ejecución automática diaria
-✅ Lógica de fechas inteligente
-✅ Logs detallados
-✅ Notificaciones de estado
-✅ Manejo de errores robusto
+[OK] Ejecución automática diaria
+[OK] Lógica de fechas inteligente
+[OK] Logs detallados
+[OK] Notificaciones de estado
+[OK] Manejo de errores robusto
 """
 
 import sys
@@ -62,7 +62,7 @@ def cargar_configuracion():
             config = json.load(f)
         return config
     except Exception as e:
-        print(f"❌ Error cargando configuración: {e}")
+        print(f"[ERROR] Error cargando configuración: {e}")
         return None
 
 def verificar_requisitos():
@@ -76,11 +76,11 @@ def verificar_requisitos():
         import win32com.client
         sap_gui_auto = win32com.client.GetObject("SAPGUI")
         if not sap_gui_auto:
-            logger.error("❌ SAP GUI no está disponible")
+            logger.error("[ERROR] SAP GUI no está disponible")
             return False
-        logger.info("✅ SAP GUI disponible")
+        logger.info("[OK] SAP GUI disponible")
     except Exception as e:
-        logger.error(f"❌ Error verificando SAP GUI: {e}")
+        logger.error(f"[ERROR] Error verificando SAP GUI: {e}")
         return False
     
     # Verificar directorios
@@ -93,9 +93,9 @@ def verificar_requisitos():
     for directorio in directorios:
         try:
             os.makedirs(directorio, exist_ok=True)
-            logger.info(f"✅ Directorio verificado: {directorio}")
+            logger.info(f"[OK] Directorio verificado: {directorio}")
         except Exception as e:
-            logger.error(f"❌ Error creando directorio {directorio}: {e}")
+            logger.error(f"[ERROR] Error creando directorio {directorio}: {e}")
             return False
     
     return True
@@ -107,12 +107,12 @@ def enviar_notificacion(estado, mensaje, config):
     logger = logging.getLogger(__name__)
     
     if not config.get('notificaciones', {}).get('enviar_email', False):
-        logger.info("📧 Notificaciones por email deshabilitadas")
+        logger.info(" Notificaciones por email deshabilitadas")
         return
     
     # Aquí se podría implementar envío de email
     # Por ahora solo se registra en el log
-    logger.info(f"📧 Notificación: {estado} - {mensaje}")
+    logger.info(f" Notificación: {estado} - {mensaje}")
 
 def crear_resumen_ejecucion(resultado, inicio, fin):
     """
@@ -137,9 +137,9 @@ def crear_resumen_ejecucion(resultado, inicio, fin):
     try:
         with open(resumen_file, 'w', encoding='utf-8') as f:
             json.dump(resumen, f, indent=2, ensure_ascii=False)
-        logger.info(f"📋 Resumen guardado: {resumen_file}")
+        logger.info(f"[LISTA] Resumen guardado: {resumen_file}")
     except Exception as e:
-        logger.error(f"❌ Error guardando resumen: {e}")
+        logger.error(f"[ERROR] Error guardando resumen: {e}")
     
     return resumen
 
@@ -153,33 +153,33 @@ def main():
     # Marcar inicio
     inicio_ejecucion = datetime.now()
     
-    logger.info("🚀 INICIANDO EJECUCIÓN DIARIA DE REPORTES SAP")
+    logger.info("[INICIO] INICIANDO EJECUCIÓN DIARIA DE REPORTES SAP")
     logger.info("=" * 80)
-    logger.info(f"📅 Fecha: {inicio_ejecucion.strftime('%Y-%m-%d %H:%M:%S')}")
-    logger.info(f"💻 Usuario: {os.getenv('USERNAME', 'Desconocido')}")
-    logger.info(f"🖥️ Sistema: {os.getenv('COMPUTERNAME', 'Desconocido')}")
+    logger.info(f"[FECHA] Fecha: {inicio_ejecucion.strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"[SISTEMA] Usuario: {os.getenv('USERNAME', 'Desconocido')}")
+    logger.info(f"[PC] Sistema: {os.getenv('COMPUTERNAME', 'Desconocido')}")
     logger.info("=" * 80)
     
     try:
         # Cargar configuración
-        logger.info("📋 Cargando configuración...")
+        logger.info("[LISTA] Cargando configuración...")
         config = cargar_configuracion()
         if not config:
-            logger.error("❌ No se pudo cargar la configuración")
+            logger.error("[ERROR] No se pudo cargar la configuración")
             return False
         
         # Verificar requisitos
-        logger.info("🔍 Verificando requisitos...")
+        logger.info("[BUSCAR] Verificando requisitos...")
         if not verificar_requisitos():
-            logger.error("❌ Requisitos no cumplidos")
+            logger.error("[ERROR] Requisitos no cumplidos")
             return False
         
         # Crear instancia de automatización
-        logger.info("🔧 Inicializando automatización SAP...")
+        logger.info("[CONFIGURACION] Inicializando automatización SAP...")
         automatizacion = AutomatizacionSAP()
         
         # Ejecutar automatización
-        logger.info("⚡ Ejecutando extracción de reportes...")
+        logger.info(" Ejecutando extracción de reportes...")
         resultado = automatizacion.main()
         
         # Marcar fin
@@ -190,29 +190,29 @@ def main():
         
         # Enviar notificación
         if resultado:
-            logger.info("🎉 EJECUCIÓN COMPLETADA EXITOSAMENTE")
+            logger.info("[EXITO] EJECUCIÓN COMPLETADA EXITOSAMENTE")
             enviar_notificacion("EXITOSO", "Todos los reportes se extrajeron correctamente", config)
         else:
-            logger.error("❌ EJECUCIÓN FALLÓ")
+            logger.error("[ERROR] EJECUCIÓN FALLÓ")
             enviar_notificacion("FALLIDO", "Algunos reportes no se pudieron extraer", config)
         
         # Log final
         logger.info("=" * 80)
-        logger.info("📊 ESTADÍSTICAS DE EJECUCIÓN")
+        logger.info("[DASHBOARD] ESTADÍSTICAS DE EJECUCIÓN")
         logger.info("=" * 80)
-        logger.info(f"⏱️ Duración total: {resumen['duracion_minutos']} minutos")
-        logger.info(f"📈 Estado: {resumen['estado']}")
-        logger.info(f"📁 Directorio de salida: {automatizacion.output_dir}")
+        logger.info(f"⏱ Duración total: {resumen['duracion_minutos']} minutos")
+        logger.info(f"[GRAFICO] Estado: {resumen['estado']}")
+        logger.info(f"[CARPETA] Directorio de salida: {automatizacion.output_dir}")
         logger.info("=" * 80)
         
         return resultado
         
     except KeyboardInterrupt:
-        logger.warning("⚠️ Ejecución interrumpida por el usuario")
+        logger.warning("[ADVERTENCIA] Ejecución interrumpida por el usuario")
         return False
         
     except Exception as e:
-        logger.error(f"❌ Error inesperado en ejecución diaria: {e}")
+        logger.error(f"[ERROR] Error inesperado en ejecución diaria: {e}")
         return False
 
 if __name__ == "__main__":
@@ -220,5 +220,5 @@ if __name__ == "__main__":
         exito = main()
         sys.exit(0 if exito else 1)
     except Exception as e:
-        print(f"❌ Error crítico: {e}")
+        print(f"[ERROR] Error crítico: {e}")
         sys.exit(1)

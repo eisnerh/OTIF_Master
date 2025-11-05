@@ -233,14 +233,14 @@ def main():
 
     config_path = args.config or DEFAULT_CONFIG_PATH
     if not os.path.isfile(config_path):
-        print(f"✖ No se encontró el archivo de configuración: {config_path}")
+        print(f" No se encontró el archivo de configuración: {config_path}")
         print("  - Pasa uno con --config <ruta> o ajusta DEFAULT_CONFIG_PATH en el script.")
         sys.exit(1)
 
     try:
         jobs = load_jobs_from_config(config_path)
     except Exception as e:
-        print(f"✖ Error leyendo la configuración: {e}")
+        print(f" Error leyendo la configuración: {e}")
         traceback.print_exc()
         sys.exit(1)
 
@@ -272,7 +272,7 @@ def main():
             df_ref = pd.read_excel(rf, header=0, engine="openpyxl")
             ref_cols = list(df_ref.columns)
         except Exception as e:
-            print(f"  ✖ Error leyendo referencia: {e}")
+            print(f"   Error leyendo referencia: {e}")
             traceback.print_exc()
             continue
 
@@ -282,7 +282,7 @@ def main():
         paths = [p for p in paths if os.path.abspath(p) != os.path.abspath(rf)]
 
         if not paths:
-            print(f"  ⚠ No se encontraron archivos en {sd} con patrón {pattern}")
+            print(f"   No se encontraron archivos en {sd} con patrón {pattern}")
             continue
 
         # Procesar
@@ -304,9 +304,9 @@ def main():
                 with pd.ExcelWriter(out_path, engine="openpyxl") as writer:
                     df_out.to_excel(writer, index=False, sheet_name="Hoja1")
                 total_files += 1
-                print(f"  ✔ {base} -> {os.path.basename(out_path)} (filas: {len(df_out)})")
+                print(f"   {base} -> {os.path.basename(out_path)} (filas: {len(df_out)})")
             except Exception as e:
-                print(f"  ✖ Error procesando {base}: {e}")
+                print(f"   Error procesando {base}: {e}")
                 traceback.print_exc()
 
     print(f"\nTerminado. Archivos generados: {total_files}")

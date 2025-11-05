@@ -1,6 +1,6 @@
-# 🚀 Inicio Rápido - Reporte PLR
+# [INICIO] Inicio Rápido - Reporte PLR
 
-## ⚡ Configuración en 4 Pasos
+##  Configuración en 4 Pasos
 
 ### 1. Instalar Dependencias
 ```bash
@@ -24,7 +24,7 @@ Este script verifica que todo esté configurado correctamente.
 ejecutar_rep_plr.bat
 ```
 
-## 📋 Credenciales SAP
+## [LISTA] Credenciales SAP
 
 Edita `credentials.ini`:
 ```ini
@@ -36,21 +36,21 @@ sap_password = TU_CONTRASEÑA
 sap_language = ES
 ```
 
-## ✨ Características Principales
+## [NUEVO] Características Principales
 
-✅ **Auto-login**: Si SAP no está abierto, se inicia automáticamente  
-✅ **Nueva sesión**: Si SAP ya está abierto, crea una sesión nueva  
-✅ **Fecha de hoy**: Usa la fecha actual automáticamente  
-✅ **Excel limpio**: Genera archivo `.xlsx` procesado y listo para usar  
+[OK] **Auto-login**: Si SAP no está abierto, se inicia automáticamente  
+[OK] **Nueva sesión**: Si SAP ya está abierto, crea una sesión nueva  
+[OK] **Fecha de hoy**: Usa la fecha actual automáticamente  
+[OK] **Excel limpio**: Genera archivo `.xlsx` procesado y listo para usar  
 
-## 📁 Archivos Generados
+## [CARPETA] Archivos Generados
 
 Los archivos se guardan en: `C:\data\SAP_Extraction\rep_plr\`
 
 - `REP_PLR.txt` - Archivo exportado de SAP
 - `REP_PLR_YYYY-MM-DD_processed.xlsx` - Excel procesado y limpio
 
-## 🤖 Automatización (Opcional)
+## [AUTOMATICO] Automatización (Opcional)
 
 Para ejecutar automáticamente cada hora:
 
@@ -61,19 +61,19 @@ Para ejecutar automáticamente cada hora:
 .\configurar_tarea_programada.ps1
 ```
 
-## 🐛 Problemas Comunes
+## [ERROR] Problemas Comunes
 
-### ❌ "No se encontró credentials.ini"
+### [ERROR] "No se encontró credentials.ini"
 **Solución**: Crea el archivo copiando el ejemplo y configurándolo.
 
-### ❌ "No se encontró el objeto SAPGUI"
+### [ERROR] "No se encontró el objeto SAPGUI"
 **Solución**: Habilita SAP GUI Scripting en SAP Logon:
 - Opciones → Accesibilidad y scripting → Scripting → Habilitar
 
-### ❌ Error de login
+### [ERROR] Error de login
 **Solución**: Verifica que el nombre del sistema en `credentials.ini` coincida EXACTAMENTE con el de SAP Logon.
 
-## 📚 Documentación Completa
+## [DOCUMENTACION] Documentación Completa
 
 Lee `README_REPORTE_PLR.md` para documentación detallada.
 

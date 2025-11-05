@@ -264,7 +264,7 @@ def run_y_rep_plr(session,
     # 2) Intentar seleccionar nodo del árbol (fallback si no hay)
     has_tree = select_tree_node_dynamic(session, node_key=node_key, debug=debug)
     if debug and not has_tree:
-        print("🔎 No se seleccionó nodo (no hay árbol o no coincide el ID).")
+        print(" No se seleccionó nodo (no hay árbol o no coincide el ID).")
 
     # 3) Botón de selección
     if press_if_exists(session, "wnd[0]/tbar[1]/btn[17]") is False and debug:
@@ -394,7 +394,7 @@ def main():
         )
 
         print("\n" + "=" * 60)
-        print("🎉 PROCESO Y_REP_PLR HOMOLOGADO (74) COMPLETADO")
+        print("[EXITO] PROCESO Y_REP_PLR HOMOLOGADO (74) COMPLETADO")
         print("=" * 60)
         print(f" Archivo generado: {os.path.basename(full_path)}")
         print(f" Ubicación: {os.path.dirname(full_path)}")

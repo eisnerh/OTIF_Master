@@ -2,17 +2,17 @@
 
 Este documento explica cómo usar y configurar el reporte automático de PLR (Planeamiento).
 
-## 📋 Descripción
+## [LISTA] Descripción
 
 El script `amalgama_y_rep_plr.py` automatiza la extracción del reporte PLR desde SAP con las siguientes características:
 
-- ✅ **Auto-login**: Si SAP no está abierto, lo inicia y hace login automáticamente
-- ✅ **Nueva sesión**: Si SAP ya está abierto, crea una nueva sesión sin interferir con tu trabajo actual
-- ✅ **Fecha de hoy**: Usa la fecha actual (no ayer) para la extracción
-- ✅ **Datos limpios**: Procesa y limpia automáticamente los datos exportados
-- ✅ **Formato Excel**: Convierte el archivo de texto a Excel (.xlsx)
+- [OK] **Auto-login**: Si SAP no está abierto, lo inicia y hace login automáticamente
+- [OK] **Nueva sesión**: Si SAP ya está abierto, crea una nueva sesión sin interferir con tu trabajo actual
+- [OK] **Fecha de hoy**: Usa la fecha actual (no ayer) para la extracción
+- [OK] **Datos limpios**: Procesa y limpia automáticamente los datos exportados
+- [OK] **Formato Excel**: Convierte el archivo de texto a Excel (.xlsx)
 
-## 🚀 Requisitos Previos
+## [INICIO] Requisitos Previos
 
 1. **Python 3.7+** instalado y en el PATH del sistema
 2. **SAP GUI** instalado y configurado
@@ -22,7 +22,7 @@ El script `amalgama_y_rep_plr.py` automatiza la extracción del reporte PLR desd
    ```
 4. **Archivo de credenciales** configurado (ver sección Configuración)
 
-## ⚙️ Configuración
+## [CONFIG] Configuración
 
 ### Paso 1: Configurar Credenciales
 
@@ -41,7 +41,7 @@ El script `amalgama_y_rep_plr.py` automatiza la extracción del reporte PLR desd
    sap_language = ES
    ```
 
-   **⚠️ IMPORTANTE**: 
+   **[ADVERTENCIA] IMPORTANTE**: 
    - El nombre del sistema (`sap_system`) debe coincidir EXACTAMENTE con el nombre que aparece en SAP Logon
    - NO subas el archivo `credentials.ini` a repositorios públicos
 
@@ -56,7 +56,7 @@ ROW_NUMBER  = 11                      # Fila a seleccionar en el ALV
 OUTPUT_DIR  = Path(r"C:/data/SAP_Extraction/rep_plr")  # Carpeta de salida
 ```
 
-## 🎯 Uso
+## [OBJETIVO] Uso
 
 ### Ejecución Manual
 
@@ -95,7 +95,7 @@ Para ejecutar el reporte automáticamente cada hora:
 .\configurar_tarea_programada.ps1 -SoloHorarioLaboral:$false
 ```
 
-## 📊 Archivos Generados
+## [DASHBOARD] Archivos Generados
 
 El script genera dos archivos en la carpeta de salida (por defecto: `C:\data\SAP_Extraction\rep_plr`):
 
@@ -105,11 +105,11 @@ El script genera dos archivos en la carpeta de salida (por defecto: `C:\data\SAP
 ### Procesamiento de Datos
 
 El archivo Excel procesado tiene las siguientes transformaciones:
-- ✅ Conversión de formato tabulado (TXT) a Excel (XLSX)
-- ✅ Eliminación de las primeras 5 filas (encabezados/títulos de SAP)
-- ✅ Formato limpio listo para análisis
+- [OK] Conversión de formato tabulado (TXT) a Excel (XLSX)
+- [OK] Eliminación de las primeras 5 filas (encabezados/títulos de SAP)
+- [OK] Formato limpio listo para análisis
 
-## 🔍 Verificación
+## [BUSCAR] Verificación
 
 ### Logs
 El script muestra información detallada en la consola:
@@ -130,13 +130,13 @@ Get-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly"
 2. Busca la tarea `OTIF_Reporte_PLR_Hourly`
 3. Ve a la pestaña "Historial"
 
-## 🗑️ Desinstalar Tarea Programada
+## [ELIMINAR] Desinstalar Tarea Programada
 
 ```powershell
 Unregister-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly" -Confirm:$false
 ```
 
-## 🐛 Solución de Problemas
+## [ERROR] Solución de Problemas
 
 ### Error: "No se encontró credentials.ini"
 **Solución**: Crea el archivo `credentials.ini` copiando `credentials.ini.example` y configura tus credenciales.
@@ -188,7 +188,7 @@ Unregister-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly" -Confirm:$false
 1. Ejecuta con `--debug` para ver los controles disponibles
 2. Reporta el problema para actualizar el script
 
-## 📝 Diferencias con Monitor Guías
+## [NOTA] Diferencias con Monitor Guías
 
 | Característica | Monitor Guías (Y_DEV_74) | Reporte PLR (Y_REP_PLR) |
 |----------------|--------------------------|-------------------------|
@@ -199,7 +199,7 @@ Unregister-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly" -Confirm:$false
 | Fecha por defecto | Ayer | **Hoy** |
 | Archivo salida | `Monitor_Guias.txt` | `REP_PLR.txt` |
 
-## 🔒 Seguridad
+##  Seguridad
 
 ### Protección de Credenciales
 
@@ -217,7 +217,7 @@ Unregister-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly" -Confirm:$false
 - Revisa regularmente los logs de ejecución
 - Mantén actualizadas las dependencias Python
 
-## 📞 Soporte
+## [CONTACTO] Soporte
 
 Si tienes problemas:
 
@@ -226,20 +226,20 @@ Si tienes problemas:
 3. Ejecuta con `--debug` para obtener más información
 4. Verifica el historial del Programador de Tareas (si usas ejecución automática)
 
-## 📚 Archivos del Proyecto
+## [DOCUMENTACION] Archivos del Proyecto
 
 ```
 Reporte_PLR/
-├── amalgama_y_rep_plr.py       # Script principal con auto-login
-├── y_rep_plr.py                # Módulo de extracción SAP
-├── ejecutar_rep_plr.bat        # Script batch para ejecución manual
-├── configurar_tarea_programada.ps1  # Script PowerShell para automatización
-├── credentials.ini.example     # Plantilla de credenciales
-├── credentials.ini            # Credenciales SAP (NO SUBIR A GIT)
-└── README_REPORTE_PLR.md      # Esta documentación
+ amalgama_y_rep_plr.py       # Script principal con auto-login
+ y_rep_plr.py                # Módulo de extracción SAP
+ ejecutar_rep_plr.bat        # Script batch para ejecución manual
+ configurar_tarea_programada.ps1  # Script PowerShell para automatización
+ credentials.ini.example     # Plantilla de credenciales
+ credentials.ini            # Credenciales SAP (NO SUBIR A GIT)
+ README_REPORTE_PLR.md      # Esta documentación
 ```
 
-## 🎓 Cómo Funciona
+##  Cómo Funciona
 
 1. **Inicio**: El script verifica si SAP está abierto
 2. **Conexión**:
@@ -257,7 +257,7 @@ Reporte_PLR/
    - Guarda el archivo limpio
 5. **Finalización**: Vuelve a SAP Easy Access
 
-## 🆕 Actualizaciones Futuras
+## [NUEVO] Actualizaciones Futuras
 
 Posibles mejoras:
 - [ ] Integración con Power BI

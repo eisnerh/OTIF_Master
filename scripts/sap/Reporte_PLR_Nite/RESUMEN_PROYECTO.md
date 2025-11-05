@@ -1,52 +1,52 @@
-# 📊 Reporte PLR - Resumen del Proyecto
+# [DASHBOARD] Reporte PLR - Resumen del Proyecto
 
-## ✅ Proyecto Completado
+## [OK] Proyecto Completado
 
 Se ha creado exitosamente un sistema automático de reportes PLR similar al de Monitor Guías, con las siguientes mejoras:
 
-## 🎯 Características Implementadas
+## [OBJETIVO] Características Implementadas
 
-### ✨ Auto-Login Inteligente
+### [NUEVO] Auto-Login Inteligente
 - **Si SAP no está abierto**: El script inicia SAP automáticamente y hace login con las credenciales configuradas
 - **Si SAP ya está abierto**: Crea una nueva sesión sin interrumpir tu trabajo actual
 - **Gestión automática**: No necesitas preocuparte por el estado de SAP
 
-### 📅 Fecha Actualizada
+### [FECHA] Fecha Actualizada
 - **Fecha de HOY**: A diferencia del script original que usaba AYER, este usa la fecha actual automáticamente
 - **Configurable**: Puedes cambiar la fecha si lo necesitas
 
-### 🧹 Datos Limpios
+### [LIMPIEZA] Datos Limpios
 - **Conversión automática**: TXT → Excel (.xlsx)
 - **Limpieza automática**: Elimina las primeras 5 filas (encabezados de SAP)
 - **Formato listo**: El Excel está listo para análisis inmediato
 
-### 🤖 Automatización Completa
+### [AUTOMATICO] Automatización Completa
 - **Ejecución programada**: Configura ejecución horaria con un solo comando PowerShell
 - **Sin intervención**: Una vez configurado, funciona solo
 - **Logs detallados**: Seguimiento completo de cada ejecución
 
-## 📁 Estructura de Archivos
+## [CARPETA] Estructura de Archivos
 
 ```
 Reporte_PLR/
-│
-├── 📄 INICIO_RAPIDO.md                    # ⚡ Guía de inicio rápido
-├── 📘 README_REPORTE_PLR.md               # 📚 Documentación completa
-├── 📋 RESUMEN_PROYECTO.md                 # 📊 Este archivo
-│
-├── 🐍 y_rep_plr.py                        # Módulo de extracción SAP
-├── 🔧 amalgama_y_rep_plr.py               # Script principal con auto-login
-│
-├── ⚙️ credentials.ini.example             # Plantilla de credenciales
-├── 🔒 credentials.ini                     # Credenciales reales (crear)
-│
-├── 🖥️ ejecutar_rep_plr.bat               # Ejecutar manualmente
-├── 📅 configurar_tarea_programada.ps1    # Configurar automatización
-│
-└── 🚫 .gitignore                          # Protección de credenciales
+
+ [ARCHIVO] INICIO_RAPIDO.md                    #  Guía de inicio rápido
+  README_REPORTE_PLR.md               # [DOCUMENTACION] Documentación completa
+ [LISTA] RESUMEN_PROYECTO.md                 # [DASHBOARD] Este archivo
+
+  y_rep_plr.py                        # Módulo de extracción SAP
+ [CONFIGURACION] amalgama_y_rep_plr.py               # Script principal con auto-login
+
+ [CONFIG] credentials.ini.example             # Plantilla de credenciales
+  credentials.ini                     # Credenciales reales (crear)
+
+ [PC] ejecutar_rep_plr.bat               # Ejecutar manualmente
+ [FECHA] configurar_tarea_programada.ps1    # Configurar automatización
+
+  .gitignore                          # Protección de credenciales
 ```
 
-## 🚀 Inicio Rápido (3 Pasos)
+## [INICIO] Inicio Rápido (3 Pasos)
 
 ### Paso 1: Instalar Dependencias
 ```bash
@@ -67,18 +67,18 @@ ejecutar_rep_plr.bat
 
 ¡Listo! El reporte se generará automáticamente.
 
-## 📊 Comparación con Monitor Guías
+## [DASHBOARD] Comparación con Monitor Guías
 
 | Característica | Monitor Guías | Reporte PLR | Mejora |
 |----------------|---------------|-------------|---------|
-| Auto-login | ✅ | ✅ | Igual |
-| Nueva sesión | ✅ | ✅ | Igual |
-| Datos limpios | ✅ | ✅ | Igual |
-| Fecha | AYER | **HOY** | ✅ Mejorado |
+| Auto-login | [OK] | [OK] | Igual |
+| Nueva sesión | [OK] | [OK] | Igual |
+| Datos limpios | [OK] | [OK] | Igual |
+| Fecha | AYER | **HOY** | [OK] Mejorado |
 | Transacción | y_dev_42000074 | zsd_rep_planeamiento | Específico |
 | Archivo salida | Monitor_Guias.txt | REP_PLR.txt | Específico |
 
-## 🔧 Configuración Personalizada
+## [CONFIGURACION] Configuración Personalizada
 
 ### Ajustar Parámetros
 
@@ -103,7 +103,7 @@ FILENAME    = "REP_PLR.txt"          # Nombre archivo
 .\configurar_tarea_programada.ps1 -SoloHorarioLaboral:$false
 ```
 
-## 📂 Archivos Generados
+##  Archivos Generados
 
 **Ubicación por defecto**: `C:\data\SAP_Extraction\rep_plr\`
 
@@ -117,14 +117,14 @@ FILENAME    = "REP_PLR.txt"          # Nombre archivo
    - Sin encabezados de SAP
    - Listo para análisis
 
-## 🔐 Seguridad
+## [SEGURIDAD] Seguridad
 
-### ⚠️ IMPORTANTE: Protección de Credenciales
+### [ADVERTENCIA] IMPORTANTE: Protección de Credenciales
 
-1. ✅ Archivo `.gitignore` creado (protege `credentials.ini`)
-2. ✅ Plantilla de ejemplo incluida (`credentials.ini.example`)
-3. ❌ **NUNCA** subir `credentials.ini` a Git
-4. ✅ Mantener credenciales locales y seguras
+1. [OK] Archivo `.gitignore` creado (protege `credentials.ini`)
+2. [OK] Plantilla de ejemplo incluida (`credentials.ini.example`)
+3. [ERROR] **NUNCA** subir `credentials.ini` a Git
+4. [OK] Mantener credenciales locales y seguras
 
 ### Verificar Protección
 
@@ -134,7 +134,7 @@ git status
 
 Si `credentials.ini` aparece en la lista, agregalo al `.gitignore` global.
 
-## 🎓 Flujo de Ejecución
+##  Flujo de Ejecución
 
 ```mermaid
 graph TD
@@ -155,7 +155,7 @@ graph TD
     N --> O[Fin]
 ```
 
-## 🤖 Automatización
+## [AUTOMATICO] Automatización
 
 ### Configurar Tarea Programada
 
@@ -179,7 +179,7 @@ Get-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly"
 Unregister-ScheduledTask -TaskName "OTIF_Reporte_PLR_Hourly" -Confirm:$false
 ```
 
-## 🐛 Solución de Problemas
+## [ERROR] Solución de Problemas
 
 ### Problema 1: "No se encontró credentials.ini"
 ```bash
@@ -205,7 +205,7 @@ notepad credentials.ini
 python y_rep_plr.py --debug
 ```
 
-## 📈 Mejoras Futuras (Roadmap)
+## [GRAFICO] Mejoras Futuras (Roadmap)
 
 - [ ] Integración con Power BI
 - [ ] Envío automático por correo (similar a Monitor Guías)
@@ -214,25 +214,25 @@ python y_rep_plr.py --debug
 - [ ] Notificaciones por Telegram/Slack
 - [ ] Análisis predictivo con ML
 
-## 📚 Documentación
+## [DOCUMENTACION] Documentación
 
 - **Inicio Rápido**: Lee `INICIO_RAPIDO.md`
 - **Documentación Completa**: Lee `README_REPORTE_PLR.md`
 - **Comparación Monitor Guías**: Ver carpeta `Reporte_Monitor_Guías`
 
-## 🎉 Conclusión
+## [EXITO] Conclusión
 
 El sistema está completamente funcional y listo para usar. Incluye:
 
-✅ **Auto-login inteligente**  
-✅ **Manejo de sesiones**  
-✅ **Fecha actualizada (HOY)**  
-✅ **Datos limpios automáticamente**  
-✅ **Automatización programable**  
-✅ **Documentación completa**  
-✅ **Seguridad de credenciales**  
+[OK] **Auto-login inteligente**  
+[OK] **Manejo de sesiones**  
+[OK] **Fecha actualizada (HOY)**  
+[OK] **Datos limpios automáticamente**  
+[OK] **Automatización programable**  
+[OK] **Documentación completa**  
+[OK] **Seguridad de credenciales**  
 
-## 📞 Próximos Pasos
+## [CONTACTO] Próximos Pasos
 
 1. **Configurar credenciales**: Crea `credentials.ini` con tus datos
 2. **Probar manualmente**: Ejecuta `ejecutar_rep_plr.bat`
@@ -243,5 +243,5 @@ El sistema está completamente funcional y listo para usar. Incluye:
 
 **Versión**: 1.0.0  
 **Fecha**: 2025-11-05  
-**Estado**: ✅ Completado y Funcional
+**Estado**: [OK] Completado y Funcional
 

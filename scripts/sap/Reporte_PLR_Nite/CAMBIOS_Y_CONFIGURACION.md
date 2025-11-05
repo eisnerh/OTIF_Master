@@ -25,10 +25,10 @@ Paso 3: Eliminar las primeras 3 filas (después de eliminar fila 5)
 
 ### 4. Logs sin Emojis
 Todos los mensajes usan texto plano en lugar de emojis:
-- `[OK]` en lugar de ✅
-- `[ERROR]` en lugar de ❌
-- `[ADVERTENCIA]` en lugar de ⚠️
-- `[INFO]` en lugar de 📊
+- `[OK]` en lugar de [OK]
+- `[ERROR]` en lugar de [ERROR]
+- `[ADVERTENCIA]` en lugar de [ADVERTENCIA]
+- `[INFO]` en lugar de [DASHBOARD]
 - etc.
 
 ## Configuración del Sistema
@@ -218,18 +218,18 @@ Si necesitas cambiar qué columnas o filas se eliminan, edita la función `proce
 
 ```
 Reporte_PLR_Nite/
-├── amalgama_y_rep_plr.py           # Script principal
-├── y_rep_plr.py                    # Módulo de extracción SAP
-├── ejecutar_rep_plr.bat            # Ejecutar manualmente
-├── configurar_tarea_programada.ps1 # Configurar automatización
-├── verificar_instalacion.py        # Verificar requisitos
-├── credentials.ini.example         # Plantilla de credenciales
-├── credentials.ini                 # Credenciales (NO SUBIR A GIT)
-├── .gitignore                      # Protección de archivos
-├── INICIO_RAPIDO.md               # Guía de inicio rápido
-├── README_REPORTE_PLR.md          # Documentación completa
-├── RESUMEN_PROYECTO.md            # Resumen del proyecto
-└── CAMBIOS_Y_CONFIGURACION.md     # Este archivo
+ amalgama_y_rep_plr.py           # Script principal
+ y_rep_plr.py                    # Módulo de extracción SAP
+ ejecutar_rep_plr.bat            # Ejecutar manualmente
+ configurar_tarea_programada.ps1 # Configurar automatización
+ verificar_instalacion.py        # Verificar requisitos
+ credentials.ini.example         # Plantilla de credenciales
+ credentials.ini                 # Credenciales (NO SUBIR A GIT)
+ .gitignore                      # Protección de archivos
+ INICIO_RAPIDO.md               # Guía de inicio rápido
+ README_REPORTE_PLR.md          # Documentación completa
+ RESUMEN_PROYECTO.md            # Resumen del proyecto
+ CAMBIOS_Y_CONFIGURACION.md     # Este archivo
 ```
 
 ## Notas Importantes
@@ -246,11 +246,11 @@ Reporte_PLR_Nite/
 
 Para usar el sistema:
 
-1. ✅ Configurar `credentials.ini` con tus datos SAP
-2. ✅ Ejecutar `verificar_instalacion.py` para verificar requisitos
-3. ✅ Probar manualmente con `ejecutar_rep_plr.bat`
-4. ✅ Revisar el archivo Excel generado
-5. ✅ Configurar automatización (opcional)
+1. [OK] Configurar `credentials.ini` con tus datos SAP
+2. [OK] Ejecutar `verificar_instalacion.py` para verificar requisitos
+3. [OK] Probar manualmente con `ejecutar_rep_plr.bat`
+4. [OK] Revisar el archivo Excel generado
+5. [OK] Configurar automatización (opcional)
 
 ---
 

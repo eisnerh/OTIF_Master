@@ -15,12 +15,12 @@ def instalar_dependencia(paquete):
         paquete (str): Nombre del paquete a instalar
     """
     try:
-        print(f"📦 Instalando {paquete}...")
+        print(f" Instalando {paquete}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", paquete])
-        print(f"✅ {paquete} instalado correctamente")
+        print(f"[OK] {paquete} instalado correctamente")
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error instalando {paquete}: {e}")
+        print(f"[ERROR] Error instalando {paquete}: {e}")
         return False
 
 def verificar_dependencia(paquete):
@@ -32,17 +32,17 @@ def verificar_dependencia(paquete):
     """
     try:
         __import__(paquete)
-        print(f"✅ {paquete} ya está instalado")
+        print(f"[OK] {paquete} ya está instalado")
         return True
     except ImportError:
-        print(f"❌ {paquete} no está instalado")
+        print(f"[ERROR] {paquete} no está instalado")
         return False
 
 def main():
     """
     Función principal de instalación
     """
-    print("🚀 INSTALADOR DE DEPENDENCIAS - SCRIPT MAESTRO SAP")
+    print("[INICIO] INSTALADOR DE DEPENDENCIAS - SCRIPT MAESTRO SAP")
     print("=" * 60)
     
     # Lista de dependencias requeridas
@@ -58,24 +58,24 @@ def main():
     dependencias_faltantes = []
     
     # Verificar dependencias existentes
-    print("🔍 Verificando dependencias...")
+    print("[BUSCAR] Verificando dependencias...")
     for paquete, modulo in dependencias:
         if not verificar_dependencia(modulo):
             dependencias_faltantes.append(paquete)
     
     # Instalar dependencias faltantes
     if dependencias_faltantes:
-        print(f"\n📦 Instalando {len(dependencias_faltantes)} dependencias faltantes...")
+        print(f"\n Instalando {len(dependencias_faltantes)} dependencias faltantes...")
         
         for paquete in dependencias_faltantes:
             if not instalar_dependencia(paquete):
-                print(f"❌ No se pudo instalar {paquete}")
+                print(f"[ERROR] No se pudo instalar {paquete}")
                 return False
     else:
-        print("✅ Todas las dependencias ya están instaladas")
+        print("[OK] Todas las dependencias ya están instaladas")
     
     # Verificar instalación final
-    print("\n🔍 Verificación final...")
+    print("\n[BUSCAR] Verificación final...")
     todas_instaladas = True
     
     for paquete, modulo in dependencias:
@@ -83,11 +83,11 @@ def main():
             todas_instaladas = False
     
     if todas_instaladas:
-        print("\n🎉 ¡Todas las dependencias están instaladas correctamente!")
-        print("✅ El Script Maestro SAP está listo para usar")
+        print("\n[EXITO] ¡Todas las dependencias están instaladas correctamente!")
+        print("[OK] El Script Maestro SAP está listo para usar")
         return True
     else:
-        print("\n❌ Algunas dependencias no se pudieron instalar")
+        print("\n[ERROR] Algunas dependencias no se pudieron instalar")
         return False
 
 def crear_requirements_txt():
@@ -102,10 +102,10 @@ python-dateutil>=2.8.0
     try:
         with open("requirements.txt", "w", encoding="utf-8") as f:
             f.write(requirements_content)
-        print("📄 Archivo requirements.txt creado")
+        print("[ARCHIVO] Archivo requirements.txt creado")
         return True
     except Exception as e:
-        print(f"❌ Error creando requirements.txt: {e}")
+        print(f"[ERROR] Error creando requirements.txt: {e}")
         return False
 
 def instalar_desde_requirements():
@@ -114,20 +114,20 @@ def instalar_desde_requirements():
     """
     if os.path.exists("requirements.txt"):
         try:
-            print("📦 Instalando desde requirements.txt...")
+            print(" Instalando desde requirements.txt...")
             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-            print("✅ Dependencias instaladas desde requirements.txt")
+            print("[OK] Dependencias instaladas desde requirements.txt")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"❌ Error instalando desde requirements.txt: {e}")
+            print(f"[ERROR] Error instalando desde requirements.txt: {e}")
             return False
     else:
-        print("❌ Archivo requirements.txt no encontrado")
+        print("[ERROR] Archivo requirements.txt no encontrado")
         return False
 
 if __name__ == "__main__":
     try:
-        print("🚀 Iniciando instalación de dependencias...")
+        print("[INICIO] Iniciando instalación de dependencias...")
         
         # Crear requirements.txt
         crear_requirements_txt()
@@ -136,14 +136,14 @@ if __name__ == "__main__":
         success = main()
         
         if success:
-            print("\n✅ Instalación completada exitosamente")
-            print("💡 Ahora puedes ejecutar el Script Maestro SAP")
-            print("📖 Ejecuta: python script_maestro_sap_python.py")
+            print("\n[OK] Instalación completada exitosamente")
+            print(" Ahora puedes ejecutar el Script Maestro SAP")
+            print(" Ejecuta: python script_maestro_sap_python.py")
         else:
-            print("\n❌ Instalación falló")
-            print("💡 Revisa los errores anteriores e intenta nuevamente")
+            print("\n[ERROR] Instalación falló")
+            print(" Revisa los errores anteriores e intenta nuevamente")
             
     except KeyboardInterrupt:
-        print("\n⚠️  Instalación interrumpida por el usuario")
+        print("\n[ADVERTENCIA]  Instalación interrumpida por el usuario")
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\n[ERROR] Error inesperado: {e}")

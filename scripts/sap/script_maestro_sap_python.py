@@ -118,7 +118,7 @@ class SAPAutomation:
         Establece conexión con SAP GUI
         """
         try:
-            self.logger.info("🔐 Conectando a SAP GUI...")
+            self.logger.info("[SEGURIDAD] Conectando a SAP GUI...")
             
             # Obtener objeto SAP GUI
             sap_gui_auto = win32com.client.GetObject("SAPGUI")
@@ -131,11 +131,11 @@ class SAPAutomation:
             # Maximizar ventana
             self.session.findById("wnd[0]").maximize
             
-            self.logger.info("✅ Conexión SAP establecida correctamente")
+            self.logger.info("[OK] Conexión SAP establecida correctamente")
             return True
             
         except Exception as e:
-            self.logger.error(f"❌ Error conectando a SAP: {e}")
+            self.logger.error(f"[ERROR] Error conectando a SAP: {e}")
             return False
     
     def execute_transaction(self, transaction_name, custom_date=None):
@@ -147,13 +147,13 @@ class SAPAutomation:
             custom_date (str): Fecha personalizada (opcional)
         """
         if transaction_name not in self.config["transactions"]:
-            self.logger.error(f"❌ Transacción '{transaction_name}' no encontrada en configuración")
+            self.logger.error(f"[ERROR] Transacción '{transaction_name}' no encontrada en configuración")
             return False
         
         config = self.config["transactions"][transaction_name]
         
         try:
-            self.logger.info(f"📊 Ejecutando transacción: {transaction_name}")
+            self.logger.info(f"[DASHBOARD] Ejecutando transacción: {transaction_name}")
             
             # Navegar a la transacción
             self.session.findById("wnd[0]/tbar[0]/okcd").text = config["transaction"]
@@ -200,11 +200,11 @@ class SAPAutomation:
             # Exportar a Excel
             self._export_to_excel(config["filename"])
             
-            self.logger.info(f"✅ Transacción {transaction_name} ejecutada correctamente")
+            self.logger.info(f"[OK] Transacción {transaction_name} ejecutada correctamente")
             return True
             
         except Exception as e:
-            self.logger.error(f"❌ Error ejecutando transacción {transaction_name}: {e}")
+            self.logger.error(f"[ERROR] Error ejecutando transacción {transaction_name}: {e}")
             return False
     
     def _export_to_excel(self, filename):
@@ -237,10 +237,10 @@ class SAPAutomation:
             self.session.findById("wnd[0]/tbar[0]/btn[3]").press
             self.session.findById("wnd[0]/tbar[0]/btn[15]").press
             
-            self.logger.info(f"📁 Archivo exportado: {filename}")
+            self.logger.info(f"[CARPETA] Archivo exportado: {filename}")
             
         except Exception as e:
-            self.logger.error(f"❌ Error exportando archivo {filename}: {e}")
+            self.logger.error(f"[ERROR] Error exportando archivo {filename}: {e}")
             raise
     
     def execute_all_transactions(self, custom_date=None):
@@ -256,31 +256,31 @@ class SAPAutomation:
         results = {}
         total_transactions = len(self.config["transactions"])
         
-        self.logger.info(f"🚀 Iniciando ejecución de {total_transactions} transacciones")
+        self.logger.info(f"[INICIO] Iniciando ejecución de {total_transactions} transacciones")
         
         for i, (transaction_name, config) in enumerate(self.config["transactions"].items(), 1):
-            self.logger.info(f"📊 Procesando {i}/{total_transactions}: {transaction_name}")
+            self.logger.info(f"[DASHBOARD] Procesando {i}/{total_transactions}: {transaction_name}")
             
             try:
                 success = self.execute_transaction(transaction_name, custom_date)
                 results[transaction_name] = success
                 
                 if success:
-                    self.logger.info(f"✅ {transaction_name} completada")
+                    self.logger.info(f"[OK] {transaction_name} completada")
                 else:
-                    self.logger.error(f"❌ {transaction_name} falló")
+                    self.logger.error(f"[ERROR] {transaction_name} falló")
                 
                 # Pausa entre transacciones
                 if i < total_transactions:
                     time.sleep(2)
                     
             except Exception as e:
-                self.logger.error(f"❌ Error inesperado en {transaction_name}: {e}")
+                self.logger.error(f"[ERROR] Error inesperado en {transaction_name}: {e}")
                 results[transaction_name] = False
         
         # Resumen final
         successful = sum(1 for success in results.values() if success)
-        self.logger.info(f"📋 Resumen: {successful}/{total_transactions} transacciones exitosas")
+        self.logger.info(f"[LISTA] Resumen: {successful}/{total_transactions} transacciones exitosas")
         
         return results
     
@@ -299,7 +299,7 @@ class SAPAutomation:
         
         for transaction_name in transaction_list:
             if transaction_name not in self.config["transactions"]:
-                self.logger.error(f"❌ Transacción '{transaction_name}' no encontrada")
+                self.logger.error(f"[ERROR] Transacción '{transaction_name}' no encontrada")
                 results[transaction_name] = False
                 continue
             
@@ -308,14 +308,14 @@ class SAPAutomation:
                 results[transaction_name] = success
                 
                 if success:
-                    self.logger.info(f"✅ {transaction_name} completada")
+                    self.logger.info(f"[OK] {transaction_name} completada")
                 else:
-                    self.logger.error(f"❌ {transaction_name} falló")
+                    self.logger.error(f"[ERROR] {transaction_name} falló")
                 
                 time.sleep(2)
                     
             except Exception as e:
-                self.logger.error(f"❌ Error inesperado en {transaction_name}: {e}")
+                self.logger.error(f"[ERROR] Error inesperado en {transaction_name}: {e}")
                 results[transaction_name] = False
         
         return results
@@ -339,23 +339,23 @@ class SAPAutomation:
             
             if os.path.exists(file_path):
                 size = os.path.getsize(file_path)
-                self.logger.info(f"✅ {filename} - {size:,} bytes")
+                self.logger.info(f"[OK] {filename} - {size:,} bytes")
             else:
-                self.logger.error(f"❌ {filename} - No encontrado")
+                self.logger.error(f"[ERROR] {filename} - No encontrado")
                 missing_files.append(filename)
         
         if missing_files:
-            self.logger.warning(f"⚠️  Archivos faltantes: {missing_files}")
+            self.logger.warning(f"[ADVERTENCIA]  Archivos faltantes: {missing_files}")
             return False
         else:
-            self.logger.info("🎉 Todos los archivos generados correctamente")
+            self.logger.info("[EXITO] Todos los archivos generados correctamente")
             return True
 
 def main():
     """
     Función principal del script
     """
-    print("🚀 SCRIPT MAESTRO SAP - AUTOMATIZACIÓN COMPLETA")
+    print("[INICIO] SCRIPT MAESTRO SAP - AUTOMATIZACIÓN COMPLETA")
     print("=" * 80)
     print(f"⏰ Hora de inicio: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
@@ -365,14 +365,14 @@ def main():
     
     # Obtener fecha de hoy
     today_date = sap_auto.get_today_date()
-    print(f"📅 Fecha configurada: {today_date}")
+    print(f"[FECHA] Fecha configurada: {today_date}")
     
     try:
         # Ejecutar todas las transacciones
         results = sap_auto.execute_all_transactions(today_date)
         
         # Verificar archivos generados
-        print("\n📋 Verificando archivos generados...")
+        print("\n[LISTA] Verificando archivos generados...")
         sap_auto.verify_output_files()
         
         # Resumen final
@@ -380,31 +380,31 @@ def main():
         total = len(results)
         
         print("\n" + "=" * 80)
-        print("🎉 PROCESO COMPLETADO")
+        print("[EXITO] PROCESO COMPLETADO")
         print("=" * 80)
-        print(f"📊 Transacciones exitosas: {successful}/{total}")
-        print(f"📁 Archivos generados en: {sap_auto.config['output_path']}")
+        print(f"[DASHBOARD] Transacciones exitosas: {successful}/{total}")
+        print(f"[CARPETA] Archivos generados en: {sap_auto.config['output_path']}")
         print(f"⏰ Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 80)
         
         return successful == total
         
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f"[ERROR] Error inesperado: {e}")
         return False
 
 if __name__ == "__main__":
     try:
         success = main()
         if success:
-            print("\n✅ Script ejecutado exitosamente")
+            print("\n[OK] Script ejecutado exitosamente")
             exit(0)
         else:
-            print("\n❌ Script falló")
+            print("\n[ERROR] Script falló")
             exit(1)
     except KeyboardInterrupt:
-        print("\n⚠️  Script interrumpido por el usuario")
+        print("\n[ADVERTENCIA]  Script interrumpido por el usuario")
         exit(1)
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\n[ERROR] Error inesperado: {e}")
         exit(1)

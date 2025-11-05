@@ -237,7 +237,7 @@ def main():
         # Debug específico para z_devo_alv para diagnosticar problemas
         if script_name == "Z_DEVO_ALV":
             args.append("--debug")
-            print(f"🔍 Debug habilitado específicamente para {script_name}")
+            print(f"[BUSCAR] Debug habilitado específicamente para {script_name}")
         
         # Ejecutar script
         success = ejecutar_script(script_name, script_file, *args)

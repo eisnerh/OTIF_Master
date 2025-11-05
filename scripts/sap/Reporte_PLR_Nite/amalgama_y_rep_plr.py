@@ -95,7 +95,7 @@ except ImportError:
         sys.path.insert(0, str(PARENT_DIR))
         import y_rep_plr as yplr
     except ImportError as e:
-        print(f"❌ ERROR: No se pudo importar 'y_rep_plr.py'.")
+        print(f"[ERROR] ERROR: No se pudo importar 'y_rep_plr.py'.")
         print(f"Se buscó en: {SCRIPT_DIR} y {PARENT_DIR}")
         print(f"Detalle: {e}")
         print(f"Verifica que el archivo 'y_rep_plr.py' existe en: {SCRIPT_DIR / 'y_rep_plr.py'}")
@@ -362,6 +362,31 @@ def run_once(cfg: RunConfig) -> Path:
 
     # Verificación final (ya no hace limpieza adicional)
     clean_excel_file(xlsx_path, rows_to_drop=0)
+
+    # Generar reporte gráfico
+    try:
+        logger.info("[GRAFICO] Generando reporte grafico para WhatsApp...")
+        import subprocess
+        script_grafico = Path(__file__).parent / "generar_reporte_grafico.py"
+        if script_grafico.exists():
+            result = subprocess.run(
+                [sys.executable, str(script_grafico), "--archivo", str(xlsx_path)],
+                capture_output=True,
+                text=True,
+                timeout=300
+            )
+            if result.returncode == 0:
+                logger.info("[OK] Reporte grafico generado exitosamente")
+                # Buscar el archivo PNG generado
+                reporte_png = list(xlsx_path.parent.glob("reporte_grafico_*.png"))
+                if reporte_png:
+                    logger.info(f"[ARCHIVO] Reporte PNG: {reporte_png[-1]}")
+            else:
+                logger.warning(f"[ADVERTENCIA] Error al generar reporte grafico: {result.stderr}")
+        else:
+            logger.warning("[ADVERTENCIA] Script de graficos no encontrado")
+    except Exception as e:
+        logger.warning(f"[ADVERTENCIA] Error al generar reporte grafico: {e}")
 
     logger.info("=" * 60)
     logger.info("[EXITO] PROCESO PLR_NITE COMPLETADO EXITOSAMENTE")

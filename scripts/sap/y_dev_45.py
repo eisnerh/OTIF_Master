@@ -7,7 +7,7 @@ from datetime import datetime
 try:
     import win32com.client
 except ImportError:
-    print("❌ Falta pywin32. Instala con: pip install pywin32")
+    print("[ERROR] Falta pywin32. Instala con: pip install pywin32")
     sys.exit(1)
 
 

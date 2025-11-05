@@ -281,7 +281,7 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
     </head>
     <body>
         <div class="container">
-            <h1>📊 Reporte de Monitor de Guías por Zona</h1>
+            <h1>Reporte de Monitor de Guias por Zona</h1>
             <p class="fecha">Fecha de generación: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
             
             <div class="total">Total de Guías procesadas: {total_lineas:,}</div>

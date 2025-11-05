@@ -141,10 +141,10 @@ def main():
 
     # Validaciones tempranas
     if not src_dir or not os.path.isdir(src_dir):
-        print(f"✖ La carpeta de origen no existe: {src_dir}")
+        print(f" La carpeta de origen no existe: {src_dir}")
         sys.exit(1)
     if not ref_path or not os.path.isfile(ref_path):
-        print(f"✖ No se encuentra el archivo de referencia: {ref_path}")
+        print(f" No se encuentra el archivo de referencia: {ref_path}")
         sys.exit(1)
     os.makedirs(out_dir, exist_ok=True)
 
@@ -152,7 +152,7 @@ def main():
     try:
         df_ref = pd.read_excel(ref_path, header=0, engine="openpyxl")
     except Exception as e:
-        print(f"✖ Error leyendo referencia '{ref_path}': {e}")
+        print(f" Error leyendo referencia '{ref_path}': {e}")
         traceback.print_exc()
         sys.exit(1)
 
@@ -163,7 +163,7 @@ def main():
     paths = [p for p in paths if os.path.abspath(p) != os.path.abspath(ref_path)]
 
     if not paths:
-        print(f"⚠ No se encontraron archivos con el patrón {args.pattern} en {src_dir}")
+        print(f" No se encontraron archivos con el patrón {args.pattern} en {src_dir}")
         sys.exit(0)
 
     forced_date_cols = [x.strip() for x in args.date_cols.split(",")] if args.date_cols.strip() else []
@@ -189,10 +189,10 @@ def main():
             with pd.ExcelWriter(out_path, engine="openpyxl") as writer:
                 df_out.to_excel(writer, index=False, sheet_name="Hoja1")
 
-            print(f"✔ {base} -> {os.path.basename(out_path)} (filas: {len(df_out)})")
+            print(f" {base} -> {os.path.basename(out_path)} (filas: {len(df_out)})")
 
         except Exception as e:
-            print(f"✖ Error procesando {base}: {e}")
+            print(f" Error procesando {base}: {e}")
             traceback.print_exc()
 
     print("\nTerminado.")
