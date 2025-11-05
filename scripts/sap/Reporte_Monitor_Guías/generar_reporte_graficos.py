@@ -55,9 +55,9 @@ def cargar_configuracion_email() -> dict:
     email_config = {
         'smtp_server': os.getenv('SMTP_SERVER', 'smtp.gmail.com'),
         'smtp_port': int(os.getenv('SMTP_PORT', '587')),
-        'email_from': os.getenv('EMAIL_FROM', ''),
-        'email_password': os.getenv('EMAIL_PASSWORD', ''),
-        'email_to': os.getenv('EMAIL_TO', '').split(',') if os.getenv('EMAIL_TO') else [],
+        'email_from': os.getenv('EMAIL_FROM', 'eisner.lopez@gmail.com'),
+        'email_password': os.getenv('EMAIL_PASSWORD', 'lnqh wqkd dsoo jsvd'),
+        'email_to': os.getenv('EMAIL_TO', 'eisner.lopez@fifco.com').split(',') if os.getenv('EMAIL_TO') else [],
     }
     
     if creds_path.exists():
