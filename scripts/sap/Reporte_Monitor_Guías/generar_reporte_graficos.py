@@ -99,6 +99,7 @@ def leer_excel_procesado(xlsx_path: Path) -> pd.DataFrame:
         # Columna I = índice 8 (hora)
         columna_zona_idx = 1  # Columna B
         columna_hora_idx = 8  # Columna I
+        columna_viaje_idx = 5  # Columna F
         
         # Extraer zona
         df['Zona'] = df.iloc[:, columna_zona_idx]
@@ -136,6 +137,22 @@ def leer_excel_procesado(xlsx_path: Path) -> pd.DataFrame:
         
         if df.empty:
             raise ValueError("No se encontraron filas con hora válida en la columna I")
+        
+        # --- Nuevo: Filtro columna F para valores que inicia con '1'
+        # Normalizar y comprabar inicio con '1' (manejo de números y strings)
+        def inicia_con_uno(val) -> bool:
+            """Verifica si el valor inicia con '1'."""
+            if pd.isna(val):
+                return False
+            val_str = str(val).strip()
+            return val_str.startswith('1')
+        
+        df['Colf_raw'] = df.iloc[:, columna_viaje_idx]
+        df = df[df['Colf_raw'].apply(inicia_con_uno)].copy()
+        
+        if df.empty:
+            raise ValueError("No se encontraron filas donde la columna viaje inicie con '1'")# Columna F sin procesar
+        # -----------------------------------------------------------------
         
         # Mapear zona
         df['Zona_Grupo'] = df['Zona'].apply(mapear_zona)
