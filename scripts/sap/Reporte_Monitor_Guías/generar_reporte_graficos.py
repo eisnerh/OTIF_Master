@@ -18,6 +18,7 @@ import re
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
+from email.mime.application import MIMEApplication
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -177,6 +178,15 @@ def generar_graficos(conteo_df: pd.DataFrame, output_dir: Path) -> List[Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     rutas_graficos = []
     
+    # Ordenar horas de forma ascendente y consistente (00:00 .. 23:00)
+    try:
+        horas_orden = sorted(conteo_df['Hora'].dropna().unique(), key=lambda h: int(str(h).split(':')[0]))
+        conteo_df = conteo_df.copy()
+        conteo_df['Hora'] = pd.Categorical(conteo_df['Hora'], categories=horas_orden, ordered=True)
+    except Exception:
+        # Si algo falla, continuará con el orden por defecto
+        pass
+    
     zonas = conteo_df['Zona_Grupo'].unique()
     
     # Configurar estilo
@@ -307,7 +317,7 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
     
     return html
 
-def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: str) -> bool:
+def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: str, excel_path: Optional[Path] = None) -> bool:
     """Envía correo con gráficos adjuntos."""
     if not email_config.get('email_from') or not email_config.get('email_to'):
         print("ADVERTENCIA: Configuración de email incompleta. No se enviará correo.")
@@ -333,6 +343,16 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
                     img.add_header('Content-Disposition', 'attachment', 
                                  filename=ruta_grafico.name)
                     msg.attach(img)
+        
+        # Adjuntar Excel procesado si existe
+        if excel_path and excel_path.exists():
+            with open(excel_path, 'rb') as f:
+                part = MIMEApplication(
+                    f.read(),
+                    _subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                )
+                part.add_header('Content-Disposition', 'attachment', filename=excel_path.name)
+                msg.attach(part)
         
         # Enviar correo
         server = smtplib.SMTP(email_config['smtp_server'], email_config['smtp_port'])
@@ -381,7 +401,7 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
         # Enviar correo
         if enviar_email:
             email_config = cargar_configuracion_email()
-            enviar_correo(email_config, rutas_graficos, resumen_html)
+            enviar_correo(email_config, rutas_graficos, resumen_html, excel_path=xlsx_path)
         
         print("OK: Proceso completado exitosamente")
         return 0
