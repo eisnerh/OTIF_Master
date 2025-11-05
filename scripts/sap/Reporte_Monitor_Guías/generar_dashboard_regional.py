@@ -2,10 +2,9 @@
 """
 Script: generar_dashboard_regional.py
 Descripción:
-  - Genera un dashboard completo por regiones (RURAL, GAM, VINOS, HA)
-  - Incluye gráficos segmentados por zona
-  - Crea una imagen estilo Power BI lista para compartir
-  - Incluye KPIs, tendencias y distribución por zona
+  - Genera un dashboard estilo "Tablero de Monitor de Guías"
+  - Incluye KPIs, tabla detallada zona x hora, resumen por región y gráfico de tendencias
+  - Formato exacto según especificaciones
 """
 
 import sys
@@ -18,65 +17,41 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.gridspec import GridSpec
-import seaborn as sns
 import numpy as np
 import warnings
 
 warnings.filterwarnings('ignore')
 
 # Importar configuración centralizada de regiones
-import sys
-from pathlib import Path
-# Agregar carpeta padre al path para importar configuracion_regiones
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
     from configuracion_regiones import (
         REGIONES_CONFIG, 
         REGIONES_ORDEN,
-        mapear_zona_a_region,
-        obtener_color_region,
-        obtener_nombre_region
+        mapear_zona_a_region
     )
     print("[OK] Configuracion de regiones cargada correctamente")
 except ImportError as e:
     print(f"[ERROR] No se pudo importar configuracion_regiones: {e}")
     print("[INFO] Usando configuracion local como fallback")
     
-    # Configuración local como fallback
     REGIONES_CONFIG = {
-        'GAM': {
-            'zonas': ['ALJ', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO'],
-            'color': '#1565C0',
-            'nombre': 'GAM'
-        },
-        'RURAL': {
-            'zonas': ['CNL', 'GUA', 'LIB', 'LIM', 'NIC', 'PUN', 'SCA', 'SIS', 'ZTL', 'ZTN', 'ZTP'],
-            'color': '#2E7D32',
-            'nombre': 'RURAL'
-        },
-        'CT01': {
-            'zonas': ['SPE'],
-            'color': '#F57C00',
-            'nombre': 'CT01'
-        },
-        'CT02': {
-            'zonas': ['VYD'],
-            'color': '#6A1B9A',
-            'nombre': 'CT02'
-        }
+        'GAM': {'zonas': ['ALJ', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO'], 'color': '#1565C0', 'nombre': 'GAM'},
+        'RURAL': {'zonas': ['CNL', 'GUA', 'LIB', 'LIM', 'NIC', 'PUN', 'SCA', 'SIS', 'ZTL', 'ZTN', 'ZTP'], 'color': '#2E7D32', 'nombre': 'RURAL'},
+        'CT01': {'zonas': ['SPE'], 'color': '#F57C00', 'nombre': 'CT01'},
+        'CT02': {'zonas': ['VYD'], 'color': '#6A1B9A', 'nombre': 'CT02'}
     }
     REGIONES_ORDEN = ['RURAL', 'GAM', 'CT01', 'CT02']
     
-    def mapear_zona_a_region(zona: str) -> str:
-        """Mapea una zona a su región correspondiente"""
+    def mapear_zona_a_region(zona):
         if pd.isna(zona) or zona == '':
             return 'SIN_ZONA'
         zona_upper = str(zona).strip().upper()
         for region, config in REGIONES_CONFIG.items():
             if zona_upper in config['zonas']:
                 return region
-        return 'GAM'
+        return 'SIN_ZONA'
 
 def leer_excel_procesado(xlsx_path: Path) -> pd.DataFrame:
     """Lee el archivo Excel procesado y prepara los datos"""
@@ -89,12 +64,11 @@ def leer_excel_procesado(xlsx_path: Path) -> pd.DataFrame:
         if len(df.columns) < 9:
             raise ValueError(f"El archivo tiene menos de 9 columnas. Columnas encontradas: {len(df.columns)}")
         
-        # Columnas importantes
-        columna_zona_idx = 1  # Columna B
-        columna_hora_idx = 8  # Columna I
-        columna_viaje_idx = 5  # Columna F
+        # Columnas: B=zona (idx 1), I=hora (idx 8), F=viaje (idx 5)
+        columna_zona_idx = 1
+        columna_hora_idx = 8
+        columna_viaje_idx = 5
         
-        # Extraer zona
         df['Zona'] = df.iloc[:, columna_zona_idx]
         
         # Extraer hora
@@ -144,277 +118,295 @@ def leer_excel_procesado(xlsx_path: Path) -> pd.DataFrame:
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo Excel: {e}")
 
-def crear_kpi_card(ax, titulo, valor, porcentaje, color):
-    """Crea una tarjeta KPI"""
-    ax.axis('off')
-    
-    # Rectángulo de fondo
-    rect = mpatches.FancyBboxPatch((0.05, 0.15), 0.9, 0.7,
-                                    boxstyle="round,pad=0.08",
-                                    facecolor=color, edgecolor='white',
-                                    linewidth=3, alpha=0.9)
-    ax.add_patch(rect)
-    
-    # Título
-    ax.text(0.5, 0.7, titulo, ha='center', va='center',
-            fontsize=11, fontweight='bold', color='white',
-            transform=ax.transAxes)
-    
-    # Valor
-    ax.text(0.5, 0.45, f'{valor:,}', ha='center', va='center',
-            fontsize=20, fontweight='bold', color='white',
-            transform=ax.transAxes)
-    
-    # Porcentaje
-    ax.text(0.5, 0.25, f'{porcentaje:.1f}%', ha='center', va='center',
-            fontsize=12, color='white', style='italic',
-            transform=ax.transAxes)
-    
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-
 def generar_dashboard(df: pd.DataFrame, output_path: Path):
-    """Genera el dashboard completo"""
+    """Genera el dashboard estilo Tablero de Monitor de Guías"""
     
-    print("[PROCESO] Generando dashboard regional...")
+    print("[PROCESO] Generando dashboard Tablero de Monitor de Guias...")
     
     # Calcular estadísticas
     total_guias = len(df)
     stats_por_region = df.groupby('Region').size().to_dict()
-    stats_por_zona = df.groupby(['Region', 'Zona']).size().reset_index(name='Cantidad')
-    stats_por_hora = df.groupby(['Region', 'Hora']).size().reset_index(name='Cantidad')
     
-    # Crear matriz de zona x hora por región
+    # Crear matriz zona x hora
     stats_zona_hora = df.groupby(['Region', 'Zona', 'Hora']).size().reset_index(name='Cantidad')
     
-    # Crear figura (optimizada para tablas)
-    fig = plt.figure(figsize=(24, 28), dpi=120, facecolor='#f5f5f5')
-    fig.suptitle('DASHBOARD MONITOR DE GUIAS - ANALISIS REGIONAL POR ZONA',
-                 fontsize=24, fontweight='bold', y=0.995, color='#333')
+    # Crear pivot table completa
+    pivot_detallado = stats_zona_hora.pivot_table(
+        values='Cantidad',
+        index=['Region', 'Zona'],
+        columns='Hora',
+        fill_value=0,
+        aggfunc='sum'
+    )
     
-    # Crear grid de subplots (4 regiones)
-    gs = GridSpec(7, 4, figure=fig, hspace=0.6, wspace=0.4,
-                  top=0.97, bottom=0.02, left=0.04, right=0.98)
+    # Ordenar columnas (horas)
+    try:
+        cols_ordenadas = sorted(pivot_detallado.columns, key=lambda h: int(h.split(':')[0]))
+        pivot_detallado = pivot_detallado[cols_ordenadas]
+    except:
+        pass
     
-    # ==================== FILA 1: KPIs PRINCIPALES ====================
-    print("[GRAFICO] Generando KPIs principales...")
+    # Crear pivot por región (resumen)
+    pivot_region = stats_zona_hora.groupby(['Region', 'Hora'])['Cantidad'].sum().reset_index()
+    pivot_region_tabla = pivot_region.pivot_table(
+        values='Cantidad',
+        index='Region',
+        columns='Hora',
+        fill_value=0
+    )
     
-    # Usar solo las 4 regiones reales
-    for i, region in enumerate(REGIONES_ORDEN):
-        ax = fig.add_subplot(gs[0, i])
-        cantidad = stats_por_region.get(region, 0)
-        porcentaje = (cantidad / total_guias * 100) if total_guias > 0 else 0
-        color = REGIONES_CONFIG[region]['color']
-        nombre = REGIONES_CONFIG[region]['nombre']
-        crear_kpi_card(ax, nombre, cantidad, porcentaje, color)
+    # Ordenar columnas
+    try:
+        cols_ordenadas = sorted(pivot_region_tabla.columns, key=lambda h: int(h.split(':')[0]))
+        pivot_region_tabla = pivot_region_tabla[cols_ordenadas]
+    except:
+        pass
     
-    # ==================== FILA 2: TOTAL ====================
-    ax_total = fig.add_subplot(gs[1, :])
-    ax_total.axis('off')
+    # Crear figura
+    fig = plt.figure(figsize=(20, 24), dpi=120, facecolor='white')
+    fig.suptitle('Tablero de Monitor de Guias', fontsize=20, fontweight='bold', y=0.99, color='#333')
     
-    rect_total = mpatches.FancyBboxPatch((0.3, 0.2), 0.4, 0.6,
-                                          boxstyle="round,pad=0.05",
-                                          facecolor='#424242', edgecolor='white',
-                                          linewidth=3, alpha=0.95)
-    ax_total.add_patch(rect_total)
-    ax_total.text(0.5, 0.7, 'TOTAL GUIAS PROCESADAS', ha='center', va='center',
-                  fontsize=16, fontweight='bold', color='white',
-                  transform=ax_total.transAxes)
-    ax_total.text(0.5, 0.35, f'{total_guias:,}', ha='center', va='center',
-                  fontsize=32, fontweight='bold', color='#4CAF50',
-                  transform=ax_total.transAxes)
-    ax_total.set_xlim(0, 1)
-    ax_total.set_ylim(0, 1)
+    # Grid
+    gs = GridSpec(4, 1, figure=fig, hspace=0.3, height_ratios=[0.08, 0.50, 0.15, 0.27],
+                  top=0.96, bottom=0.02, left=0.05, right=0.97)
     
-    # ==================== FILAS 7-11: TABLAS ZONA x HORA POR REGIÓN ====================
-    print("[TABLA] Generando tablas zona x hora por region...")
+    # ==================== FILA 1: KPIs ====================
+    print("[KPI] Generando KPIs...")
     
-    # Función para crear tabla heatmap
-    def crear_tabla_heatmap(ax, region_name, df_region_data, color_region):
-        """Crea una tabla heatmap de zona x hora"""
-        if df_region_data.empty:
-            ax.text(0.5, 0.5, f'No hay datos para {region_name}',
-                   ha='center', va='center', transform=ax.transAxes,
-                   fontsize=14, color='gray')
-            ax.axis('off')
-            return
+    ax_kpis = fig.add_subplot(gs[0, 0])
+    ax_kpis.axis('off')
+    
+    # Calcular valores para mostrar (GAM, RURAL, VYD, SPE, Total)
+    kpis_valores = {
+        'GAM': stats_por_region.get('GAM', 0),
+        'RURAL': stats_por_region.get('RURAL', 0),
+        'VYD': stats_por_region.get('CT02', 0),  # VYD es CT02
+        'SPE': stats_por_region.get('CT01', 0),  # SPE es CT01
+        'Total': total_guias
+    }
+    
+    # Dibujar cajas KPI
+    num_kpis = len(kpis_valores)
+    box_width = 0.18
+    box_height = 0.7
+    spacing = 0.205
+    start_x = 0.02
+    
+    colores_kpi = {
+        'GAM': '#1565C0',
+        'RURAL': '#2E7D32',
+        'VYD': '#6A1B9A',
+        'SPE': '#F57C00',
+        'Total': '#424242'
+    }
+    
+    for i, (label, valor) in enumerate(kpis_valores.items()):
+        x_pos = start_x + (i * spacing)
         
-        # Crear pivot table: zonas en filas, horas en columnas
-        pivot_table = df_region_data.pivot_table(
-            values='Cantidad',
-            index='Zona',
-            columns='Hora',
-            fill_value=0,
-            aggfunc='sum'
-        )
+        rect = mpatches.FancyBboxPatch((x_pos, 0.15), box_width, box_height,
+                                        boxstyle="round,pad=0.02",
+                                        facecolor=colores_kpi[label],
+                                        edgecolor='white', linewidth=2, alpha=0.9,
+                                        transform=ax_kpis.transAxes)
+        ax_kpis.add_patch(rect)
         
-        # Ordenar columnas (horas)
-        try:
-            cols_ordenadas = sorted(pivot_table.columns, key=lambda h: int(h.split(':')[0]))
-            pivot_table = pivot_table[cols_ordenadas]
-        except:
-            pass
+        # Texto
+        ax_kpis.text(x_pos + box_width/2, 0.7, label,
+                    ha='center', va='center', fontsize=12, fontweight='bold',
+                    color='white', transform=ax_kpis.transAxes)
+        ax_kpis.text(x_pos + box_width/2, 0.4, str(valor),
+                    ha='center', va='center', fontsize=18, fontweight='bold',
+                    color='white', transform=ax_kpis.transAxes)
+    
+    # ==================== FILA 2: TABLA DETALLADA ZONA x HORA ====================
+    print("[TABLA] Generando tabla detallada zona x hora...")
+    
+    ax_tabla = fig.add_subplot(gs[1, 0])
+    ax_tabla.axis('off')
+    
+    # Preparar datos para tabla
+    tabla_data = []
+    headers = ['REGIÓN', 'ZONA'] + list(pivot_detallado.columns)
+    
+    # Agrupar por región y ordenar
+    for region in REGIONES_ORDEN:
+        if region not in pivot_detallado.index.get_level_values('Region'):
+            continue
         
-        # Ordenar filas (zonas) por total descendente
-        pivot_table['Total'] = pivot_table.sum(axis=1)
-        pivot_table = pivot_table.sort_values('Total', ascending=False)
-        pivot_table_sin_total = pivot_table.drop('Total', axis=1)
+        # Obtener zonas de esta región
+        zonas_region = pivot_detallado.loc[region]
         
-        # Crear heatmap
-        sns.heatmap(pivot_table_sin_total, annot=True, fmt='.0f', cmap='YlOrRd',
-                   cbar_kws={'label': 'Cantidad de Guías'},
-                   linewidths=0.5, linecolor='white',
-                   ax=ax, vmin=0, square=False)
+        # Si es una serie (solo una zona), convertir a DataFrame
+        if isinstance(zonas_region, pd.Series):
+            zonas_region = pd.DataFrame([zonas_region])
+            zonas_region.index = [zonas_region.index.name if hasattr(zonas_region.index, 'name') else 'Zona']
         
-        ax.set_title(f'{region_name} - Distribución por Zona y Hora',
-                    fontsize=14, fontweight='bold', pad=15, color='#333',
-                    bbox=dict(boxstyle='round,pad=0.5', facecolor=color_region, alpha=0.3))
-        ax.set_xlabel('Hora del Día', fontsize=11, fontweight='bold')
-        ax.set_ylabel('Zona', fontsize=11, fontweight='bold')
-        plt.setp(ax.get_xticklabels(), rotation=45, ha='right', fontsize=9)
-        plt.setp(ax.get_yticklabels(), rotation=0, fontsize=9)
-    
-    # ==================== FILAS 3-7: TABLAS ZONA x HORA POR REGIÓN ====================
-    print("[TABLA] Generando tablas zona x hora por region...")
-    
-    # Función para crear tabla heatmap
-    def crear_tabla_heatmap(ax, region_name, df_region_data, color_region):
-        """Crea una tabla heatmap de zona x hora"""
-        if df_region_data.empty:
-            ax.text(0.5, 0.5, f'No hay datos para {region_name}',
-                   ha='center', va='center', transform=ax.transAxes,
-                   fontsize=14, color='gray')
-            ax.axis('off')
-            return
+        # Nombre de región a mostrar
+        if region == 'CT01':
+            nombre_region = 'CT01'
+        elif region == 'CT02':
+            nombre_region = 'CT02'
+        elif region == 'RURAL' and 'ZTL' in zonas_region.index:
+            # Separar RURAL en RURAL y RURAL 3
+            zonas_rural_3 = ['ZTL', 'ZTN', 'ZTP']
+            zonas_rural_normal = [z for z in zonas_region.index if z not in zonas_rural_3]
+            
+            # RURAL normal
+            for zona in zonas_rural_normal:
+                if zona in zonas_region.index:
+                    fila = ['RURAL', zona] + list(zonas_region.loc[zona].values)
+                    tabla_data.append(fila)
+            
+            # RURAL 3
+            for zona in zonas_rural_3:
+                if zona in zonas_region.index:
+                    fila = ['RURAL 3', zona] + list(zonas_region.loc[zona].values)
+                    tabla_data.append(fila)
+            continue
+        else:
+            nombre_region = region
         
-        # Crear pivot table: zonas en filas, horas en columnas
-        pivot_table = df_region_data.pivot_table(
-            values='Cantidad',
-            index='Zona',
-            columns='Hora',
-            fill_value=0,
-            aggfunc='sum'
-        )
+        # Agregar filas normales
+        for zona in zonas_region.index:
+            fila = [nombre_region, zona] + list(zonas_region.loc[zona].values)
+            tabla_data.append(fila)
+    
+    # Crear tabla
+    if tabla_data:
+        tabla = ax_tabla.table(cellText=tabla_data,
+                              colLabels=headers,
+                              cellLoc='center',
+                              loc='upper center',
+                              bbox=[0, 0, 1, 1])
         
-        # Ordenar columnas (horas)
-        try:
-            cols_ordenadas = sorted(pivot_table.columns, key=lambda h: int(h.split(':')[0]))
-            pivot_table = pivot_table[cols_ordenadas]
-        except:
-            pass
+        tabla.auto_set_font_size(False)
+        tabla.set_fontsize(8)
+        tabla.scale(1, 1.5)
         
-        # Ordenar filas (zonas) por total descendente
-        pivot_table['Total'] = pivot_table.sum(axis=1)
-        pivot_table = pivot_table.sort_values('Total', ascending=False)
-        pivot_table_sin_total = pivot_table.drop('Total', axis=1)
+        # Estilo de encabezados
+        for i in range(len(headers)):
+            cell = tabla[(0, i)]
+            cell.set_facecolor('#4CAF50')
+            cell.set_text_props(weight='bold', color='white', fontsize=9)
         
-        # Crear heatmap
-        sns.heatmap(pivot_table_sin_total, annot=True, fmt='.0f', cmap='YlOrRd',
-                   cbar_kws={'label': 'Cantidad de Guias'},
-                   linewidths=0.5, linecolor='white',
-                   ax=ax, vmin=0, square=False, cbar=True)
-        
-        ax.set_title(f'{region_name} - Distribucion por Zona y Hora',
-                    fontsize=14, fontweight='bold', pad=15, color='#333',
-                    bbox=dict(boxstyle='round,pad=0.5', facecolor=color_region, alpha=0.3))
-        ax.set_xlabel('Hora del Dia', fontsize=11, fontweight='bold')
-        ax.set_ylabel('Zona', fontsize=11, fontweight='bold')
-        plt.setp(ax.get_xticklabels(), rotation=45, ha='right', fontsize=9)
-        plt.setp(ax.get_yticklabels(), rotation=0, fontsize=9)
+        # Estilo de celdas
+        for i in range(1, len(tabla_data) + 1):
+            # Columna Región
+            tabla[(i, 0)].set_facecolor('#E8F5E9')
+            tabla[(i, 0)].set_text_props(weight='bold')
+            # Columna Zona
+            tabla[(i, 1)].set_facecolor('#F1F8E9')
+            # Alternar color de filas
+            if i % 2 == 0:
+                for j in range(2, len(headers)):
+                    tabla[(i, j)].set_facecolor('#FAFAFA')
     
-    # RURAL - Tabla (filas 3-4)
-    ax_rural_tabla = fig.add_subplot(gs[2:4, :])
-    datos_rural_tabla = stats_zona_hora[stats_zona_hora['Region'] == 'RURAL']
-    crear_tabla_heatmap(ax_rural_tabla, 'RURAL', datos_rural_tabla, REGIONES_CONFIG['RURAL']['color'])
+    ax_tabla.text(0.5, 1.02, 'Horas', ha='center', va='bottom',
+                 fontsize=14, fontweight='bold', transform=ax_tabla.transAxes)
     
-    # GAM - Tabla (filas 5-6)
-    ax_gam_tabla = fig.add_subplot(gs[4:6, :])
-    datos_gam_tabla = stats_zona_hora[stats_zona_hora['Region'] == 'GAM']
-    # Limitar a top 15 zonas para que quepa
-    if not datos_gam_tabla.empty:
-        top_zonas_gam = datos_gam_tabla.groupby('Zona')['Cantidad'].sum().nlargest(15).index
-        datos_gam_tabla = datos_gam_tabla[datos_gam_tabla['Zona'].isin(top_zonas_gam)]
-    crear_tabla_heatmap(ax_gam_tabla, 'GAM (Top 15 Zonas)', datos_gam_tabla, REGIONES_CONFIG['GAM']['color'])
+    # ==================== FILA 3: TABLA RESUMEN POR REGIÓN ====================
+    print("[TABLA] Generando tabla resumen por region...")
     
-    # CT01 - Tabla (fila 7 - izquierda)
-    ax_ct01_tabla = fig.add_subplot(gs[6, :2])
-    datos_ct01_tabla = stats_zona_hora[stats_zona_hora['Region'] == 'CT01']
-    crear_tabla_heatmap(ax_ct01_tabla, REGIONES_CONFIG['CT01']['nombre'], 
-                       datos_ct01_tabla, REGIONES_CONFIG['CT01']['color'])
+    ax_resumen = fig.add_subplot(gs[2, 0])
+    ax_resumen.axis('off')
     
-    # CT02 - Tabla (fila 7 - derecha)
-    ax_ct02_tabla = fig.add_subplot(gs[6, 2:])
-    datos_ct02_tabla = stats_zona_hora[stats_zona_hora['Region'] == 'CT02']
-    crear_tabla_heatmap(ax_ct02_tabla, REGIONES_CONFIG['CT02']['nombre'], 
-                       datos_ct02_tabla, REGIONES_CONFIG['CT02']['color'])
-    
-    # ==================== FILA 8: COMPARATIVO TODAS LAS REGIONES ====================
-    print("[GRAFICO] Generando comparativo global...")
-    
-    ax_comparativo = fig.add_subplot(gs[5, :])
-    
-    # Preparar datos para comparativo
-    regiones_vals = []
-    regiones_labels = []
-    regiones_colors = []
+    # Preparar datos para resumen
+    resumen_data = []
+    headers_resumen = ['Región'] + list(pivot_region_tabla.columns)
     
     for region in REGIONES_ORDEN:
-        cant = stats_por_region.get(region, 0)
-        if cant > 0:
-            regiones_vals.append(cant)
-            regiones_labels.append(REGIONES_CONFIG[region]['nombre'])
-            regiones_colors.append(REGIONES_CONFIG[region]['color'])
+        if region in pivot_region_tabla.index:
+            nombre_mostrar = region
+            if region == 'CT01':
+                nombre_mostrar = 'CT01'
+            elif region == 'CT02':
+                nombre_mostrar = 'CT02'
+            
+            fila = [nombre_mostrar] + list(pivot_region_tabla.loc[region].values)
+            resumen_data.append(fila)
     
-    if regiones_vals:
-        # Gráfico de barras comparativo
-        x_pos = np.arange(len(regiones_labels))
-        bars = ax_comparativo.bar(x_pos, regiones_vals, color=regiones_colors, alpha=0.85, width=0.6)
+    # Crear tabla resumen
+    if resumen_data:
+        tabla_resumen = ax_resumen.table(cellText=resumen_data,
+                                        colLabels=headers_resumen,
+                                        cellLoc='center',
+                                        loc='upper center',
+                                        bbox=[0, 0.3, 1, 0.7])
         
-        ax_comparativo.set_title('COMPARATIVO GENERAL - Todas las Regiones',
-                                fontsize=16, fontweight='bold', pad=20, color='#333')
-        ax_comparativo.set_ylabel('Cantidad de Guías', fontsize=12, fontweight='bold')
-        ax_comparativo.set_xticks(x_pos)
-        ax_comparativo.set_xticklabels(regiones_labels, fontsize=12, fontweight='bold')
-        ax_comparativo.grid(axis='y', alpha=0.3, linestyle='--')
+        tabla_resumen.auto_set_font_size(False)
+        tabla_resumen.set_fontsize(9)
+        tabla_resumen.scale(1, 2)
         
-        # Agregar valores y porcentajes
-        for i, (bar, val) in enumerate(zip(bars, regiones_vals)):
-            height = bar.get_height()
-            porcentaje = (val / total_guias * 100) if total_guias > 0 else 0
-            ax_comparativo.text(bar.get_x() + bar.get_width()/2., height,
-                               f'{val:,}\n({porcentaje:.1f}%)',
-                               ha='center', va='bottom',
-                               fontsize=11, fontweight='bold')
+        # Estilo de encabezados
+        for i in range(len(headers_resumen)):
+            cell = tabla_resumen[(0, i)]
+            cell.set_facecolor('#2196F3')
+            cell.set_text_props(weight='bold', color='white', fontsize=10)
+        
+        # Estilo de celdas de datos
+        for i in range(1, len(resumen_data) + 1):
+            # Primera columna (Región)
+            tabla_resumen[(i, 0)].set_facecolor('#E3F2FD')
+            tabla_resumen[(i, 0)].set_text_props(weight='bold')
+            
+            # Resto de columnas
+            for j in range(1, len(headers_resumen)):
+                if i % 2 == 0:
+                    tabla_resumen[(i, j)].set_facecolor('#F5F5F5')
     
-    # Agregar fecha y hora de generación
-    fecha_gen = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    fig.text(0.99, 0.005, f'Generado: {fecha_gen}',
-             ha='right', va='bottom', fontsize=9, style='italic', color='#666',
-             bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8))
+    # ==================== FILA 4: GRÁFICO DE TENDENCIAS ====================
+    print("[GRAFICO] Generando grafico de tendencias...")
+    
+    ax_grafico = fig.add_subplot(gs[3, 0])
+    
+    # Preparar datos para gráfico
+    for region in REGIONES_ORDEN:
+        if region in pivot_region_tabla.index:
+            horas = pivot_region_tabla.columns
+            valores = pivot_region_tabla.loc[region].values
+            color = REGIONES_CONFIG[region]['color']
+            
+            # Nombre para leyenda
+            nombre_label = region
+            
+            ax_grafico.plot(horas, valores, marker='o', linewidth=2, markersize=6,
+                          color=color, label=nombre_label, alpha=0.9)
+    
+    ax_grafico.set_xlabel('Hora', fontsize=11, fontweight='bold')
+    ax_grafico.set_ylabel('Cantidad', fontsize=11, fontweight='bold')
+    ax_grafico.set_title('Tendencias por Región', fontsize=14, fontweight='bold', pad=15)
+    ax_grafico.legend(loc='upper left', fontsize=10, framealpha=0.9)
+    ax_grafico.grid(True, alpha=0.3, linestyle='--')
+    plt.setp(ax_grafico.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=9)
+    
+    # Agregar cajas de información en el gráfico
+    info_text = f"VYD {stats_por_region.get('CT02', 0)}\nSPE {stats_por_region.get('CT01', 0)}\nTotal {total_guias}"
+    ax_grafico.text(0.02, 0.05, info_text,
+                   transform=ax_grafico.transAxes,
+                   fontsize=9, verticalalignment='bottom',
+                   bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8, edgecolor='gray'))
     
     # Guardar
     print(f"[GUARDANDO] Guardando dashboard en: {output_path}")
     plt.savefig(output_path, dpi=150, bbox_inches='tight',
-                facecolor='#f5f5f5', edgecolor='none')
+                facecolor='white', edgecolor='none')
     plt.close()
     
     print(f"[OK] Dashboard guardado exitosamente")
     return output_path
 
 def main():
-    parser = argparse.ArgumentParser(description='Genera dashboard regional por zonas')
+    parser = argparse.ArgumentParser(description='Genera dashboard Tablero de Monitor de Guías')
     parser.add_argument('--archivo', required=True, help='Ruta al archivo Excel procesado')
     parser.add_argument('--output', help='Ruta de salida para la imagen (opcional)')
     
     args = parser.parse_args()
     
-    # Verificar que existe el archivo
     archivo_excel = Path(args.archivo)
     if not archivo_excel.exists():
         print(f"[ERROR] No se encontro el archivo: {archivo_excel}")
         return 1
     
-    # Determinar ruta de salida
     if args.output:
         output_path = Path(args.output)
     else:
@@ -422,14 +414,12 @@ def main():
     
     try:
         print("=" * 70)
-        print("[INICIO] Generacion de Dashboard Regional por Zonas")
+        print("[INICIO] Generacion de Dashboard Tablero de Monitor de Guias")
         print("=" * 70)
         
-        # Leer datos
         df = leer_excel_procesado(archivo_excel)
         print(f"[OK] Datos cargados: {len(df)} guias")
         
-        # Generar dashboard
         resultado = generar_dashboard(df, output_path)
         
         print("=" * 70)
@@ -438,9 +428,6 @@ def main():
         print(f"[ARCHIVO] {resultado}")
         print(f"[TAMAÑO] {resultado.stat().st_size / 1024:.1f} KB")
         print("=" * 70)
-        print("")
-        print("El dashboard esta listo para compartir!")
-        print("")
         
         return 0
         
@@ -452,4 +439,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

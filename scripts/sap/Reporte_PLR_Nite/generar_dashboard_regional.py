@@ -42,7 +42,7 @@ except ImportError as e:
     
     # Configuración local como fallback
     REGIONES_CONFIG = {
-        'GAM': {'zonas': ['AL', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO'], 'color': '#1565C0', 'nombre': 'GAM'},
+        'GAM': {'zonas': ['ALJ', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO'], 'color': '#1565C0', 'nombre': 'GAM'},
         'RURAL': {'zonas': ['CNL', 'GUA', 'LIB', 'LIM', 'NIC', 'PUN', 'SCA', 'SIS', 'ZTL', 'ZTN', 'ZTP'], 'color': '#2E7D32', 'nombre': 'RURAL'},
         'CT01': {'zonas': ['SPE'], 'color': '#F57C00', 'nombre': 'CT01'},
         'CT02': {'zonas': ['VYD'], 'color': '#6A1B9A', 'nombre': 'CT02'}

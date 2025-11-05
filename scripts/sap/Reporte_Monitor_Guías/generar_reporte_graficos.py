@@ -42,7 +42,7 @@ try:
 except ImportError:
     # Fallback si no se encuentra el módulo
     ZONAS_RURAL = ['CNL', 'GUA', 'LIB', 'LIM', 'NIC', 'PUN', 'SCA', 'SIS', 'ZTL', 'ZTN', 'ZTP']
-    ZONAS_GAM = ['AL', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO']
+    ZONAS_GAM = ['ALJ', 'CAR', 'CMN', 'CMT', 'COG', 'SJE', 'SJO', 'SUP', 'ZTO']
     
     def mapear_zona(zona: str) -> str:
         """Mapea una zona individual a su grupo correspondiente."""
