@@ -253,8 +253,22 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
 
 def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: str, excel_path: Optional[Path] = None) -> bool:
     """Envía correo con gráficos adjuntos."""
-    if not email_config.get('email_from') or not email_config.get('email_to'):
-        print("ADVERTENCIA: Configuración de email incompleta. No se enviará correo.")
+    if not email_config.get('email_from'):
+        print("ERROR: No se configuró 'email_from' en credentials.ini")
+        print("Por favor agrega en la sección [EMAIL]:")
+        print("  email_from = tu_email@gmail.com")
+        return False
+    
+    if not email_config.get('email_to'):
+        print("ERROR: No se configuró 'email_to' en credentials.ini")
+        print("Por favor agrega en la sección [EMAIL]:")
+        print("  email_to = destinatario@correo.com")
+        return False
+    
+    if not email_config.get('email_password'):
+        print("ERROR: No se configuró 'email_password' en credentials.ini")
+        print("Por favor agrega en la sección [EMAIL]:")
+        print("  email_password = tu_app_password")
         return False
     
     try:
@@ -302,16 +316,37 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
             print(f"OK: Excel adjuntado: {excel_path.name}")
         
         # Enviar correo
+        print(f"[EMAIL] Conectando al servidor SMTP: {email_config['smtp_server']}:{email_config['smtp_port']}")
         server = smtplib.SMTP(email_config['smtp_server'], email_config['smtp_port'])
+        
+        print("[EMAIL] Iniciando TLS...")
         server.starttls()
+        
+        print(f"[EMAIL] Autenticando con: {email_config['email_from']}")
         server.login(email_config['email_from'], email_config['email_password'])
+        
+        print("[EMAIL] Enviando mensaje...")
         server.send_message(msg)
         server.quit()
         
-        print(f"OK: Correo enviado exitosamente a: {', '.join(email_config['email_to'])}")
+        print(f"[EMAIL] ✓ Correo enviado exitosamente a: {', '.join(email_config['email_to'])}")
         return True
+        
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"[EMAIL] ERROR: Error de autenticación SMTP")
+        print(f"  Verifica que el email_password sea correcto (App Password de Gmail)")
+        print(f"  Error detallado: {e}")
+        return False
+    except smtplib.SMTPException as e:
+        print(f"[EMAIL] ERROR: Error SMTP al enviar correo")
+        print(f"  Error detallado: {e}")
+        return False
     except Exception as e:
-        print(f"ERROR: Error al enviar correo: {e}")
+        print(f"[EMAIL] ERROR: Error inesperado al enviar correo")
+        print(f"  Tipo de error: {type(e).__name__}")
+        print(f"  Mensaje: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
@@ -361,20 +396,37 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
                 print(f"ADVERTENCIA: No encontrado: {nombre}")
         
         if not rutas_graficos:
-            print("ERROR: No se encontraron imagenes del dashboard")
-            return 1
-        
-        print(f"OK: {len(rutas_graficos)} imagenes del dashboard listas para adjuntar")
+            print("ADVERTENCIA: No se encontraron imagenes del dashboard")
+            print("CONTINUANDO: Se enviara correo solo con resumen y Excel")
+        else:
+            print(f"OK: {len(rutas_graficos)} imagenes del dashboard listas para adjuntar")
         
         # Crear resumen HTML
         resumen_html = crear_resumen_html(conteo_df)
         
         # Enviar correo
         if enviar_email:
+            print("\n[EMAIL] Preparando envío de correo...")
             email_config = cargar_configuracion_email()
-            enviar_correo(email_config, rutas_graficos, resumen_html, excel_path=xlsx_path)
+            
+            print(f"[EMAIL] Configuración cargada:")
+            print(f"  SMTP Server: {email_config.get('smtp_server')}")
+            print(f"  SMTP Port: {email_config.get('smtp_port')}")
+            print(f"  From: {email_config.get('email_from')}")
+            print(f"  To: {', '.join(email_config.get('email_to', []))}")
+            print(f"  Imágenes adjuntas: {len(rutas_graficos)}")
+            print(f"  Excel adjunto: {'Sí' if excel_path and excel_path.exists() else 'No'}")
+            
+            resultado_email = enviar_correo(email_config, rutas_graficos, resumen_html, excel_path=xlsx_path)
+            
+            if resultado_email:
+                print("[EMAIL] ✓ Correo enviado exitosamente")
+            else:
+                print("[EMAIL] ✗ No se pudo enviar el correo")
+        else:
+            print("[EMAIL] Envío de email deshabilitado (--no-email)")
         
-        print("OK: Proceso completado exitosamente")
+        print("\n[PROCESO] ✓ Proceso completado exitosamente")
         return 0
         
     except Exception as e:
