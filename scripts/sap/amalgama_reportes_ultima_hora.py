@@ -180,25 +180,54 @@ def open_connection_or_reuse_new_session(system_label: str, client: str, user: s
     return app, connection, session
 
 def limpiar_sesion_sap(session):
-    """Limpia la sesión SAP antes de ejecutar el siguiente reporte"""
+    """Limpia la sesión SAP antes de ejecutar el siguiente reporte (modo robusto)"""
     try:
         logger.info("Limpiando sesión SAP...")
-        # Ir al menú principal
-        session.findById("wnd[0]").sendVKey(0)
-        session.findById("wnd[0]").sendCommand("/n")
-        session.findById("wnd[0]").sendVKey(0)
         
-        # Cerrar ventanas adicionales
-        for i in range(1, 10):
+        # Verificar que la sesión sigue activa
+        try:
+            wnd0 = session.findById("wnd[0]")
+        except Exception as e:
+            logger.warning(f"No se pudo acceder a wnd[0]: {e}")
+            return
+        
+        # Intentar ir al menú principal de manera suave
+        try:
+            wnd0.sendVKey(0)  # Enter primero
+            time.sleep(0.5)
+        except:
+            pass
+        
+        try:
+            # Comando /n para ir al menú principal
+            ok = session.findById("wnd[0]/tbar[0]/okcd")
+            ok.text = "/n"
+            wnd0.sendVKey(0)
+            time.sleep(1)
+        except Exception as e:
+            logger.warning(f"No se pudo ejecutar comando /n: {e}")
+            # Intentar método alternativo
             try:
-                session.findById(f"wnd[{i}]").close()
+                wnd0.sendCommand("/n")
+                time.sleep(1)
+            except:
+                pass
+        
+        # Cerrar ventanas adicionales de manera suave
+        for i in range(1, 5):
+            try:
+                wnd = session.findById(f"wnd[{i}]")
+                wnd.close()
+                time.sleep(0.3)
             except:
                 break
         
-        time.sleep(2)
-        logger.info("Sesión SAP limpiada correctamente")
+        time.sleep(1)
+        logger.info("✓ Sesión SAP limpiada correctamente")
+        
     except Exception as e:
-        logger.warning(f"Error al limpiar sesión: {e}")
+        logger.warning(f"⚠ Error al limpiar sesión: {e}")
+        logger.info("Continuando con el siguiente reporte...")
 
 def ensure_dir(path: Path) -> None:
     """Asegura que el directorio existe"""
@@ -336,18 +365,22 @@ def descargar_reporte_y_rep_plr(session) -> Path:
 def descargar_reporte_z_devo_alv(session) -> Path:
     """Descarga el reporte Z_DEVO_ALV"""
     logger.info("=" * 70)
-    logger.info("DESCARGANDO: Z_DEVO_ALV")
+    logger.info("DESCARGANDO: Z_DEVO_ALV (Y_DEVO_ALV)")
     logger.info("=" * 70)
     
     output_dir = OUTPUT_DIR / "Z_DEVO_ALV"
     ensure_dir(output_dir)
     filename = f"z_devo_alv_{FECHA_AYER_FILENAME}.txt"
     
+    # Parámetros correctos según z_devo_alv.py:
+    # - tcode: y_devo_alv (no z_devo_alv)
+    # - node_key: F00072 (no F00001)
+    # - row_number: 12 (no 0)
     full_path = z_devo_alv.run_z_devo_alv(
         session=session,
-        tcode="z_devo_alv",
-        node_key="F00001",
-        row_number=0,
+        tcode="y_devo_alv",
+        node_key="F00072",
+        row_number=12,
         output_path=str(output_dir),
         filename=filename,
         encoding="0000",
@@ -371,12 +404,15 @@ def descargar_reporte_zhbo(session) -> Path:
     ensure_dir(output_dir)
     filename = f"zhbo_{FECHA_AYER_FILENAME}.txt"
     
+    # Parámetros correctos según zhbo.py:
+    # - row_number: 11 (no 1)
+    # - orden: session, row_number, output_path, filename, date_str
     full_path = zhbo.run_zhbo(
         session=session,
-        row_number=1,
-        date_str=FECHA_AYER,
+        row_number=11,
         output_path=str(output_dir),
         filename=filename,
+        date_str=FECHA_AYER,
         encoding="0000",
         debug=False
     )
@@ -452,8 +488,12 @@ def descargar_reporte_zsd_incidencias(session) -> Path:
     ensure_dir(output_dir)
     filename = f"zsd_incidencias_{FECHA_AYER_FILENAME}.txt"
     
+    # Parámetros correctos según zsd_incidencias.py:
+    # - row_number: 12 (por defecto)
+    # - orden: session, row_number, output_path, filename
     full_path = zsd_incidencias.run_zsd_incidencias(
         session=session,
+        row_number=12,
         output_path=str(output_dir),
         filename=filename,
         encoding="0000",

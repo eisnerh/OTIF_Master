@@ -85,7 +85,7 @@ ejecutar_rep_plr.bat
 2. **Y_DEV_45** - Reporte Y_DEV_45
 3. **Y_DEV_82** - Reporte Y_DEV_82
 4. **Y_REP_PLR** - Planeamiento
-5. **Z_DEVO_ALV** - Devoluciones ALV
+5. **Z_DEVO_ALV** (Y_DEVO_ALV) - Devoluciones ALV
 6. **ZHBO** - HBO
 7. **ZRED** - Red
 8. **ZRESGUIAS** - Resguardo de Guías
