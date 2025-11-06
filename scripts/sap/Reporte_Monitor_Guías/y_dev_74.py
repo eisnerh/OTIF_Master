@@ -387,7 +387,7 @@ def parse_args():
     p = argparse.ArgumentParser(description="Ejecuta Y_DEV_74 y exporta a Excel (robusto/homologado).")
     p.add_argument("--tcode", default="y_dev_42000074", help='Transacción a ejecutar (por defecto: "y_dev_42000074")')
     p.add_argument("--node", default="F00119", help='Nodo del árbol a abrir (por defecto: "F00119")')
-    p.add_argument("-r", "--row", type=int, default=25, help="Fila del ALV a seleccionar (por defecto: 25)")
+    p.add_argument("-r", "--row", type=int, default=4, help="Fila del ALV a seleccionar (por defecto: 25)")
     p.add_argument("-o", "--output", default=r"C:\\data\\SAP_Extraction\\y_dev_74", help="Ruta de salida (por defecto: C:\\data\\SAP_Extraction\\y_dev_74)")
     p.add_argument("-f", "--filename", help="Nombre del archivo (si no se especifica, se genera automáticamente con fecha)")
     p.add_argument("--date", help='Fecha para SP$00002-LOW (formato "dd.mm.yyyy"). Si se omite, usa AYER.')
