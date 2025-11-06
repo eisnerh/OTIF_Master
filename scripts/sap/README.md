@@ -93,34 +93,69 @@ ejecutar_rep_plr.bat
 
 **Características**:
 - ✅ Descarga secuencial de 9 reportes
+- ✅ **Conversión automática TXT → Excel**
+- ✅ Transformaciones específicas por reporte
 - ✅ Fecha de ayer automática
 - ✅ Carpetas separadas por reporte
-- ✅ Archivos .txt para compatibilidad
 - ✅ Limpieza de sesión entre reportes (10 seg)
 - ✅ Logs detallados con resumen final
 - ✅ Manejo robusto de errores
 
-**Uso**:
+**Uso - Recomendado**:
 ```bash
-# Método 1: Ejecutar .bat
+# Ejecuta descarga + conversión automática a Excel
 ejecutar_reportes_ultima_hora.bat
 
-# Método 2: Python directo
+# O con Python:
 python amalgama_reportes_ultima_hora.py
 ```
+
+**Uso Alternativo - Solo Conversión**:
+```bash
+# Si ya tienes archivos .txt y solo quieres convertirlos:
+procesar_txt_a_excel.bat
+
+# O con Python:
+python procesar_txt_a_excel.py
+```
+
+**Flujo Automático Integrado:**
+1. 📥 Descarga reporte de SAP → archivo `.txt`
+2. 🔄 Convierte automáticamente → archivo `.xlsx`
+3. ⏱️ Espera 10 segundos
+4. 🧹 Limpia sesión SAP
+5. 🔁 Repite para el siguiente reporte
 
 **Estructura de salida**:
 ```
 C:\data\SAP_Extraction\reportes_ultima_hora\
-├── Y_DEV_74/          → Monitor_Guias_YYYYMMDD.txt
-├── Y_DEV_45/          → y_dev_45_YYYYMMDD.txt
-├── Y_DEV_82/          → y_dev_82_YYYYMMDD.txt
-├── Y_REP_PLR/         → rep_plr_YYYYMMDD.txt
-├── Z_DEVO_ALV/        → z_devo_alv_YYYYMMDD.txt
-├── ZHBO/              → zhbo_YYYYMMDD.txt
-├── ZRED/              → zred_YYYYMMDD.txt
-├── ZRESGUIAS/         → zresguias_YYYYMMDD.txt
-└── ZSD_INCIDENCIAS/   → zsd_incidencias_YYYYMMDD.txt
+├── Y_DEV_74/
+│   ├── Monitor_Guias_YYYYMMDD.txt   (descargado de SAP)
+│   └── Monitor_Guias_YYYYMMDD.xlsx  (procesado)
+├── Y_DEV_45/
+│   ├── y_dev_45_YYYYMMDD.txt
+│   └── y_dev_45_YYYYMMDD.xlsx
+├── Y_DEV_82/
+│   ├── y_dev_82_YYYYMMDD.txt
+│   └── y_dev_82_YYYYMMDD.xlsx
+├── Y_REP_PLR/
+│   ├── rep_plr_YYYYMMDD.txt
+│   └── rep_plr_YYYYMMDD.xlsx
+├── Z_DEVO_ALV/
+│   ├── z_devo_alv_YYYYMMDD.txt
+│   └── z_devo_alv_YYYYMMDD.xlsx
+├── ZHBO/
+│   ├── zhbo_YYYYMMDD.txt
+│   └── zhbo_YYYYMMDD.xlsx
+├── ZRED/
+│   ├── zred_YYYYMMDD.txt
+│   └── zred_YYYYMMDD.xlsx
+├── ZRESGUIAS/
+│   ├── zresguias_YYYYMMDD.txt
+│   └── zresguias_YYYYMMDD.xlsx
+└── ZSD_INCIDENCIAS/
+    ├── zsd_incidencias_YYYYMMDD.txt
+    └── zsd_incidencias_YYYYMMDD.xlsx
 ```
 
 **Tiempo estimado**: 10-15 minutos (9 reportes)

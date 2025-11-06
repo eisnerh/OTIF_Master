@@ -1,11 +1,10 @@
 @echo off
-REM Script batch para ejecutar amalgama_reportes_ultima_hora.py
-REM Descarga múltiples reportes de SAP con fecha de ayer
-REM Este archivo puede ejecutarse manualmente o desde el Programador de Tareas de Windows
+REM Script batch para procesar archivos .txt a Excel
+REM Convierte todos los archivos .txt de reportes SAP a Excel con transformaciones
 
-title Reportes Última Hora - Descarga Automática
+title Procesar TXT a Excel - Reportes SAP
 echo ========================================
-echo    REPORTES ULTIMA HORA - DESCARGA
+echo    PROCESAR TXT A EXCEL - REPORTES SAP
 echo ========================================
 echo.
 
@@ -29,32 +28,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Verificar que existe el archivo credentials.ini
-if not exist "credentials.ini" (
-    echo ERROR: No se encontró el archivo credentials.ini
-    echo Por favor crea el archivo a partir de credentials.ini.example
-    pause
-    exit /b 1
-)
-
-REM Verificar que SAP está abierto
-echo [INFO] Asegúrate de que SAP esté abierto y la sesión iniciada
-echo.
-echo Presiona cualquier tecla para continuar...
-pause >nul
-echo.
-
 REM Ejecutar el script Python
-echo Ejecutando descarga y procesamiento de reportes...
+echo Procesando archivos .txt a Excel...
 echo Fecha/Hora: %date% %time%
 echo Usando Python: %PYTHON_EXE%
 echo.
-echo [INFO] Esto puede tomar 10-15 minutos (9 reportes)
-echo [INFO] El script descargara archivos .txt de SAP
-echo [INFO] Y los convertira automaticamente a Excel (.xlsx)
-echo [INFO] Ubicacion: C:\data\SAP_Extraction\reportes_ultima_hora
+echo [INFO] Esto procesará todos los archivos .txt en:
+echo C:\data\SAP_Extraction\reportes_ultima_hora\
 echo.
-"%PYTHON_EXE%" amalgama_reportes_ultima_hora.py
+"%PYTHON_EXE%" procesar_txt_a_excel.py
 
 REM Capturar el código de salida
 set EXIT_CODE=%errorlevel%
@@ -62,19 +44,14 @@ set EXIT_CODE=%errorlevel%
 if %EXIT_CODE% equ 0 (
     echo.
     echo ========================================
-    echo Proceso completado exitosamente
+    echo Procesamiento completado exitosamente
     echo ========================================
-    echo Los reportes se guardaron en:
-    echo C:\data\SAP_Extraction\reportes_ultima_hora
-    echo.
-    echo Cada carpeta contiene:
-    echo   - archivo.txt  ^(original de SAP^)
-    echo   - archivo.xlsx ^(procesado para analisis^)
+    echo Los archivos Excel se generaron en las carpetas correspondientes
     echo.
 ) else (
     echo.
     echo ========================================
-    echo ERROR: El proceso fallo con codigo %EXIT_CODE%
+    echo ERROR: El procesamiento falló con código %EXIT_CODE%
     echo ========================================
     echo Revisa los mensajes de error anteriores
     echo.

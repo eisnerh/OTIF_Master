@@ -3,10 +3,12 @@
 Script: amalgama_reportes_ultima_hora.py
 Descripción:
   - Descarga múltiples reportes de SAP secuencialmente
+  - Convierte automáticamente archivos .txt a Excel (.xlsx)
+  - Aplica transformaciones específicas por reporte
   - Limpia datos residuales entre cada ejecución
   - Usa la fecha de ayer para todos los reportes
-  - Genera archivos .txt
-  - Guarda en la carpeta reportes_ultima_hora
+  - Guarda en carpetas separadas por reporte
+  - Flujo completo: Descarga SAP → TXT → Excel procesado
 """
 from __future__ import annotations
 
@@ -48,6 +50,12 @@ try:
     import win32com.client
 except Exception:
     print("ERROR: No se pudo importar pywin32. Instala con: pip install pywin32")
+    sys.exit(1)
+
+try:
+    import pandas as pd
+except ImportError:
+    print("ERROR: No se pudo importar pandas. Instala con: pip install pandas openpyxl")
     sys.exit(1)
 
 # Logging
@@ -212,13 +220,166 @@ def wait_for_file(file_path: Path, timeout: int = 60) -> None:
             raise FileNotFoundError(f"Archivo no encontrado en {timeout}s: {file_path}")
         time.sleep(1)
 
-@dataclass
-class ReporteConfig:
-    """Configuración de un reporte a descargar"""
-    nombre: str  # Nombre descriptivo del reporte
-    tcode: str   # Código de transacción
-    filename: str  # Nombre del archivo de salida
-    # Agregar más campos según sea necesario para cada tipo de reporte
+# ==================== FUNCIONES DE PROCESAMIENTO TXT → EXCEL ====================
+
+def leer_archivo_txt(ruta_txt: Path) -> pd.DataFrame:
+    """Lee un archivo .txt tabulado y lo convierte en DataFrame"""
+    try:
+        with open(ruta_txt, 'r', encoding='utf-8', errors='replace') as f:
+            lineas = f.readlines()
+        data = [linea.rstrip('\r\n').split('\t') for linea in lineas]
+        df = pd.DataFrame(data)
+        return df
+    except Exception as e:
+        raise RuntimeError(f"Error al leer {ruta_txt}: {e}")
+
+def procesar_y_dev_45_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """Y_DEV_45: Eliminar cols A,C | fila 6 | primeras 4 filas"""
+    if len(df) > 5:
+        df = df.drop(index=5).reset_index(drop=True)
+    if len(df) > 4:
+        df = df.iloc[4:].reset_index(drop=True)
+    columnas_mantener = [i for i in range(len(df.columns)) if i not in [0, 2]]
+    df = df.iloc[:, columnas_mantener]
+    return df
+
+def procesar_monitor_guias_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """Monitor_Guias: Eliminar cols A,C | fila 6 | primeras 4 filas"""
+    if len(df) > 5:
+        df = df.drop(index=5).reset_index(drop=True)
+    if len(df) > 4:
+        df = df.iloc[4:].reset_index(drop=True)
+    columnas_mantener = [i for i in range(len(df.columns)) if i not in [0, 2]]
+    df = df.iloc[:, columnas_mantener]
+    return df
+
+def procesar_y_dev_82_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """Y_DEV_82: Eliminar cols A,D | fila 6 | primeras 4 filas"""
+    if len(df) > 5:
+        df = df.drop(index=5).reset_index(drop=True)
+    if len(df) > 4:
+        df = df.iloc[4:].reset_index(drop=True)
+    columnas_mantener = [i for i in range(len(df.columns)) if i not in [0, 3]]
+    df = df.iloc[:, columnas_mantener]
+    return df
+
+def procesar_rep_plr_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """REP_PLR: Eliminar col A | fila 5 | primeras 4 filas | filtrar H=1"""
+    if len(df) > 4:
+        df = df.drop(index=4).reset_index(drop=True)
+    if len(df) > 4:
+        df = df.iloc[4:].reset_index(drop=True)
+    if len(df.columns) > 0:
+        df = df.iloc[:, 1:]
+    if len(df.columns) > 7 and len(df) > 0:
+        df = df[df.iloc[:, 7] == "1"]
+    return df
+
+def procesar_zhbo_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """ZHBO: Eliminar cols A,B | fila 6 | primeras 4 filas"""
+    if len(df) > 5:
+        df = df.drop(index=5).reset_index(drop=True)
+    if len(df) > 4:
+        df = df.iloc[4:].reset_index(drop=True)
+    if len(df.columns) > 2:
+        df = df.iloc[:, 2:]
+    return df
+
+def procesar_zred_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """ZRED: Eliminar col A | fila 5 | primeras 3 filas"""
+    if len(df) > 4:
+        df = df.drop(index=4).reset_index(drop=True)
+    if len(df) > 3:
+        df = df.iloc[3:].reset_index(drop=True)
+    if len(df.columns) > 0:
+        df = df.iloc[:, 1:]
+    return df
+
+def procesar_zresguias_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """ZRESGUIAS: Eliminar cols A,B,O | fila 6 | primeras 4 filas"""
+    if len(df) > 5:
+        df = df.drop(index=5).reset_index(drop=True)
+    if len(df) > 4:
+        df = df.iloc[4:].reset_index(drop=True)
+    columnas_mantener = [i for i in range(len(df.columns)) if i not in [0, 1, 14]]
+    df = df.iloc[:, columnas_mantener]
+    return df
+
+def procesar_z_devo_alv_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """Z_DEVO_ALV: Eliminar col A | fila 5 | primeras 3 filas"""
+    if len(df) > 4:
+        df = df.drop(index=4).reset_index(drop=True)
+    if len(df) > 3:
+        df = df.iloc[3:].reset_index(drop=True)
+    if len(df.columns) > 0:
+        df = df.iloc[:, 1:]
+    return df
+
+def procesar_zsd_incidencias_excel(df: pd.DataFrame) -> pd.DataFrame:
+    """ZSD_INCIDENCIAS: Procesamiento básico"""
+    if len(df) > 5:
+        df = df.iloc[5:].reset_index(drop=True)
+    return df
+
+def convertir_txt_a_excel(ruta_txt: Path, procesador_nombre: str) -> Path:
+    """Convierte un archivo .txt a Excel aplicando las transformaciones correspondientes"""
+    
+    procesadores = {
+        'Y_DEV_45': procesar_y_dev_45_excel,
+        'Y_DEV_74': procesar_monitor_guias_excel,
+        'Y_DEV_82': procesar_y_dev_82_excel,
+        'Y_REP_PLR': procesar_rep_plr_excel,
+        'ZHBO': procesar_zhbo_excel,
+        'ZRED': procesar_zred_excel,
+        'ZRESGUIAS': procesar_zresguias_excel,
+        'Z_DEVO_ALV': procesar_z_devo_alv_excel,
+        'ZSD_INCIDENCIAS': procesar_zsd_incidencias_excel,
+    }
+    
+    try:
+        logger.info(f"  Convirtiendo a Excel: {ruta_txt.name}")
+        
+        # Leer archivo
+        df = leer_archivo_txt(ruta_txt)
+        
+        # Aplicar transformaciones
+        procesador = procesadores.get(procesador_nombre)
+        if procesador:
+            df_procesado = procesador(df)
+            logger.info(f"    Transformaciones aplicadas: {len(df_procesado)} filas x {len(df_procesado.columns)} cols")
+        else:
+            df_procesado = df
+            logger.warning(f"    No se encontró procesador para {procesador_nombre}, usando datos sin procesar")
+        
+        # Generar archivo Excel
+        ruta_excel = ruta_txt.with_suffix('.xlsx')
+        df_procesado.to_excel(ruta_excel, index=False, header=False, engine='openpyxl')
+        
+        logger.info(f"  ✓ Excel generado: {ruta_excel.name}")
+        return ruta_excel
+        
+    except Exception as e:
+        logger.error(f"  ✗ Error al convertir a Excel: {e}")
+        return None
+
+# ==================== FIN FUNCIONES DE PROCESAMIENTO ====================
+
+def descargar_y_procesar(session, funcion_descarga, nombre_procesador: str):
+    """Wrapper que descarga un reporte y automáticamente lo convierte a Excel"""
+    
+    # Paso 1: Descargar archivo .txt
+    ruta_txt = funcion_descarga(session)
+    
+    if ruta_txt is None:
+        logger.error(f"  ✗ No se pudo descargar el reporte")
+        return None, None
+    
+    # Paso 2: Convertir a Excel
+    ruta_excel = convertir_txt_a_excel(ruta_txt, nombre_procesador)
+    
+    return ruta_txt, ruta_excel
+
+# ==================== FUNCIONES DE DESCARGA ====================
 
 def descargar_reporte_y_dev_74(session) -> Path:
     """Descarga el reporte Y_DEV_74 (Monitor de Guías)"""
@@ -507,32 +668,43 @@ def main() -> int:
         reportes_descargados = []
         reportes_fallidos = []
         
-        # Lista de reportes a descargar (nombre, función)
+        # Lista de reportes a descargar (nombre, función de descarga, nombre del procesador)
         reportes = [
-            ("Y_DEV_74 - Monitor de Guías", descargar_reporte_y_dev_74),
-            ("Y_DEV_45", descargar_reporte_y_dev_45),
-            ("Y_DEV_82", descargar_reporte_y_dev_82),
-            ("Y_REP_PLR - Planeamiento", descargar_reporte_y_rep_plr),
-            ("Z_DEVO_ALV", descargar_reporte_z_devo_alv),
-            ("ZHBO", descargar_reporte_zhbo),
-            ("ZRED", descargar_reporte_zred),
-            ("ZRESGUIAS - Resguardo de Guías", descargar_reporte_zresguias),
-            ("ZSD_INCIDENCIAS", descargar_reporte_zsd_incidencias),
+            ("Y_DEV_74 - Monitor de Guías", descargar_reporte_y_dev_74, "Y_DEV_74"),
+            ("Y_DEV_45", descargar_reporte_y_dev_45, "Y_DEV_45"),
+            ("Y_DEV_82", descargar_reporte_y_dev_82, "Y_DEV_82"),
+            ("Y_REP_PLR - Planeamiento", descargar_reporte_y_rep_plr, "Y_REP_PLR"),
+            ("Z_DEVO_ALV", descargar_reporte_z_devo_alv, "Z_DEVO_ALV"),
+            ("ZHBO", descargar_reporte_zhbo, "ZHBO"),
+            ("ZRED", descargar_reporte_zred, "ZRED"),
+            ("ZRESGUIAS - Resguardo de Guías", descargar_reporte_zresguias, "ZRESGUIAS"),
+            ("ZSD_INCIDENCIAS", descargar_reporte_zsd_incidencias, "ZSD_INCIDENCIAS"),
         ]
         
         total_reportes = len(reportes)
-        logger.info(f"Total de reportes a descargar: {total_reportes}")
+        logger.info(f"Total de reportes a descargar y procesar: {total_reportes}")
         logger.info("=" * 70)
         
-        # Descargar cada reporte
-        for i, (nombre, funcion) in enumerate(reportes, 1):
+        # Descargar y procesar cada reporte
+        for i, (nombre, funcion, procesador) in enumerate(reportes, 1):
             try:
                 logger.info(f"\n[{i}/{total_reportes}] Procesando: {nombre}")
-                archivo = funcion(session)
-                reportes_descargados.append((nombre, archivo))
-                logger.info(f"✓ Reporte {nombre} descargado exitosamente")
+                
+                # Descargar archivo .txt
+                archivo_txt = funcion(session)
+                
+                # Convertir a Excel
+                archivo_excel = convertir_txt_a_excel(archivo_txt, procesador)
+                
+                if archivo_excel:
+                    reportes_descargados.append((nombre, archivo_txt, archivo_excel))
+                    logger.info(f"✓ Reporte {nombre} completado (TXT + Excel)")
+                else:
+                    reportes_descargados.append((nombre, archivo_txt, None))
+                    logger.warning(f"⚠ Reporte {nombre} descargado pero sin Excel")
+                    
             except Exception as e:
-                logger.error(f"✗ Error al descargar {nombre}: {e}")
+                logger.error(f"✗ Error al procesar {nombre}: {e}")
                 reportes_fallidos.append((nombre, str(e)))
             
             # Esperar y limpiar sesión entre reportes (excepto después del último)
@@ -552,9 +724,17 @@ def main() -> int:
         
         if reportes_descargados:
             logger.info("\n✓ REPORTES DESCARGADOS EXITOSAMENTE:")
-            for nombre, archivo in reportes_descargados:
+            for item in reportes_descargados:
+                nombre = item[0]
+                archivo_txt = item[1]
+                archivo_excel = item[2] if len(item) > 2 else None
+                
                 logger.info(f"  • {nombre}")
-                logger.info(f"    └─ {archivo.name}")
+                logger.info(f"    ├─ TXT:  {archivo_txt.name}")
+                if archivo_excel:
+                    logger.info(f"    └─ XLSX: {archivo_excel.name}")
+                else:
+                    logger.info(f"    └─ XLSX: (no generado)")
         
         if reportes_fallidos:
             logger.info("\n✗ REPORTES CON ERRORES:")
@@ -565,13 +745,21 @@ def main() -> int:
         logger.info("\n" + "=" * 70)
         logger.info(f"Directorio de salida: {OUTPUT_DIR}")
         logger.info(f"Hora de finalización: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.info("")
+        logger.info("Archivos generados por carpeta:")
+        logger.info("  Cada carpeta contiene:")
+        logger.info("    • archivo.txt  (original de SAP)")
+        logger.info("    • archivo.xlsx (procesado y listo para análisis)")
         
         if len(reportes_fallidos) == 0:
-            logger.info("PROCESO COMPLETADO EXITOSAMENTE - TODOS LOS REPORTES DESCARGADOS")
+            logger.info("\n✓ PROCESO COMPLETADO EXITOSAMENTE")
+            logger.info("  Todos los reportes descargados y procesados a Excel")
         elif len(reportes_descargados) > 0:
-            logger.info("PROCESO COMPLETADO CON ADVERTENCIAS - ALGUNOS REPORTES FALLARON")
+            logger.info("\n⚠ PROCESO COMPLETADO CON ADVERTENCIAS")
+            logger.info(f"  {len(reportes_descargados)} reportes exitosos, {len(reportes_fallidos)} fallidos")
         else:
-            logger.info("PROCESO FALLIDO - NO SE DESCARGÓ NINGÚN REPORTE")
+            logger.info("\n✗ PROCESO FALLIDO")
+            logger.info("  No se descargó ningún reporte")
         
         logger.info("=" * 70)
         

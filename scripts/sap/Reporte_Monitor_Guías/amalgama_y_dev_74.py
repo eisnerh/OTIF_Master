@@ -23,11 +23,12 @@ from pathlib import Path
 import configparser
 import pandas as pd
 
-# Agregar el directorio padre al sys.path para poder importar y_dev_74
+# Agregar Reportes_Ultima_Hora al sys.path para poder importar y_dev_74
 SCRIPT_DIR = Path(__file__).parent
 PARENT_DIR = SCRIPT_DIR.parent  # scripts/sap/
-if str(PARENT_DIR) not in sys.path:
-    sys.path.insert(0, str(PARENT_DIR))
+REPORTES_DIR = PARENT_DIR / "Reportes_Ultima_Hora"
+if str(REPORTES_DIR) not in sys.path:
+    sys.path.insert(0, str(REPORTES_DIR))
 
 def load_credentials() -> dict:
     """Carga credenciales desde credentials.ini ubicado junto a este script.
@@ -88,9 +89,9 @@ try:
     import y_dev_74 as ydev
 except ImportError as e:
     print(f"ERROR: No se pudo importar 'y_dev_74.py'.")
-    print(f"Se buscó en: {PARENT_DIR}")
+    print(f"Se buscó en: {REPORTES_DIR}")
     print(f"Detalle: {e}")
-    print(f"Verifica que el archivo 'y_dev_74.py' existe en: {PARENT_DIR / 'y_dev_74.py'}")
+    print(f"Verifica que el archivo 'y_dev_74.py' existe en: {REPORTES_DIR / 'y_dev_74.py'}")
     sys.exit(1)
 except Exception as e:
     print(f"ERROR inesperado al importar 'y_dev_74.py': {e}")
