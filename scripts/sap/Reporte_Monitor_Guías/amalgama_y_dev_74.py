@@ -318,7 +318,8 @@ def run_once(cfg: RunConfig) -> Path:
                 # Esperar a que el archivo esté completamente escrito
                 time.sleep(2)
                 # Buscar el archivo PNG generado
-                dashboard_png = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
+                dashboard_png = list(xlsx_path.parent.glob("dashboard_*.png"))
+                
                 if dashboard_png:
                     dashboard_mas_reciente = max(dashboard_png, key=lambda p: p.stat().st_mtime)
                     logger.info(f"[ARCHIVO] Dashboard: {dashboard_mas_reciente.name}")

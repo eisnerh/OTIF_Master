@@ -238,49 +238,12 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
     html += """
             </table>
             
-            <h2>Archivos Adjuntos</h2>
+            <h2> </h2>
             <ul>
-                <li><strong>Imagen 1A - Detalle GAM (dashboard_parte1a_detalle_gam.png)</strong>
+                <li><strong></strong>
                     <ul>
-                        <li>KPIs por región (GAM, RURAL, VYD, SPE, Total)</li>
-                        <li>Tabla detallada zona x hora solo para zonas GAM</li>
-                        <li>Mayor legibilidad con menos zonas por imagen</li>
                     </ul>
                 </li>
-                <li><strong>Imagen 1B - Detalle RURAL y CT (dashboard_parte1b_detalle_rural_ct.png)</strong>
-                    <ul>
-                        <li>KPIs por región (GAM, RURAL, VYD, SPE, Total)</li>
-                        <li>Tabla detallada zona x hora para RURAL, CT01 y CT02</li>
-                        <li>Incluye todas las zonas rurales y centros de distribución</li>
-                    </ul>
-                </li>
-                <li><strong>Imagen 2 - Resumen Completo (dashboard_parte2_resumen.png)</strong>
-                    <ul>
-                        <li>Tabla resumen: GAM, RURAL, CT01, CT02 por hora</li>
-                        <li>Vista consolidada de todas las regiones</li>
-                    </ul>
-                </li>
-                <li><strong>Imagen 3 - Tendencias (dashboard_parte3_tendencias.png)</strong>
-                    <ul>
-                        <li>Gráfico de líneas con valores numéricos</li>
-                        <li>Muestra GAM, RURAL y CT01 (excluye CT02 para mejor legibilidad)</li>
-                        <li>Visualiza el comportamiento de cada región a lo largo del día</li>
-                    </ul>
-                </li>
-                <li><strong>Archivo Excel</strong>: Datos procesados completos para análisis adicional</li>
-            </ul>
-            
-            <h2>Cómo leer el Dashboard Regional</h2>
-            <p style="margin-top: 10px; padding: 10px; background-color: #FFF3E0; border-left: 4px solid #FF9800;">
-                <strong>Tarjetas KPI:</strong> Muestran el total de guías por región (GAM, RURAL, VYD, SPE) y el total general.<br>
-                <strong>Tabla Detallada GAM:</strong> Muestra cantidad de guías por zona GAM en cada hora.<br>
-                <strong>Tabla Detallada RURAL+CT:</strong> Muestra cantidad de guías por zona RURAL, CT01 y CT02 en cada hora.<br>
-                <strong>Tabla Resumen:</strong> Consolidado de todas las regiones por hora (GAM, RURAL, CT01, CT02).<br>
-                <strong>Gráfico de Tendencias:</strong> Visualiza el comportamiento de GAM, RURAL y CT01 con valores numéricos.
-            </p>
-            <p style="margin-top: 10px; padding: 10px; background-color: #E8F5E9; border-left: 4px solid #4CAF50;">
-                <strong>Nota:</strong> Las tablas de detalle están separadas en dos imágenes para mejor legibilidad. El gráfico de tendencias excluye CT02 para simplificar la visualización.
-            </p>
         </div>
     </body>
     </html>

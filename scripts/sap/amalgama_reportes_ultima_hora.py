@@ -512,7 +512,7 @@ def descargar_reporte_z_devo_alv(session) -> Path:
         session=session,
         tcode="y_devo_alv",
         node_key="F00072",
-        row_number=12,
+        row_number=13,
         output_path=str(output_dir),
         filename=filename,
         encoding="0000",
