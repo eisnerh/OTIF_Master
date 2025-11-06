@@ -72,6 +72,79 @@ ejecutar_rep_plr.bat
 
 ---
 
+### Reportes de Última Hora
+**Propósito**: Descarga automática de 9 reportes SAP con fecha de AYER
+
+**Scripts**:
+- `amalgama_reportes_ultima_hora.py` - Script principal
+- `ejecutar_reportes_ultima_hora.bat` - Ejecutor Windows
+- Módulos en `Reportes_Ultima_Hora/` (9 scripts)
+
+**Reportes Incluidos** (todos con fecha de ayer):
+1. **Y_DEV_74** - Monitor de Guías
+2. **Y_DEV_45** - Reporte Y_DEV_45
+3. **Y_DEV_82** - Reporte Y_DEV_82
+4. **Y_REP_PLR** - Planeamiento
+5. **Z_DEVO_ALV** - Devoluciones ALV
+6. **ZHBO** - HBO
+7. **ZRED** - Red
+8. **ZRESGUIAS** - Resguardo de Guías
+9. **ZSD_INCIDENCIAS** - Incidencias
+
+**Características**:
+- ✅ Descarga secuencial de 9 reportes
+- ✅ Fecha de ayer automática
+- ✅ Carpetas separadas por reporte
+- ✅ Archivos .txt para compatibilidad
+- ✅ Limpieza de sesión entre reportes (10 seg)
+- ✅ Logs detallados con resumen final
+- ✅ Manejo robusto de errores
+
+**Uso**:
+```bash
+# Método 1: Ejecutar .bat
+ejecutar_reportes_ultima_hora.bat
+
+# Método 2: Python directo
+python amalgama_reportes_ultima_hora.py
+```
+
+**Estructura de salida**:
+```
+C:\data\SAP_Extraction\reportes_ultima_hora\
+├── Y_DEV_74/          → Monitor_Guias_YYYYMMDD.txt
+├── Y_DEV_45/          → y_dev_45_YYYYMMDD.txt
+├── Y_DEV_82/          → y_dev_82_YYYYMMDD.txt
+├── Y_REP_PLR/         → rep_plr_YYYYMMDD.txt
+├── Z_DEVO_ALV/        → z_devo_alv_YYYYMMDD.txt
+├── ZHBO/              → zhbo_YYYYMMDD.txt
+├── ZRED/              → zred_YYYYMMDD.txt
+├── ZRESGUIAS/         → zresguias_YYYYMMDD.txt
+└── ZSD_INCIDENCIAS/   → zsd_incidencias_YYYYMMDD.txt
+```
+
+**Tiempo estimado**: 10-15 minutos (9 reportes)
+
+**Requisitos previos**:
+1. SAP abierto y con sesión iniciada
+2. Credenciales configuradas en `credentials.ini`
+3. Python 3.7+ con pywin32, pandas, openpyxl
+
+**Configuración**:
+```python
+# En amalgama_reportes_ultima_hora.py:
+OUTPUT_DIR = Path(r"C:/data/SAP_Extraction/reportes_ultima_hora")
+TIEMPO_ESPERA_ENTRE_REPORTES = 10  # segundos
+```
+
+**Programación automática**:
+- Usar Programador de Tareas de Windows
+- Ejecutar `ejecutar_reportes_ultima_hora.bat`
+- Horario recomendado: diariamente a las 7:00 AM
+- Importante: SAP debe estar abierto antes de ejecutar
+
+---
+
 ## Regiones y Zonas
 
 ### GAM (9 zonas):
@@ -177,7 +250,7 @@ Ver archivos específicos:
 
 ---
 
-**Versión**: 3.0.0  
-**Última actualización**: 2025-11-05  
-**Estado**: [OK] Sistema completo y optimizado
+**Versión**: 4.0.0  
+**Última actualización**: 2024-11-06  
+**Estado**: [OK] Sistema completo con 9 reportes de última hora integrados
 
