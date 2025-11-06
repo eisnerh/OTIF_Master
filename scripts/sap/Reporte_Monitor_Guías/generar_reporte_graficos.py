@@ -240,27 +240,30 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             
             <h2>Archivos Adjuntos</h2>
             <ul>
-                <li><strong>Imagen 1 - Detalle por Zona (dashboard_parte1_detalle.png)</strong>
+                <li><strong>Imagen 1A - Detalle GAM (dashboard_parte1a_detalle_gam.png)</strong>
                     <ul>
                         <li>KPIs por región (GAM, RURAL, VYD, SPE, Total)</li>
-                        <li>Tabla detallada zona x hora (22 zonas × horas 14:00-23:00)</li>
+                        <li>Tabla detallada zona x hora solo para zonas GAM</li>
+                        <li>Mayor legibilidad con menos zonas por imagen</li>
                     </ul>
                 </li>
-                <li><strong>Imagen 2A - Resumen GAM, CT01 y CT02 (dashboard_parte2a_resumen_gam_ct.png)</strong>
+                <li><strong>Imagen 1B - Detalle RURAL y CT (dashboard_parte1b_detalle_rural_ct.png)</strong>
                     <ul>
-                        <li>Tabla resumen: GAM, CT01 (SPE), CT02 (VYD) por hora</li>
-                        <li>Suma de todas las zonas de GAM y centros de distribución</li>
+                        <li>KPIs por región (GAM, RURAL, VYD, SPE, Total)</li>
+                        <li>Tabla detallada zona x hora para RURAL, CT01 y CT02</li>
+                        <li>Incluye todas las zonas rurales y centros de distribución</li>
                     </ul>
                 </li>
-                <li><strong>Imagen 2B - Resumen RURAL (dashboard_parte2b_resumen_rural.png)</strong>
+                <li><strong>Imagen 2 - Resumen Completo (dashboard_parte2_resumen.png)</strong>
                     <ul>
-                        <li>Tabla resumen: RURAL por hora</li>
-                        <li>Suma de todas las zonas rurales</li>
+                        <li>Tabla resumen: GAM, RURAL, CT01, CT02 por hora</li>
+                        <li>Vista consolidada de todas las regiones</li>
                     </ul>
                 </li>
                 <li><strong>Imagen 3 - Tendencias (dashboard_parte3_tendencias.png)</strong>
                     <ul>
-                        <li>Gráfico de líneas comparativo</li>
+                        <li>Gráfico de líneas con valores numéricos</li>
+                        <li>Muestra GAM, RURAL y CT01 (excluye CT02 para mejor legibilidad)</li>
                         <li>Visualiza el comportamiento de cada región a lo largo del día</li>
                     </ul>
                 </li>
@@ -270,13 +273,13 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             <h2>Cómo leer el Dashboard Regional</h2>
             <p style="margin-top: 10px; padding: 10px; background-color: #FFF3E0; border-left: 4px solid #FF9800;">
                 <strong>Tarjetas KPI:</strong> Muestran el total de guías por región (GAM, RURAL, VYD, SPE) y el total general.<br>
-                <strong>Tabla Detallada "Horas":</strong> Muestra la cantidad de guías por zona en cada hora del día (22 zonas × horas).<br>
-                <strong>Tabla Resumen GAM/CT:</strong> Suma de todas las zonas de GAM, CT01 (SPE) y CT02 (VYD) por hora.<br>
-                <strong>Tabla Resumen RURAL:</strong> Suma de todas las zonas rurales por hora.<br>
-                <strong>Gráfico de Tendencias:</strong> Visualiza el comportamiento de cada región a lo largo del día.
+                <strong>Tabla Detallada GAM:</strong> Muestra cantidad de guías por zona GAM en cada hora.<br>
+                <strong>Tabla Detallada RURAL+CT:</strong> Muestra cantidad de guías por zona RURAL, CT01 y CT02 en cada hora.<br>
+                <strong>Tabla Resumen:</strong> Consolidado de todas las regiones por hora (GAM, RURAL, CT01, CT02).<br>
+                <strong>Gráfico de Tendencias:</strong> Visualiza el comportamiento de GAM, RURAL y CT01 con valores numéricos.
             </p>
             <p style="margin-top: 10px; padding: 10px; background-color: #E8F5E9; border-left: 4px solid #4CAF50;">
-                <strong>Nota:</strong> El dashboard está optimizado con fuentes grandes y negritas para mejor legibilidad.
+                <strong>Nota:</strong> Las tablas de detalle están separadas en dos imágenes para mejor legibilidad. El gráfico de tendencias excluye CT02 para simplificar la visualización.
             </p>
         </div>
     </body>
@@ -379,9 +382,9 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
         # Buscar las 4 imágenes del dashboard
         rutas_graficos = []
         nombres_dashboard = [
-            "dashboard_parte1_detalle.png",
-            "dashboard_parte2a_resumen_gam_ct.png",
-            "dashboard_parte2b_resumen_rural.png",
+            "dashboard_parte1a_detalle_gam.png",
+            "dashboard_parte1b_detalle_rural_ct.png",
+            "dashboard_parte2_resumen.png",
             "dashboard_parte3_tendencias.png"
         ]
         

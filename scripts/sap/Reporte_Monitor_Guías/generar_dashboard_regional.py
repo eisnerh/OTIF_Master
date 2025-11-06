@@ -410,135 +410,158 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
     
     print(f"[OK] Dashboard completo guardado: {output_path.name}")
     
-    # ==================== GENERAR 3 IMÁGENES SEPARADAS ====================
+    # ==================== GENERAR 4 IMÁGENES SEPARADAS ====================
     print("[PROCESO] Generando imagenes separadas...")
     
     archivos_generados = [output_path]
     output_dir = output_path.parent
     
-    # IMAGEN 1: KPIs + Tabla Detallada
-    print("[IMAGEN 1] KPIs + Tabla detallada...")
-    fig1 = plt.figure(figsize=(20, 16), dpi=120, facecolor='white')
-    fig1.suptitle('Tablero de Monitor de Guias - Detalle por Zona', 
+    # Separar tabla_data por región
+    tabla_data_gam = [fila for fila in tabla_data if fila[0] == 'GAM']
+    tabla_data_resto = [fila for fila in tabla_data if fila[0] in ['RURAL', 'RURAL 3', 'CT01', 'CT02']]
+    
+    # IMAGEN 1A: KPIs + Tabla Detallada GAM
+    print("[IMAGEN 1A] KPIs + Tabla detallada GAM...")
+    fig1a = plt.figure(figsize=(20, 12), dpi=120, facecolor='white')
+    fig1a.suptitle('Tablero de Monitor de Guias - Detalle GAM', 
                   fontsize=20, fontweight='bold', y=0.98, color='#333')
-    gs1 = GridSpec(2, 1, figure=fig1, hspace=0.2, height_ratios=[0.12, 0.88],
+    gs1a = GridSpec(2, 1, figure=fig1a, hspace=0.2, height_ratios=[0.15, 0.85],
                    top=0.96, bottom=0.02, left=0.05, right=0.97)
     
     # KPIs
-    ax1_kpis = fig1.add_subplot(gs1[0, 0])
-    ax1_kpis.axis('off')
+    ax1a_kpis = fig1a.add_subplot(gs1a[0, 0])
+    ax1a_kpis.axis('off')
     for i, (label, valor) in enumerate(kpis_valores.items()):
         x_pos = start_x + (i * spacing)
         rect = mpatches.FancyBboxPatch((x_pos, 0.15), box_width, box_height,
                                         boxstyle="round,pad=0.02",
                                         facecolor=colores_kpi[label],
                                         edgecolor='white', linewidth=2, alpha=0.9,
-                                        transform=ax1_kpis.transAxes)
-        ax1_kpis.add_patch(rect)
-        ax1_kpis.text(x_pos + box_width/2, 0.7, label,
+                                        transform=ax1a_kpis.transAxes)
+        ax1a_kpis.add_patch(rect)
+        ax1a_kpis.text(x_pos + box_width/2, 0.7, label,
                      ha='center', va='center', fontsize=14, fontweight='bold',
-                     color='white', transform=ax1_kpis.transAxes)
-        ax1_kpis.text(x_pos + box_width/2, 0.4, str(valor),
+                     color='white', transform=ax1a_kpis.transAxes)
+        ax1a_kpis.text(x_pos + box_width/2, 0.4, str(valor),
                      ha='center', va='center', fontsize=22, fontweight='bold',
-                     color='white', transform=ax1_kpis.transAxes)
+                     color='white', transform=ax1a_kpis.transAxes)
     
-    # Tabla Detallada
-    ax1_tabla = fig1.add_subplot(gs1[1, 0])
-    ax1_tabla.axis('off')
-    if tabla_data:
-        tabla1 = ax1_tabla.table(cellText=tabla_data, colLabels=headers,
+    # Tabla Detallada GAM
+    ax1a_tabla = fig1a.add_subplot(gs1a[1, 0])
+    ax1a_tabla.axis('off')
+    if tabla_data_gam:
+        tabla1a = ax1a_tabla.table(cellText=tabla_data_gam, colLabels=headers,
                                 cellLoc='center', loc='upper center', bbox=[0, 0, 1, 1])
-        tabla1.auto_set_font_size(False)
-        tabla1.set_fontsize(10)
-        tabla1.scale(1, 1.8)
+        tabla1a.auto_set_font_size(False)
+        tabla1a.set_fontsize(10)
+        tabla1a.scale(1, 2.0)
         for i in range(len(headers)):
-            tabla1[(0, i)].set_facecolor('#4CAF50')
-            tabla1[(0, i)].set_text_props(weight='bold', color='white', fontsize=11)
-        for i in range(1, len(tabla_data) + 1):
-            tabla1[(i, 0)].set_facecolor('#E8F5E9')
-            tabla1[(i, 0)].set_text_props(weight='bold', fontsize=10)
-            tabla1[(i, 1)].set_facecolor('#F1F8E9')
-            tabla1[(i, 1)].set_text_props(weight='bold', fontsize=10)
+            tabla1a[(0, i)].set_facecolor('#4CAF50')
+            tabla1a[(0, i)].set_text_props(weight='bold', color='white', fontsize=11)
+        for i in range(1, len(tabla_data_gam) + 1):
+            tabla1a[(i, 0)].set_facecolor('#E8F5E9')
+            tabla1a[(i, 0)].set_text_props(weight='bold', fontsize=10)
+            tabla1a[(i, 1)].set_facecolor('#F1F8E9')
+            tabla1a[(i, 1)].set_text_props(weight='bold', fontsize=10)
             for j in range(2, len(headers)):
-                tabla1[(i, j)].set_text_props(weight='bold', fontsize=11)
+                tabla1a[(i, j)].set_text_props(weight='bold', fontsize=11)
                 if i % 2 == 0:
-                    tabla1[(i, j)].set_facecolor('#FAFAFA')
-    ax1_tabla.text(0.5, 1.02, 'Horas', ha='center', va='bottom',
-                  fontsize=16, fontweight='bold', transform=ax1_tabla.transAxes)
+                    tabla1a[(i, j)].set_facecolor('#FAFAFA')
+    ax1a_tabla.text(0.5, 1.02, 'Horas - GAM', ha='center', va='bottom',
+                  fontsize=16, fontweight='bold', transform=ax1a_tabla.transAxes)
     
-    imagen1_path = output_dir / "dashboard_parte1_detalle.png"
-    plt.savefig(imagen1_path, dpi=150, bbox_inches='tight', facecolor='white')
+    imagen1a_path = output_dir / "dashboard_parte1a_detalle_gam.png"
+    plt.savefig(imagen1a_path, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
-    archivos_generados.append(imagen1_path)
-    print(f"[OK] Imagen 1 guardada: {imagen1_path.name}")
+    archivos_generados.append(imagen1a_path)
+    print(f"[OK] Imagen 1A guardada: {imagen1a_path.name}")
     
-    # IMAGEN 2A: Tabla Resumen - GAM, CT01 y CT02
-    print("[IMAGEN 2A] Tabla resumen - GAM, CT01 y CT02...")
-    fig2a = plt.figure(figsize=(20, 6), dpi=120, facecolor='white')
-    fig2a.suptitle('Tablero de Monitor de Guias - Resumen GAM, CT01 y CT02', 
+    # IMAGEN 1B: KPIs + Tabla Detallada RURAL + CT
+    print("[IMAGEN 1B] KPIs + Tabla detallada RURAL + CT...")
+    fig1b = plt.figure(figsize=(20, 14), dpi=120, facecolor='white')
+    fig1b.suptitle('Tablero de Monitor de Guias - Detalle RURAL y CT', 
+                  fontsize=20, fontweight='bold', y=0.98, color='#333')
+    gs1b = GridSpec(2, 1, figure=fig1b, hspace=0.2, height_ratios=[0.12, 0.88],
+                   top=0.96, bottom=0.02, left=0.05, right=0.97)
+    
+    # KPIs
+    ax1b_kpis = fig1b.add_subplot(gs1b[0, 0])
+    ax1b_kpis.axis('off')
+    for i, (label, valor) in enumerate(kpis_valores.items()):
+        x_pos = start_x + (i * spacing)
+        rect = mpatches.FancyBboxPatch((x_pos, 0.15), box_width, box_height,
+                                        boxstyle="round,pad=0.02",
+                                        facecolor=colores_kpi[label],
+                                        edgecolor='white', linewidth=2, alpha=0.9,
+                                        transform=ax1b_kpis.transAxes)
+        ax1b_kpis.add_patch(rect)
+        ax1b_kpis.text(x_pos + box_width/2, 0.7, label,
+                     ha='center', va='center', fontsize=14, fontweight='bold',
+                     color='white', transform=ax1b_kpis.transAxes)
+        ax1b_kpis.text(x_pos + box_width/2, 0.4, str(valor),
+                     ha='center', va='center', fontsize=22, fontweight='bold',
+                     color='white', transform=ax1b_kpis.transAxes)
+    
+    # Tabla Detallada RURAL + CT
+    ax1b_tabla = fig1b.add_subplot(gs1b[1, 0])
+    ax1b_tabla.axis('off')
+    if tabla_data_resto:
+        tabla1b = ax1b_tabla.table(cellText=tabla_data_resto, colLabels=headers,
+                                cellLoc='center', loc='upper center', bbox=[0, 0, 1, 1])
+        tabla1b.auto_set_font_size(False)
+        tabla1b.set_fontsize(10)
+        tabla1b.scale(1, 1.8)
+        for i in range(len(headers)):
+            tabla1b[(0, i)].set_facecolor('#4CAF50')
+            tabla1b[(0, i)].set_text_props(weight='bold', color='white', fontsize=11)
+        for i in range(1, len(tabla_data_resto) + 1):
+            tabla1b[(i, 0)].set_facecolor('#E8F5E9')
+            tabla1b[(i, 0)].set_text_props(weight='bold', fontsize=10)
+            tabla1b[(i, 1)].set_facecolor('#F1F8E9')
+            tabla1b[(i, 1)].set_text_props(weight='bold', fontsize=10)
+            for j in range(2, len(headers)):
+                tabla1b[(i, j)].set_text_props(weight='bold', fontsize=11)
+                if i % 2 == 0:
+                    tabla1b[(i, j)].set_facecolor('#FAFAFA')
+    ax1b_tabla.text(0.5, 1.02, 'Horas - RURAL y CT', ha='center', va='bottom',
+                  fontsize=16, fontweight='bold', transform=ax1b_tabla.transAxes)
+    
+    imagen1b_path = output_dir / "dashboard_parte1b_detalle_rural_ct.png"
+    plt.savefig(imagen1b_path, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+    archivos_generados.append(imagen1b_path)
+    print(f"[OK] Imagen 1B guardada: {imagen1b_path.name}")
+    
+    # IMAGEN 2: Tabla Resumen Completa (GAM, RURAL, CT01, CT02)
+    print("[IMAGEN 2] Tabla resumen completa...")
+    fig2 = plt.figure(figsize=(20, 6), dpi=120, facecolor='white')
+    fig2.suptitle('Tablero de Monitor de Guias - Resumen por Region', 
                   fontsize=20, fontweight='bold', y=0.95, color='#333')
-    ax2a = fig2a.add_subplot(111)
-    ax2a.axis('off')
+    ax2 = fig2.add_subplot(111)
+    ax2.axis('off')
     
-    # Filtrar GAM, CT01 y CT02
-    resumen_data_parte1 = [fila for fila in resumen_data if fila[0] in ['GAM', 'CT01', 'CT02']]
-    
-    if resumen_data_parte1:
-        tabla2a = ax2a.table(cellText=resumen_data_parte1, colLabels=headers_resumen,
+    if resumen_data:
+        tabla2 = ax2.table(cellText=resumen_data, colLabels=headers_resumen,
                           cellLoc='center', loc='center', bbox=[0, 0, 1, 0.8])
-        tabla2a.auto_set_font_size(False)
-        tabla2a.set_fontsize(11)
-        tabla2a.scale(1, 2.8)
+        tabla2.auto_set_font_size(False)
+        tabla2.set_fontsize(11)
+        tabla2.scale(1, 2.5)
         for i in range(len(headers_resumen)):
-            tabla2a[(0, i)].set_facecolor('#2196F3')
-            tabla2a[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
-        for i in range(1, len(resumen_data_parte1) + 1):
-            tabla2a[(i, 0)].set_facecolor('#E3F2FD')
-            tabla2a[(i, 0)].set_text_props(weight='bold', fontsize=11)
+            tabla2[(0, i)].set_facecolor('#2196F3')
+            tabla2[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
+        for i in range(1, len(resumen_data) + 1):
+            tabla2[(i, 0)].set_facecolor('#E3F2FD')
+            tabla2[(i, 0)].set_text_props(weight='bold', fontsize=11)
             for j in range(1, len(headers_resumen)):
-                tabla2a[(i, j)].set_text_props(weight='bold', fontsize=12)
+                tabla2[(i, j)].set_text_props(weight='bold', fontsize=12)
                 if i % 2 == 0:
-                    tabla2a[(i, j)].set_facecolor('#F5F5F5')
+                    tabla2[(i, j)].set_facecolor('#F5F5F5')
     
-    imagen2a_path = output_dir / "dashboard_parte2a_resumen_gam_ct.png"
-    plt.savefig(imagen2a_path, dpi=150, bbox_inches='tight', facecolor='white')
+    imagen2_path = output_dir / "dashboard_parte2_resumen.png"
+    plt.savefig(imagen2_path, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
-    archivos_generados.append(imagen2a_path)
-    print(f"[OK] Imagen 2A guardada: {imagen2a_path.name}")
-    
-    # IMAGEN 2B: Tabla Resumen - RURAL
-    print("[IMAGEN 2B] Tabla resumen - RURAL...")
-    fig2b = plt.figure(figsize=(20, 4), dpi=120, facecolor='white')
-    fig2b.suptitle('Tablero de Monitor de Guias - Resumen RURAL', 
-                  fontsize=20, fontweight='bold', y=0.95, color='#333')
-    ax2b = fig2b.add_subplot(111)
-    ax2b.axis('off')
-    
-    # Filtrar solo RURAL
-    resumen_data_parte2 = [fila for fila in resumen_data if fila[0] in ['RURAL']]
-    
-    if resumen_data_parte2:
-        tabla2b = ax2b.table(cellText=resumen_data_parte2, colLabels=headers_resumen,
-                          cellLoc='center', loc='center', bbox=[0, 0, 1, 0.8])
-        tabla2b.auto_set_font_size(False)
-        tabla2b.set_fontsize(11)
-        tabla2b.scale(1, 3.5)
-        for i in range(len(headers_resumen)):
-            tabla2b[(0, i)].set_facecolor('#2196F3')
-            tabla2b[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
-        for i in range(1, len(resumen_data_parte2) + 1):
-            tabla2b[(i, 0)].set_facecolor('#E3F2FD')
-            tabla2b[(i, 0)].set_text_props(weight='bold', fontsize=11)
-            for j in range(1, len(headers_resumen)):
-                tabla2b[(i, j)].set_text_props(weight='bold', fontsize=12)
-                if i % 2 == 0:
-                    tabla2b[(i, j)].set_facecolor('#F5F5F5')
-    
-    imagen2b_path = output_dir / "dashboard_parte2b_resumen_rural.png"
-    plt.savefig(imagen2b_path, dpi=150, bbox_inches='tight', facecolor='white')
-    plt.close()
-    archivos_generados.append(imagen2b_path)
-    print(f"[OK] Imagen 2B guardada: {imagen2b_path.name}")
+    archivos_generados.append(imagen2_path)
+    print(f"[OK] Imagen 2 guardada: {imagen2_path.name}")
     
     # IMAGEN 3: Gráfico de Tendencias
     print("[IMAGEN 3] Grafico de tendencias...")
@@ -589,7 +612,11 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
     archivos_generados.append(imagen3_path)
     print(f"[OK] Imagen 3 guardada: {imagen3_path.name}")
     
-    print("[EXITO] 4 imagenes generadas exitosamente")
+    print("[EXITO] Dashboard completo + 4 imagenes separadas generadas exitosamente")
+    print("  - Imagen 1A: Detalle GAM")
+    print("  - Imagen 1B: Detalle RURAL + CT")
+    print("  - Imagen 2: Resumen completo")
+    print("  - Imagen 3: Tendencias")
     return archivos_generados
 
 def main():
