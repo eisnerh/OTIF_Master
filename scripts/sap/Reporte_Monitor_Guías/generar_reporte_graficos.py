@@ -185,61 +185,8 @@ def contar_por_zona_y_hora(df: pd.DataFrame) -> pd.DataFrame:
     conteo = df.groupby(['Zona_Grupo', 'Hora']).size().reset_index(name='Cantidad')
     return conteo
 
-def generar_graficos(conteo_df: pd.DataFrame, output_dir: Path) -> List[Path]:
-    """Genera gráficos de tendencia por hora para cada zona."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    rutas_graficos = []
-    
-    # Ordenar horas de forma ascendente y consistente (00:00 .. 23:00)
-    try:
-        horas_orden = sorted(conteo_df['Hora'].dropna().unique(), key=lambda h: int(str(h).split(':')[0]))
-        conteo_df = conteo_df.copy()
-        conteo_df['Hora'] = pd.Categorical(conteo_df['Hora'], categories=horas_orden, ordered=True)
-    except Exception:
-        # Si algo falla, continuará con el orden por defecto
-        pass
-    
-    zonas = conteo_df['Zona_Grupo'].unique()
-    
-    # Configurar estilo
-    sns.set_style("whitegrid")
-    plt.rcParams['figure.figsize'] = (12, 6)
-    plt.rcParams['font.size'] = 10
-    
-    # Gráficos individuales por zona
-    for zona in sorted(zonas):
-        datos_zona = conteo_df[conteo_df['Zona_Grupo'] == zona].copy()
-        if datos_zona.empty:
-            continue
-        
-        datos_zona = datos_zona.sort_values('Hora')
-        
-        fig, ax = plt.subplots(figsize=(12, 6))
-        ax.plot(datos_zona['Hora'], datos_zona['Cantidad'], 
-               marker='o', linewidth=2.5, markersize=10, 
-               color=sns.color_palette("husl", len(zonas))[list(zonas).index(zona)])
-        ax.fill_between(datos_zona['Hora'], datos_zona['Cantidad'], alpha=0.3)
-        
-        # Agregar etiquetas con valores en cada punto
-        for _, row in datos_zona.iterrows():
-            ax.text(row['Hora'], row['Cantidad'], f" {int(row['Cantidad'])}", 
-                   fontsize=10, ha='left', va='bottom', fontweight='bold',
-                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7, edgecolor='gray', linewidth=0.5))
-        
-        ax.set_xlabel('Hora', fontsize=11, fontweight='bold')
-        ax.set_ylabel('Cantidad de Guías', fontsize=11, fontweight='bold')
-        ax.set_title(f'Tendencia de Guías por Hora - Zona {zona}', 
-                    fontsize=13, fontweight='bold', pad=15)
-        ax.grid(True, alpha=0.3)
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
-        
-        ruta_individual = output_dir / f'grafico_{zona.lower()}.png'
-        plt.savefig(ruta_individual, dpi=300, bbox_inches='tight')
-        plt.close()
-        rutas_graficos.append(ruta_individual)
-    
-    return rutas_graficos
+# Función eliminada - ya no se generan gráficos individuales
+# Los gráficos ahora vienen del generar_dashboard_regional.py
 
 def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
     """Crea un resumen HTML con estadísticas."""
@@ -293,20 +240,22 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             
             <h2>Archivos Adjuntos</h2>
             <ul>
-                <li><strong>Dashboard Regional (PNG)</strong>: Vista completa por regiones (RURAL, GAM, CT01, CT02)
+                <li><strong>Imagen 1 - Detalle por Zona (dashboard_parte1_detalle.png)</strong>
                     <ul>
-                        <li>KPIs por región con valores y porcentajes</li>
-                        <li>Tabla detallada zona x hora (22 zonas)</li>
-                        <li>Tabla resumen por región</li>
-                        <li>Gráfico de tendencias comparativo</li>
+                        <li>KPIs por región (GAM, RURAL, VYD, SPE, Total)</li>
+                        <li>Tabla detallada zona x hora (22 zonas × horas 14:00-23:00)</li>
                     </ul>
                 </li>
-                <li><strong>Gráficos Individuales (PNG)</strong>: Tendencias horarias por región
+                <li><strong>Imagen 2 - Resumen por Región (dashboard_parte2_resumen.png)</strong>
                     <ul>
-                        <li>grafico_rural.png</li>
-                        <li>grafico_gam.png</li>
-                        <li>grafico_ct01.png</li>
-                        <li>grafico_ct02.png</li>
+                        <li>Tabla resumen: GAM, RURAL, CT01, CT02 por hora</li>
+                        <li>Suma de todas las zonas de cada región</li>
+                    </ul>
+                </li>
+                <li><strong>Imagen 3 - Tendencias (dashboard_parte3_tendencias.png)</strong>
+                    <ul>
+                        <li>Gráfico de líneas comparativo</li>
+                        <li>Visualiza el comportamiento de cada región a lo largo del día</li>
                     </ul>
                 </li>
                 <li><strong>Archivo Excel</strong>: Datos procesados completos para análisis adicional</li>
@@ -358,11 +307,11 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
                                  filename=ruta_grafico.name)
                     msg.attach(img)
                 
-                # Log especial para dashboard
-                if 'dashboard_regional' in ruta_grafico.name:
-                    print(f"OK: [DASHBOARD] {ruta_grafico.name} adjuntado (posicion {i+1}, tamaño: {ruta_grafico.stat().st_size / 1024:.1f} KB)")
+                # Log para dashboards
+                if 'dashboard_parte' in ruta_grafico.name:
+                    print(f"OK: [DASHBOARD PARTE {i+1}] {ruta_grafico.name} adjuntado ({ruta_grafico.stat().st_size / 1024:.1f} KB)")
                 else:
-                    print(f"OK: Grafico adjuntado: {ruta_grafico.name}")
+                    print(f"OK: Imagen adjuntada: {ruta_grafico.name}")
                 
                 total_adjuntos += 1
         
@@ -415,39 +364,33 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
         conteo_df = contar_por_zona_y_hora(df)
         print(f"OK: Conteo realizado para {len(conteo_df)} combinaciones zona/hora")
         
-        # Generar gráficos
-        graficos_dir = xlsx_path.parent / "graficos"
-        rutas_graficos = generar_graficos(conteo_df, graficos_dir)
-        print(f"OK: Gráficos generados: {len(rutas_graficos)} archivos")
-        
-        # Esperar y buscar dashboard regional (debe haberse generado antes)
-        print("Esperando dashboard regional...")
+        # Esperar 10 segundos para que se generen las imágenes del dashboard
+        print("Esperando 10 segundos para que se generen las imagenes del dashboard...")
         import time
-        max_intentos = 10
-        dashboard_path = None
+        time.sleep(10)
         
-        for intento in range(max_intentos):
-            time.sleep(1)  # Esperar 1 segundo entre intentos
-            dashboard_regional = list(xlsx_path.parent.glob("dashboard_regional_*.png"))
-            if dashboard_regional:
-                # Obtener el más reciente (generado en los últimos 5 minutos)
-                ahora = time.time()
-                dashboards_recientes = [
-                    d for d in dashboard_regional 
-                    if (ahora - d.stat().st_mtime) < 300  # 5 minutos
-                ]
-                if dashboards_recientes:
-                    dashboard_path = max(dashboards_recientes, key=lambda p: p.stat().st_mtime)
-                    print(f"OK: Dashboard regional encontrado: {dashboard_path.name}")
-                    print(f"    Tamaño: {dashboard_path.stat().st_size / 1024:.1f} KB")
-                    print(f"    Generado hace: {int(ahora - dashboard_path.stat().st_mtime)} segundos")
-                    break
+        # Buscar las 3 imágenes del dashboard
+        rutas_graficos = []
+        nombres_dashboard = [
+            "dashboard_parte1_detalle.png",
+            "dashboard_parte2_resumen.png",
+            "dashboard_parte3_tendencias.png"
+        ]
         
-        if dashboard_path:
-            # Insertar al inicio de la lista para que sea el primer adjunto
-            rutas_graficos.insert(0, dashboard_path)
-        else:
-            print("ADVERTENCIA: No se encontró dashboard regional reciente. Continuando sin él...")
+        print("[BUSCAR] Buscando imagenes del dashboard...")
+        for nombre in nombres_dashboard:
+            dashboard_path = xlsx_path.parent / nombre
+            if dashboard_path.exists():
+                rutas_graficos.append(dashboard_path)
+                print(f"OK: Encontrado: {nombre} ({dashboard_path.stat().st_size / 1024:.1f} KB)")
+            else:
+                print(f"ADVERTENCIA: No encontrado: {nombre}")
+        
+        if not rutas_graficos:
+            print("ERROR: No se encontraron imagenes del dashboard")
+            return 1
+        
+        print(f"OK: {len(rutas_graficos)} imagenes del dashboard listas para adjuntar")
         
         # Crear resumen HTML
         resumen_html = crear_resumen_html(conteo_df)

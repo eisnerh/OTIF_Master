@@ -391,14 +391,143 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
                    fontsize=11, fontweight='bold', verticalalignment='bottom',  # Aumentado de 9 a 11 y añadido bold
                    bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8, edgecolor='gray'))
     
-    # Guardar
-    print(f"[GUARDANDO] Guardando dashboard en: {output_path}")
+    # Guardar figura completa
+    print(f"[GUARDANDO] Guardando dashboard completo en: {output_path}")
     plt.savefig(output_path, dpi=150, bbox_inches='tight',
                 facecolor='white', edgecolor='none')
     plt.close()
     
-    print(f"[OK] Dashboard guardado exitosamente")
-    return output_path
+    print(f"[OK] Dashboard completo guardado: {output_path.name}")
+    
+    # ==================== GENERAR 3 IMÁGENES SEPARADAS ====================
+    print("[PROCESO] Generando imagenes separadas...")
+    
+    archivos_generados = [output_path]
+    output_dir = output_path.parent
+    
+    # IMAGEN 1: KPIs + Tabla Detallada
+    print("[IMAGEN 1] KPIs + Tabla detallada...")
+    fig1 = plt.figure(figsize=(20, 16), dpi=120, facecolor='white')
+    fig1.suptitle('Tablero de Monitor de Guias - Detalle por Zona', 
+                  fontsize=20, fontweight='bold', y=0.98, color='#333')
+    gs1 = GridSpec(2, 1, figure=fig1, hspace=0.2, height_ratios=[0.12, 0.88],
+                   top=0.96, bottom=0.02, left=0.05, right=0.97)
+    
+    # KPIs
+    ax1_kpis = fig1.add_subplot(gs1[0, 0])
+    ax1_kpis.axis('off')
+    for i, (label, valor) in enumerate(kpis_valores.items()):
+        x_pos = start_x + (i * spacing)
+        rect = mpatches.FancyBboxPatch((x_pos, 0.15), box_width, box_height,
+                                        boxstyle="round,pad=0.02",
+                                        facecolor=colores_kpi[label],
+                                        edgecolor='white', linewidth=2, alpha=0.9,
+                                        transform=ax1_kpis.transAxes)
+        ax1_kpis.add_patch(rect)
+        ax1_kpis.text(x_pos + box_width/2, 0.7, label,
+                     ha='center', va='center', fontsize=14, fontweight='bold',
+                     color='white', transform=ax1_kpis.transAxes)
+        ax1_kpis.text(x_pos + box_width/2, 0.4, str(valor),
+                     ha='center', va='center', fontsize=22, fontweight='bold',
+                     color='white', transform=ax1_kpis.transAxes)
+    
+    # Tabla Detallada
+    ax1_tabla = fig1.add_subplot(gs1[1, 0])
+    ax1_tabla.axis('off')
+    if tabla_data:
+        tabla1 = ax1_tabla.table(cellText=tabla_data, colLabels=headers,
+                                cellLoc='center', loc='upper center', bbox=[0, 0, 1, 1])
+        tabla1.auto_set_font_size(False)
+        tabla1.set_fontsize(10)
+        tabla1.scale(1, 1.8)
+        for i in range(len(headers)):
+            tabla1[(0, i)].set_facecolor('#4CAF50')
+            tabla1[(0, i)].set_text_props(weight='bold', color='white', fontsize=11)
+        for i in range(1, len(tabla_data) + 1):
+            tabla1[(i, 0)].set_facecolor('#E8F5E9')
+            tabla1[(i, 0)].set_text_props(weight='bold', fontsize=10)
+            tabla1[(i, 1)].set_facecolor('#F1F8E9')
+            tabla1[(i, 1)].set_text_props(weight='bold', fontsize=10)
+            for j in range(2, len(headers)):
+                tabla1[(i, j)].set_text_props(weight='bold', fontsize=11)
+                if i % 2 == 0:
+                    tabla1[(i, j)].set_facecolor('#FAFAFA')
+    ax1_tabla.text(0.5, 1.02, 'Horas', ha='center', va='bottom',
+                  fontsize=16, fontweight='bold', transform=ax1_tabla.transAxes)
+    
+    imagen1_path = output_dir / "dashboard_parte1_detalle.png"
+    plt.savefig(imagen1_path, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+    archivos_generados.append(imagen1_path)
+    print(f"[OK] Imagen 1 guardada: {imagen1_path.name}")
+    
+    # IMAGEN 2: Tabla Resumen
+    print("[IMAGEN 2] Tabla resumen...")
+    fig2 = plt.figure(figsize=(20, 6), dpi=120, facecolor='white')
+    fig2.suptitle('Tablero de Monitor de Guias - Resumen por Region', 
+                  fontsize=20, fontweight='bold', y=0.95, color='#333')
+    ax2 = fig2.add_subplot(111)
+    ax2.axis('off')
+    
+    if resumen_data:
+        tabla2 = ax2.table(cellText=resumen_data, colLabels=headers_resumen,
+                          cellLoc='center', loc='center', bbox=[0, 0, 1, 0.8])
+        tabla2.auto_set_font_size(False)
+        tabla2.set_fontsize(11)
+        tabla2.scale(1, 2.5)
+        for i in range(len(headers_resumen)):
+            tabla2[(0, i)].set_facecolor('#2196F3')
+            tabla2[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
+        for i in range(1, len(resumen_data) + 1):
+            tabla2[(i, 0)].set_facecolor('#E3F2FD')
+            tabla2[(i, 0)].set_text_props(weight='bold', fontsize=11)
+            for j in range(1, len(headers_resumen)):
+                tabla2[(i, j)].set_text_props(weight='bold', fontsize=12)
+                if i % 2 == 0:
+                    tabla2[(i, j)].set_facecolor('#F5F5F5')
+    
+    imagen2_path = output_dir / "dashboard_parte2_resumen.png"
+    plt.savefig(imagen2_path, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+    archivos_generados.append(imagen2_path)
+    print(f"[OK] Imagen 2 guardada: {imagen2_path.name}")
+    
+    # IMAGEN 3: Gráfico de Tendencias
+    print("[IMAGEN 3] Grafico de tendencias...")
+    fig3 = plt.figure(figsize=(16, 10), dpi=120, facecolor='white')
+    fig3.suptitle('Tablero de Monitor de Guias - Tendencias', 
+                  fontsize=20, fontweight='bold', y=0.96, color='#333')
+    ax3 = fig3.add_subplot(111)
+    
+    for region in REGIONES_ORDEN:
+        if region in pivot_region_tabla.index:
+            horas = pivot_region_tabla.columns
+            valores = pivot_region_tabla.loc[region].values
+            color = REGIONES_CONFIG[region]['color']
+            ax3.plot(horas, valores, marker='o', linewidth=2, markersize=6,
+                    color=color, label=region, alpha=0.9)
+    
+    ax3.set_xlabel('Hora', fontsize=13, fontweight='bold')
+    ax3.set_ylabel('Cantidad', fontsize=13, fontweight='bold')
+    ax3.set_title('Tendencias por Región', fontsize=16, fontweight='bold', pad=15)
+    ax3.legend(loc='upper left', fontsize=12, framealpha=0.9, prop={'weight': 'bold'})
+    ax3.grid(True, alpha=0.3, linestyle='--')
+    plt.setp(ax3.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=11, weight='bold')
+    plt.setp(ax3.yaxis.get_majorticklabels(), fontsize=11, weight='bold')
+    
+    info_text = f"VYD {stats_por_region.get('CT02', 0)}\nSPE {stats_por_region.get('CT01', 0)}\nTotal {total_guias}"
+    ax3.text(0.02, 0.05, info_text, transform=ax3.transAxes,
+            fontsize=11, fontweight='bold', verticalalignment='bottom',
+            bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8, edgecolor='gray'))
+    
+    imagen3_path = output_dir / "dashboard_parte3_tendencias.png"
+    plt.savefig(imagen3_path, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+    archivos_generados.append(imagen3_path)
+    print(f"[OK] Imagen 3 guardada: {imagen3_path.name}")
+    
+    print("[EXITO] 3 imagenes generadas exitosamente")
+    return archivos_generados
 
 def main():
     parser = argparse.ArgumentParser(description='Genera dashboard Tablero de Monitor de Guías')
@@ -425,13 +554,14 @@ def main():
         df = leer_excel_procesado(archivo_excel)
         print(f"[OK] Datos cargados: {len(df)} guias")
         
-        resultado = generar_dashboard(df, output_path)
+        archivos_generados = generar_dashboard(df, output_path)
         
         print("=" * 70)
         print("[EXITO] Dashboard generado exitosamente")
         print("=" * 70)
-        print(f"[ARCHIVO] {resultado}")
-        print(f"[TAMAÑO] {resultado.stat().st_size / 1024:.1f} KB")
+        print(f"Archivos generados: {len(archivos_generados)}")
+        for i, archivo in enumerate(archivos_generados, 1):
+            print(f"  {i}. {archivo.name} ({archivo.stat().st_size / 1024:.1f} KB)")
         print("=" * 70)
         
         return 0
