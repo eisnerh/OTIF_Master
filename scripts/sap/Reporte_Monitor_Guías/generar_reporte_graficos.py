@@ -415,7 +415,7 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
             print(f"  From: {email_config.get('email_from')}")
             print(f"  To: {', '.join(email_config.get('email_to', []))}")
             print(f"  Imágenes adjuntas: {len(rutas_graficos)}")
-            print(f"  Excel adjunto: {'Sí' if excel_path and excel_path.exists() else 'No'}")
+            print(f"  Excel adjunto: {'Sí' if xlsx_path and xlsx_path.exists() else 'No'}")
             
             resultado_email = enviar_correo(email_config, rutas_graficos, resumen_html, excel_path=xlsx_path)
             
