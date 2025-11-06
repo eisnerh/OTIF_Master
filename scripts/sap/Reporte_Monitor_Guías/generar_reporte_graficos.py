@@ -293,22 +293,34 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             
             <h2>Archivos Adjuntos</h2>
             <ul>
-                <li><strong>Dashboard Regional</strong>: Vista completa por regiones (RURAL, GAM, VINOS, HA, CT01)
+                <li><strong>Dashboard Regional (PNG)</strong>: Vista completa por regiones (RURAL, GAM, CT01, CT02)
                     <ul>
                         <li>KPIs por región con valores y porcentajes</li>
-                        <li>Tablas zona x hora (heatmaps) por cada región</li>
-                        <li>Gráfico comparativo entre regiones</li>
+                        <li>Tabla detallada zona x hora (22 zonas)</li>
+                        <li>Tabla resumen por región</li>
+                        <li>Gráfico de tendencias comparativo</li>
                     </ul>
                 </li>
-                <li><strong>Gráficos por Zona Agrupada</strong>: Tendencias horarias (RURAL, GAM, VINOS, HA)</li>
+                <li><strong>Gráficos Individuales (PNG)</strong>: Tendencias horarias por región
+                    <ul>
+                        <li>grafico_rural.png</li>
+                        <li>grafico_gam.png</li>
+                        <li>grafico_ct01.png</li>
+                        <li>grafico_ct02.png</li>
+                    </ul>
+                </li>
                 <li><strong>Archivo Excel</strong>: Datos procesados completos para análisis adicional</li>
             </ul>
             
             <h2>Cómo leer el Dashboard Regional</h2>
             <p style="margin-top: 10px; padding: 10px; background-color: #FFF3E0; border-left: 4px solid #FF9800;">
-                <strong>Tarjetas KPI:</strong> Muestran el total de guías por región y su porcentaje del total.<br>
-                <strong>Tablas Zona x Hora:</strong> Cada celda muestra la cantidad de guías por zona en cada hora del día (código de colores: amarillo=bajo, rojo=alto).<br>
-                <strong>Gráfico Comparativo:</strong> Compara el volumen total entre todas las regiones.
+                <strong>Tarjetas KPI:</strong> Muestran el total de guías por región (GAM, RURAL, VYD, SPE) y el total general.<br>
+                <strong>Tabla Detallada "Horas":</strong> Muestra la cantidad de guías por zona en cada hora del día (22 zonas × horas).<br>
+                <strong>Tabla Resumen:</strong> Suma de todas las zonas de cada región por hora.<br>
+                <strong>Gráfico de Tendencias:</strong> Visualiza el comportamiento de cada región a lo largo del día.
+            </p>
+            <p style="margin-top: 10px; padding: 10px; background-color: #E8F5E9; border-left: 4px solid #4CAF50;">
+                <strong>Nota:</strong> El dashboard está optimizado con fuentes grandes y negritas para mejor legibilidad.
             </p>
         </div>
     </body>
@@ -335,33 +347,26 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
         msg.attach(msg_alternative)
         msg_alternative.attach(MIMEText(resumen_html, 'html'))
         
-        # Adjuntar gráficos (priorizar dashboard regional primero)
-        graficos_ordenados = []
-        dashboard_regional = None
-        
-        for ruta_grafico in rutas_graficos:
-            if 'dashboard_regional' in ruta_grafico.name:
-                dashboard_regional = ruta_grafico
-            else:
-                graficos_ordenados.append(ruta_grafico)
-        
-        # Adjuntar dashboard regional primero
-        if dashboard_regional and dashboard_regional.exists():
-            with open(dashboard_regional, 'rb') as f:
-                img = MIMEImage(f.read())
-                img.add_header('Content-Disposition', 'attachment', 
-                             filename=dashboard_regional.name)
-                msg.attach(img)
-            print(f"OK: Dashboard regional adjuntado: {dashboard_regional.name}")
-        
-        # Luego los demás gráficos
-        for ruta_grafico in graficos_ordenados:
+        # Adjuntar gráficos
+        # El dashboard ya está al inicio de rutas_graficos si existe
+        total_adjuntos = 0
+        for i, ruta_grafico in enumerate(rutas_graficos):
             if ruta_grafico.exists():
                 with open(ruta_grafico, 'rb') as f:
                     img = MIMEImage(f.read())
                     img.add_header('Content-Disposition', 'attachment', 
                                  filename=ruta_grafico.name)
                     msg.attach(img)
+                
+                # Log especial para dashboard
+                if 'dashboard_regional' in ruta_grafico.name:
+                    print(f"OK: [DASHBOARD] {ruta_grafico.name} adjuntado (posicion {i+1}, tamaño: {ruta_grafico.stat().st_size / 1024:.1f} KB)")
+                else:
+                    print(f"OK: Grafico adjuntado: {ruta_grafico.name}")
+                
+                total_adjuntos += 1
+        
+        print(f"OK: Total de imagenes adjuntadas: {total_adjuntos}")
         
         # Adjuntar Excel procesado si existe
         if excel_path and excel_path.exists():
@@ -372,6 +377,7 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
                 )
                 part.add_header('Content-Disposition', 'attachment', filename=excel_path.name)
                 msg.attach(part)
+            print(f"OK: Excel adjuntado: {excel_path.name}")
         
         # Enviar correo
         server = smtplib.SMTP(email_config['smtp_server'], email_config['smtp_port'])

@@ -212,11 +212,11 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
         
         # Texto
         ax_kpis.text(x_pos + box_width/2, 0.7, label,
-                    ha='center', va='center', fontsize=12, fontweight='bold',
-                    color='white', transform=ax_kpis.transAxes)
+                    ha='center', va='center', fontsize=14, fontweight='bold',
+                    color='white', transform=ax_kpis.transAxes)  # Aumentado de 12 a 14
         ax_kpis.text(x_pos + box_width/2, 0.4, str(valor),
-                    ha='center', va='center', fontsize=18, fontweight='bold',
-                    color='white', transform=ax_kpis.transAxes)
+                    ha='center', va='center', fontsize=22, fontweight='bold',
+                    color='white', transform=ax_kpis.transAxes)  # Aumentado de 18 a 22
     
     # ==================== FILA 2: TABLA DETALLADA ZONA x HORA ====================
     print("[TABLA] Generando tabla detallada zona x hora...")
@@ -280,29 +280,32 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
                               bbox=[0, 0, 1, 1])
         
         tabla.auto_set_font_size(False)
-        tabla.set_fontsize(8)
-        tabla.scale(1, 1.5)
+        tabla.set_fontsize(10)  # Aumentado de 8 a 10
+        tabla.scale(1, 1.8)  # Aumentado de 1.5 a 1.8
         
         # Estilo de encabezados
         for i in range(len(headers)):
             cell = tabla[(0, i)]
             cell.set_facecolor('#4CAF50')
-            cell.set_text_props(weight='bold', color='white', fontsize=9)
+            cell.set_text_props(weight='bold', color='white', fontsize=11)  # Aumentado de 9 a 11
         
         # Estilo de celdas
         for i in range(1, len(tabla_data) + 1):
             # Columna Región
             tabla[(i, 0)].set_facecolor('#E8F5E9')
-            tabla[(i, 0)].set_text_props(weight='bold')
+            tabla[(i, 0)].set_text_props(weight='bold', fontsize=10)  # Añadido fontsize
             # Columna Zona
             tabla[(i, 1)].set_facecolor('#F1F8E9')
-            # Alternar color de filas
-            if i % 2 == 0:
-                for j in range(2, len(headers)):
+            tabla[(i, 1)].set_text_props(weight='bold', fontsize=10)  # Añadido weight y fontsize
+            # Valores numéricos - NEGRITAS Y MÁS GRANDES
+            for j in range(2, len(headers)):
+                tabla[(i, j)].set_text_props(weight='bold', fontsize=11)  # Valores en negrita y más grandes
+                # Alternar color de filas
+                if i % 2 == 0:
                     tabla[(i, j)].set_facecolor('#FAFAFA')
     
     ax_tabla.text(0.5, 1.02, 'Horas', ha='center', va='bottom',
-                 fontsize=14, fontweight='bold', transform=ax_tabla.transAxes)
+                 fontsize=16, fontweight='bold', transform=ax_tabla.transAxes)  # Aumentado de 14 a 16
     
     # ==================== FILA 3: TABLA RESUMEN POR REGIÓN ====================
     print("[TABLA] Generando tabla resumen por region...")
@@ -334,23 +337,24 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
                                         bbox=[0, 0.3, 1, 0.7])
         
         tabla_resumen.auto_set_font_size(False)
-        tabla_resumen.set_fontsize(9)
-        tabla_resumen.scale(1, 2)
+        tabla_resumen.set_fontsize(11)  # Aumentado de 9 a 11
+        tabla_resumen.scale(1, 2.2)  # Aumentado de 2 a 2.2
         
         # Estilo de encabezados
         for i in range(len(headers_resumen)):
             cell = tabla_resumen[(0, i)]
             cell.set_facecolor('#2196F3')
-            cell.set_text_props(weight='bold', color='white', fontsize=10)
+            cell.set_text_props(weight='bold', color='white', fontsize=12)  # Aumentado de 10 a 12
         
         # Estilo de celdas de datos
         for i in range(1, len(resumen_data) + 1):
             # Primera columna (Región)
             tabla_resumen[(i, 0)].set_facecolor('#E3F2FD')
-            tabla_resumen[(i, 0)].set_text_props(weight='bold')
+            tabla_resumen[(i, 0)].set_text_props(weight='bold', fontsize=11)  # Añadido fontsize
             
-            # Resto de columnas
+            # Resto de columnas - VALORES EN NEGRITA Y MÁS GRANDES
             for j in range(1, len(headers_resumen)):
+                tabla_resumen[(i, j)].set_text_props(weight='bold', fontsize=12)  # Valores negritas y grandes
                 if i % 2 == 0:
                     tabla_resumen[(i, j)].set_facecolor('#F5F5F5')
     
@@ -372,18 +376,19 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
             ax_grafico.plot(horas, valores, marker='o', linewidth=2, markersize=6,
                           color=color, label=nombre_label, alpha=0.9)
     
-    ax_grafico.set_xlabel('Hora', fontsize=11, fontweight='bold')
-    ax_grafico.set_ylabel('Cantidad', fontsize=11, fontweight='bold')
-    ax_grafico.set_title('Tendencias por Región', fontsize=14, fontweight='bold', pad=15)
-    ax_grafico.legend(loc='upper left', fontsize=10, framealpha=0.9)
+    ax_grafico.set_xlabel('Hora', fontsize=13, fontweight='bold')  # Aumentado de 11 a 13
+    ax_grafico.set_ylabel('Cantidad', fontsize=13, fontweight='bold')  # Aumentado de 11 a 13
+    ax_grafico.set_title('Tendencias por Región', fontsize=16, fontweight='bold', pad=15)  # Aumentado de 14 a 16
+    ax_grafico.legend(loc='upper left', fontsize=12, framealpha=0.9, prop={'weight': 'bold'})  # Aumentado de 10 a 12 y añadido bold
     ax_grafico.grid(True, alpha=0.3, linestyle='--')
-    plt.setp(ax_grafico.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=9)
+    plt.setp(ax_grafico.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=11, weight='bold')  # Aumentado de 9 a 11 y añadido bold
+    plt.setp(ax_grafico.yaxis.get_majorticklabels(), fontsize=11, weight='bold')  # Añadido para eje Y
     
     # Agregar cajas de información en el gráfico
     info_text = f"VYD {stats_por_region.get('CT02', 0)}\nSPE {stats_por_region.get('CT01', 0)}\nTotal {total_guias}"
     ax_grafico.text(0.02, 0.05, info_text,
                    transform=ax_grafico.transAxes,
-                   fontsize=9, verticalalignment='bottom',
+                   fontsize=11, fontweight='bold', verticalalignment='bottom',  # Aumentado de 9 a 11 y añadido bold
                    bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8, edgecolor='gray'))
     
     # Guardar
