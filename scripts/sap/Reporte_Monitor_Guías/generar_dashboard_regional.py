@@ -363,32 +363,43 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
     
     ax_grafico = fig.add_subplot(gs[3, 0])
     
+    # Excluir CT02 del gráfico
+    regiones_para_grafico = [r for r in REGIONES_ORDEN if r != 'CT02']
+    
     # Preparar datos para gráfico
-    for region in REGIONES_ORDEN:
+    for region in regiones_para_grafico:
         if region in pivot_region_tabla.index:
             horas = pivot_region_tabla.columns
             valores = pivot_region_tabla.loc[region].values
             color = REGIONES_CONFIG[region]['color']
             
-            # Nombre para leyenda
-            nombre_label = region
-            
+            # Dibujar línea
             ax_grafico.plot(horas, valores, marker='o', linewidth=2, markersize=6,
-                          color=color, label=nombre_label, alpha=0.9)
+                          color=color, label=region, alpha=0.9)
+            
+            # Agregar valores en cada punto
+            for i, (hora, valor) in enumerate(zip(horas, valores)):
+                ax_grafico.text(i, valor, str(int(valor)), 
+                              ha='center', va='bottom', fontsize=9, 
+                              fontweight='bold', color=color)
     
-    ax_grafico.set_xlabel('Hora', fontsize=13, fontweight='bold')  # Aumentado de 11 a 13
-    ax_grafico.set_ylabel('Cantidad', fontsize=13, fontweight='bold')  # Aumentado de 11 a 13
-    ax_grafico.set_title('Tendencias por Región', fontsize=16, fontweight='bold', pad=15)  # Aumentado de 14 a 16
-    ax_grafico.legend(loc='upper left', fontsize=12, framealpha=0.9, prop={'weight': 'bold'})  # Aumentado de 10 a 12 y añadido bold
+    ax_grafico.set_xlabel('Hora', fontsize=13, fontweight='bold')
+    ax_grafico.set_ylabel('Cantidad', fontsize=13, fontweight='bold')
+    ax_grafico.set_title('Tendencias por Región (GAM, RURAL, CT01)', fontsize=16, fontweight='bold', pad=15)
+    ax_grafico.legend(loc='upper left', fontsize=12, framealpha=0.9, prop={'weight': 'bold'})
     ax_grafico.grid(True, alpha=0.3, linestyle='--')
-    plt.setp(ax_grafico.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=11, weight='bold')  # Aumentado de 9 a 11 y añadido bold
-    plt.setp(ax_grafico.yaxis.get_majorticklabels(), fontsize=11, weight='bold')  # Añadido para eje Y
+    plt.setp(ax_grafico.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=11, weight='bold')
+    plt.setp(ax_grafico.yaxis.get_majorticklabels(), fontsize=11, weight='bold')
+    
+    # Agregar margen superior para que los valores no se corten
+    ylim = ax_grafico.get_ylim()
+    ax_grafico.set_ylim(ylim[0], ylim[1] * 1.1)
     
     # Agregar cajas de información en el gráfico
     info_text = f"VYD {stats_por_region.get('CT02', 0)}\nSPE {stats_por_region.get('CT01', 0)}\nTotal {total_guias}"
     ax_grafico.text(0.02, 0.05, info_text,
                    transform=ax_grafico.transAxes,
-                   fontsize=11, fontweight='bold', verticalalignment='bottom',  # Aumentado de 9 a 11 y añadido bold
+                   fontsize=11, fontweight='bold', verticalalignment='bottom',
                    bbox=dict(boxstyle='round,pad=0.5', facecolor='white', alpha=0.8, edgecolor='gray'))
     
     # Guardar figura completa
@@ -461,36 +472,73 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
     archivos_generados.append(imagen1_path)
     print(f"[OK] Imagen 1 guardada: {imagen1_path.name}")
     
-    # IMAGEN 2: Tabla Resumen
-    print("[IMAGEN 2] Tabla resumen...")
-    fig2 = plt.figure(figsize=(20, 6), dpi=120, facecolor='white')
-    fig2.suptitle('Tablero de Monitor de Guias - Resumen por Region', 
+    # IMAGEN 2A: Tabla Resumen - GAM, CT01 y CT02
+    print("[IMAGEN 2A] Tabla resumen - GAM, CT01 y CT02...")
+    fig2a = plt.figure(figsize=(20, 6), dpi=120, facecolor='white')
+    fig2a.suptitle('Tablero de Monitor de Guias - Resumen GAM, CT01 y CT02', 
                   fontsize=20, fontweight='bold', y=0.95, color='#333')
-    ax2 = fig2.add_subplot(111)
-    ax2.axis('off')
+    ax2a = fig2a.add_subplot(111)
+    ax2a.axis('off')
     
-    if resumen_data:
-        tabla2 = ax2.table(cellText=resumen_data, colLabels=headers_resumen,
+    # Filtrar GAM, CT01 y CT02
+    resumen_data_parte1 = [fila for fila in resumen_data if fila[0] in ['GAM', 'CT01', 'CT02']]
+    
+    if resumen_data_parte1:
+        tabla2a = ax2a.table(cellText=resumen_data_parte1, colLabels=headers_resumen,
                           cellLoc='center', loc='center', bbox=[0, 0, 1, 0.8])
-        tabla2.auto_set_font_size(False)
-        tabla2.set_fontsize(11)
-        tabla2.scale(1, 2.5)
+        tabla2a.auto_set_font_size(False)
+        tabla2a.set_fontsize(11)
+        tabla2a.scale(1, 2.8)
         for i in range(len(headers_resumen)):
-            tabla2[(0, i)].set_facecolor('#2196F3')
-            tabla2[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
-        for i in range(1, len(resumen_data) + 1):
-            tabla2[(i, 0)].set_facecolor('#E3F2FD')
-            tabla2[(i, 0)].set_text_props(weight='bold', fontsize=11)
+            tabla2a[(0, i)].set_facecolor('#2196F3')
+            tabla2a[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
+        for i in range(1, len(resumen_data_parte1) + 1):
+            tabla2a[(i, 0)].set_facecolor('#E3F2FD')
+            tabla2a[(i, 0)].set_text_props(weight='bold', fontsize=11)
             for j in range(1, len(headers_resumen)):
-                tabla2[(i, j)].set_text_props(weight='bold', fontsize=12)
+                tabla2a[(i, j)].set_text_props(weight='bold', fontsize=12)
                 if i % 2 == 0:
-                    tabla2[(i, j)].set_facecolor('#F5F5F5')
+                    tabla2a[(i, j)].set_facecolor('#F5F5F5')
     
-    imagen2_path = output_dir / "dashboard_parte2_resumen.png"
-    plt.savefig(imagen2_path, dpi=150, bbox_inches='tight', facecolor='white')
+    imagen2a_path = output_dir / "dashboard_parte2a_resumen_gam_ct.png"
+    plt.savefig(imagen2a_path, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
-    archivos_generados.append(imagen2_path)
-    print(f"[OK] Imagen 2 guardada: {imagen2_path.name}")
+    archivos_generados.append(imagen2a_path)
+    print(f"[OK] Imagen 2A guardada: {imagen2a_path.name}")
+    
+    # IMAGEN 2B: Tabla Resumen - RURAL
+    print("[IMAGEN 2B] Tabla resumen - RURAL...")
+    fig2b = plt.figure(figsize=(20, 4), dpi=120, facecolor='white')
+    fig2b.suptitle('Tablero de Monitor de Guias - Resumen RURAL', 
+                  fontsize=20, fontweight='bold', y=0.95, color='#333')
+    ax2b = fig2b.add_subplot(111)
+    ax2b.axis('off')
+    
+    # Filtrar solo RURAL
+    resumen_data_parte2 = [fila for fila in resumen_data if fila[0] in ['RURAL']]
+    
+    if resumen_data_parte2:
+        tabla2b = ax2b.table(cellText=resumen_data_parte2, colLabels=headers_resumen,
+                          cellLoc='center', loc='center', bbox=[0, 0, 1, 0.8])
+        tabla2b.auto_set_font_size(False)
+        tabla2b.set_fontsize(11)
+        tabla2b.scale(1, 3.5)
+        for i in range(len(headers_resumen)):
+            tabla2b[(0, i)].set_facecolor('#2196F3')
+            tabla2b[(0, i)].set_text_props(weight='bold', color='white', fontsize=12)
+        for i in range(1, len(resumen_data_parte2) + 1):
+            tabla2b[(i, 0)].set_facecolor('#E3F2FD')
+            tabla2b[(i, 0)].set_text_props(weight='bold', fontsize=11)
+            for j in range(1, len(headers_resumen)):
+                tabla2b[(i, j)].set_text_props(weight='bold', fontsize=12)
+                if i % 2 == 0:
+                    tabla2b[(i, j)].set_facecolor('#F5F5F5')
+    
+    imagen2b_path = output_dir / "dashboard_parte2b_resumen_rural.png"
+    plt.savefig(imagen2b_path, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+    archivos_generados.append(imagen2b_path)
+    print(f"[OK] Imagen 2B guardada: {imagen2b_path.name}")
     
     # IMAGEN 3: Gráfico de Tendencias
     print("[IMAGEN 3] Grafico de tendencias...")
@@ -499,21 +547,36 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
                   fontsize=20, fontweight='bold', y=0.96, color='#333')
     ax3 = fig3.add_subplot(111)
     
-    for region in REGIONES_ORDEN:
+    # Excluir CT02 del gráfico
+    regiones_para_grafico = [r for r in REGIONES_ORDEN if r != 'CT02']
+    
+    for region in regiones_para_grafico:
         if region in pivot_region_tabla.index:
             horas = pivot_region_tabla.columns
             valores = pivot_region_tabla.loc[region].values
             color = REGIONES_CONFIG[region]['color']
+            
+            # Dibujar línea
             ax3.plot(horas, valores, marker='o', linewidth=2, markersize=6,
                     color=color, label=region, alpha=0.9)
+            
+            # Agregar valores en cada punto
+            for i, (hora, valor) in enumerate(zip(horas, valores)):
+                ax3.text(i, valor, str(int(valor)), 
+                        ha='center', va='bottom', fontsize=9, 
+                        fontweight='bold', color=color)
     
     ax3.set_xlabel('Hora', fontsize=13, fontweight='bold')
     ax3.set_ylabel('Cantidad', fontsize=13, fontweight='bold')
-    ax3.set_title('Tendencias por Región', fontsize=16, fontweight='bold', pad=15)
+    ax3.set_title('Tendencias por Región (GAM, RURAL, CT01)', fontsize=16, fontweight='bold', pad=15)
     ax3.legend(loc='upper left', fontsize=12, framealpha=0.9, prop={'weight': 'bold'})
     ax3.grid(True, alpha=0.3, linestyle='--')
     plt.setp(ax3.xaxis.get_majorticklabels(), rotation=45, ha='right', fontsize=11, weight='bold')
     plt.setp(ax3.yaxis.get_majorticklabels(), fontsize=11, weight='bold')
+    
+    # Agregar margen superior para que los valores no se corten
+    ylim = ax3.get_ylim()
+    ax3.set_ylim(ylim[0], ylim[1] * 1.1)
     
     info_text = f"VYD {stats_por_region.get('CT02', 0)}\nSPE {stats_por_region.get('CT01', 0)}\nTotal {total_guias}"
     ax3.text(0.02, 0.05, info_text, transform=ax3.transAxes,
@@ -526,7 +589,7 @@ def generar_dashboard(df: pd.DataFrame, output_path: Path):
     archivos_generados.append(imagen3_path)
     print(f"[OK] Imagen 3 guardada: {imagen3_path.name}")
     
-    print("[EXITO] 3 imagenes generadas exitosamente")
+    print("[EXITO] 4 imagenes generadas exitosamente")
     return archivos_generados
 
 def main():

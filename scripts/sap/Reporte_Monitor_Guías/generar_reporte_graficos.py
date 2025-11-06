@@ -246,10 +246,16 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
                         <li>Tabla detallada zona x hora (22 zonas × horas 14:00-23:00)</li>
                     </ul>
                 </li>
-                <li><strong>Imagen 2 - Resumen por Región (dashboard_parte2_resumen.png)</strong>
+                <li><strong>Imagen 2A - Resumen GAM, CT01 y CT02 (dashboard_parte2a_resumen_gam_ct.png)</strong>
                     <ul>
-                        <li>Tabla resumen: GAM, RURAL, CT01, CT02 por hora</li>
-                        <li>Suma de todas las zonas de cada región</li>
+                        <li>Tabla resumen: GAM, CT01 (SPE), CT02 (VYD) por hora</li>
+                        <li>Suma de todas las zonas de GAM y centros de distribución</li>
+                    </ul>
+                </li>
+                <li><strong>Imagen 2B - Resumen RURAL (dashboard_parte2b_resumen_rural.png)</strong>
+                    <ul>
+                        <li>Tabla resumen: RURAL por hora</li>
+                        <li>Suma de todas las zonas rurales</li>
                     </ul>
                 </li>
                 <li><strong>Imagen 3 - Tendencias (dashboard_parte3_tendencias.png)</strong>
@@ -265,7 +271,8 @@ def crear_resumen_html(conteo_df: pd.DataFrame) -> str:
             <p style="margin-top: 10px; padding: 10px; background-color: #FFF3E0; border-left: 4px solid #FF9800;">
                 <strong>Tarjetas KPI:</strong> Muestran el total de guías por región (GAM, RURAL, VYD, SPE) y el total general.<br>
                 <strong>Tabla Detallada "Horas":</strong> Muestra la cantidad de guías por zona en cada hora del día (22 zonas × horas).<br>
-                <strong>Tabla Resumen:</strong> Suma de todas las zonas de cada región por hora.<br>
+                <strong>Tabla Resumen GAM/CT:</strong> Suma de todas las zonas de GAM, CT01 (SPE) y CT02 (VYD) por hora.<br>
+                <strong>Tabla Resumen RURAL:</strong> Suma de todas las zonas rurales por hora.<br>
                 <strong>Gráfico de Tendencias:</strong> Visualiza el comportamiento de cada región a lo largo del día.
             </p>
             <p style="margin-top: 10px; padding: 10px; background-color: #E8F5E9; border-left: 4px solid #4CAF50;">
@@ -369,11 +376,12 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
         import time
         time.sleep(10)
         
-        # Buscar las 3 imágenes del dashboard
+        # Buscar las 4 imágenes del dashboard
         rutas_graficos = []
         nombres_dashboard = [
             "dashboard_parte1_detalle.png",
-            "dashboard_parte2_resumen.png",
+            "dashboard_parte2a_resumen_gam_ct.png",
+            "dashboard_parte2b_resumen_rural.png",
             "dashboard_parte3_tendencias.png"
         ]
         
