@@ -1,3 +1,4 @@
 *.xlsx
 *.xlsm
 *.ini.example
+scripts/sap/__pycache__/configuracion_regiones.cpython-312.pyc
