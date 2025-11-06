@@ -329,7 +329,7 @@ def enviar_correo(email_config: dict, rutas_graficos: List[Path], resumen_html: 
         server.send_message(msg)
         server.quit()
         
-        print(f"[EMAIL] ✓ Correo enviado exitosamente a: {', '.join(email_config['email_to'])}")
+        print(f"[EMAIL] [OK] Correo enviado exitosamente a: {', '.join(email_config['email_to'])}")
         return True
         
     except smtplib.SMTPAuthenticationError as e:
@@ -420,13 +420,13 @@ def main(xlsx_path: Optional[Path] = None, enviar_email: bool = True) -> int:
             resultado_email = enviar_correo(email_config, rutas_graficos, resumen_html, excel_path=xlsx_path)
             
             if resultado_email:
-                print("[EMAIL] ✓ Correo enviado exitosamente")
+                print("[EMAIL]  Correo enviado exitosamente")
             else:
-                print("[EMAIL] ✗ No se pudo enviar el correo")
+                print("[EMAIL]  No se pudo enviar el correo")
         else:
             print("[EMAIL] Envío de email deshabilitado (--no-email)")
         
-        print("\n[PROCESO] ✓ Proceso completado exitosamente")
+        print("\n[PROCESO]  Proceso completado exitosamente")
         return 0
         
     except Exception as e:
