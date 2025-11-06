@@ -180,54 +180,25 @@ def open_connection_or_reuse_new_session(system_label: str, client: str, user: s
     return app, connection, session
 
 def limpiar_sesion_sap(session):
-    """Limpia la sesión SAP antes de ejecutar el siguiente reporte (modo robusto)"""
+    """Limpia la sesión SAP antes de ejecutar el siguiente reporte"""
     try:
         logger.info("Limpiando sesión SAP...")
+        # Ir al menú principal
+        session.findById("wnd[0]").sendVKey(0)
+        session.findById("wnd[0]").sendCommand("/n")
+        session.findById("wnd[0]").sendVKey(0)
         
-        # Verificar que la sesión sigue activa
-        try:
-            wnd0 = session.findById("wnd[0]")
-        except Exception as e:
-            logger.warning(f"No se pudo acceder a wnd[0]: {e}")
-            return
-        
-        # Intentar ir al menú principal de manera suave
-        try:
-            wnd0.sendVKey(0)  # Enter primero
-            time.sleep(0.5)
-        except:
-            pass
-        
-        try:
-            # Comando /n para ir al menú principal
-            ok = session.findById("wnd[0]/tbar[0]/okcd")
-            ok.text = "/n"
-            wnd0.sendVKey(0)
-            time.sleep(1)
-        except Exception as e:
-            logger.warning(f"No se pudo ejecutar comando /n: {e}")
-            # Intentar método alternativo
+        # Cerrar ventanas adicionales
+        for i in range(1, 10):
             try:
-                wnd0.sendCommand("/n")
-                time.sleep(1)
-            except:
-                pass
-        
-        # Cerrar ventanas adicionales de manera suave
-        for i in range(1, 5):
-            try:
-                wnd = session.findById(f"wnd[{i}]")
-                wnd.close()
-                time.sleep(0.3)
+                session.findById(f"wnd[{i}]").close()
             except:
                 break
         
-        time.sleep(1)
-        logger.info("✓ Sesión SAP limpiada correctamente")
-        
+        time.sleep(2)
+        logger.info("Sesión SAP limpiada correctamente")
     except Exception as e:
-        logger.warning(f"⚠ Error al limpiar sesión: {e}")
-        logger.info("Continuando con el siguiente reporte...")
+        logger.warning(f"Error al limpiar sesión: {e}")
 
 def ensure_dir(path: Path) -> None:
     """Asegura que el directorio existe"""
