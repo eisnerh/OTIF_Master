@@ -1,10 +1,11 @@
 @echo off
-REM Script batch para ejecutar amalgama_y_dev_74.py
+REM Script batch para ejecutar amalgama_reportes_ultima_hora.py
+REM Descarga múltiples reportes de SAP con fecha de ayer
 REM Este archivo puede ejecutarse manualmente o desde el Programador de Tareas de Windows
 
-title Monitor Guías - Ejecución Automática
+title Copiar Último Arhivo de Excel - Descarga Automática
 echo ========================================
-echo    MONITOR GUIAS - EJECUCION AUTOMATICA
+echo    Copia de archivo de Excel y renombrar con fecha de ayer
 echo ========================================
 echo.
 
@@ -28,19 +29,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Verificar que existe el archivo credentials.ini
-if not exist "credentials.ini" (
-    echo ERROR: No se encontró el archivo credentials.ini
-    echo Por favor crea el archivo a partir de credentials.ini.example
-    exit /b 1
-)
 
 REM Ejecutar el script Python
-echo Ejecutando script de Monitor Guías...
+echo Ejecutando descarga y procesamiento de reportes...
 echo Fecha/Hora: %date% %time%
 echo Usando Python: %PYTHON_EXE%
 echo.
-"%PYTHON_EXE%" amalgama_y_dev_74.py
+echo [INFO] Esto puede tomar 1-2 minutos (depende del tamaño de los reportes)
+echo.
+"%PYTHON_EXE%" ChronoCopy.py
 
 REM Capturar el código de salida
 set EXIT_CODE=%errorlevel%
@@ -48,13 +45,22 @@ set EXIT_CODE=%errorlevel%
 if %EXIT_CODE% equ 0 (
     echo.
     echo ========================================
-    echo Ejecución completada exitosamente
+    echo Proceso completado exitosamente
     echo ========================================
+    echo Los reportes se guardaron en:
+    echo C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025
+    echo.
+    echo Cada carpeta contiene:
+    echo   - archivo.txt  ^(original de SAP^)
+    echo   - archivo.xlsx ^(procesado para analisis^)
+    echo.
 ) else (
     echo.
     echo ========================================
-    echo ERROR: La ejecución falló con código %EXIT_CODE%
+    echo ERROR: El proceso fallo con codigo %EXIT_CODE%
     echo ========================================
+    echo Revisa los mensajes de error anteriores
+    echo.
 )
 
 

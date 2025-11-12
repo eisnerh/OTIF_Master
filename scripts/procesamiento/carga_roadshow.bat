@@ -1,10 +1,10 @@
 @echo off
-REM Script batch para ejecutar amalgama_y_dev_74.py
+REM Script batch para ejecutar carga_roadshow.py
 REM Este archivo puede ejecutarse manualmente o desde el Programador de Tareas de Windows
 
-title Monitor Guías - Ejecución Automática
+title Carga ROADSHOW GUIAS - Ejecución Automática
 echo ========================================
-echo    MONITOR GUIAS - EJECUCION AUTOMATICA
+echo    CARGA GUIAS - EJECUCION ROADSHOW
 echo ========================================
 echo.
 
@@ -28,19 +28,13 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Verificar que existe el archivo credentials.ini
-if not exist "credentials.ini" (
-    echo ERROR: No se encontró el archivo credentials.ini
-    echo Por favor crea el archivo a partir de credentials.ini.example
-    exit /b 1
-)
 
 REM Ejecutar el script Python
-echo Ejecutando script de Monitor Guías...
+echo Ejecutando script de CARGA RS...
 echo Fecha/Hora: %date% %time%
 echo Usando Python: %PYTHON_EXE%
 echo.
-"%PYTHON_EXE%" amalgama_y_dev_74.py
+"%PYTHON_EXE%" carga_roadshow.py
 
 REM Capturar el código de salida
 set EXIT_CODE=%errorlevel%
@@ -57,6 +51,8 @@ if %EXIT_CODE% equ 0 (
     echo ========================================
 )
 
+REM Pausar para ver los resultados (presiona cualquier tecla para cerrar)
+pause
 
 REM Salir con el código de error del script Python
 exit /b %EXIT_CODE%

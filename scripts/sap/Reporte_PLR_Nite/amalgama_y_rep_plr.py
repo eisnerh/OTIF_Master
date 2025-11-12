@@ -351,7 +351,7 @@ def run_once(cfg: RunConfig) -> Path:
     # 2. Eliminar fila 5
     # 3. Eliminar primeras 3 filas
     fecha_actual = datetime.now().strftime('%Y-%m-%d')
-    xlsx_path = txt_path.with_name(f"REP_PLR_NITE_{fecha_actual}_processed.xlsx")
+    xlsx_path = txt_path.with_name(f"REP_PLR_NITE_processed.xlsx")
     process_tab_file(txt_path, xlsx_path)
 
     # Verificación final (ya no hace limpieza adicional)

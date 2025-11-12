@@ -52,7 +52,7 @@ def guardar_ultima_seleccion(centro):
         with open(ARCHIVO_ULTIMO_CENTRO, "w", encoding="utf-8") as f:
             f.write(centro)
     except Exception as e:
-        mostrar_estado(f"⚠️ No se pudo guardar la última selección. Detalles: {e}")
+        mostrar_estado(f"[WARN] No se pudo guardar la última selección. Detalles: {e}")
 
 def seleccionar_centro(default_centro=None):
     """Muestra un menú para elegir el centro de destino en el FTP (con recuerdo del último)."""
@@ -109,7 +109,7 @@ def listar_archivos_dnl(directorio):
 
 # --- Flujo principal ---
 def main():
-    mostrar_estado("🚀 Iniciando el proceso de carga de RoadShow a SAP...")
+    mostrar_estado("Iniciando el proceso de carga de RoadShow a SAP...")
 
     # 1) Preparación de directorios
     mostrar_estado(f"Cambiando directorio de trabajo a: {DIRECTORIO_TRABAJO}")
@@ -126,7 +126,7 @@ def main():
     archivos_a_subir = listar_archivos_dnl(DIRECTORIO_TRABAJO)
 
     if not archivos_a_subir:
-        mostrar_estado("ℹ️ Aviso: No se encontraron archivos '.DNL' para subir. Se limpiará moviéndolos si aparecieron nuevos.")
+        mostrar_estado("[Aviso]: No se encontraron archivos '.DNL' para subir. Se limpiará moviéndolos si aparecieron nuevos.")
     else:
         ultimo_centro = leer_ultima_seleccion()
         centro_elegido = seleccionar_centro(default_centro=ultimo_centro)
@@ -140,7 +140,7 @@ def main():
         try:
             with ftplib.FTP(FTP_HOST, timeout=30) as ftp:
                 ftp.login(user, password)
-                mostrar_estado("✅ Conexión y login exitosos.")
+                mostrar_estado("[OK] Conexión y login exitosos.")
 
                 # Modo ASCII (como en tu script original). Para binario: ftp.voidcmd('TYPE I')
                 ftp.voidcmd('TYPE A')
@@ -151,18 +151,18 @@ def main():
                 # Subida de archivos
                 archivos_subidos_count = 0
                 for nombre_archivo in archivos_a_subir:
-                    mostrar_estado(f"  ⬆️ Subiendo: {nombre_archivo}")
+                    mostrar_estado(f" Subiendo: {nombre_archivo}")
                     with open(nombre_archivo, 'rb') as fp:
                         ftp.storbinary(f'STOR {nombre_archivo}', fp)
                         archivos_subidos_count += 1
 
-                mostrar_estado(f"✅ Subida FTP completa. Total de archivos subidos: {archivos_subidos_count}")
+                mostrar_estado(f"[OK] Subida FTP completa. Total de archivos subidos: {archivos_subidos_count}")
 
         except ftplib.all_errors as e:
-            mostrar_estado(f"❌ ERROR FATAL: Falló la transferencia FTP. Detalle: {e}")
+            mostrar_estado(f"ERROR FATAL: Falló la transferencia FTP. Detalle: {e}")
             return
         except RuntimeError as e:
-            mostrar_estado(f"❌ ERROR: {e}")
+            mostrar_estado(f"ERROR: {e}")
             return
 
     # 3) Mover archivos procesados
@@ -180,16 +180,16 @@ def main():
             archivos_movidos += 1
 
         if archivos_movidos > 0:
-            mostrar_estado(f"✅ Éxito: Se movieron {archivos_movidos} archivo(s) a {DIRECTORIO_MOVIDOS}.")
+            mostrar_estado(f" Éxito: Se movieron {archivos_movidos} archivo(s) a {DIRECTORIO_MOVIDOS}.")
         else:
-            mostrar_estado("ℹ️ Aviso: No se encontraron archivos '.DNL' para mover.")
+            mostrar_estado(" Aviso: No se encontraron archivos '.DNL' para mover.")
 
     except Exception as e:
-        mostrar_estado(f"❌ ERROR: Falló el movimiento de archivos. Detalles: {e}")
+        mostrar_estado(f"ERROR: Falló el movimiento de archivos. Detalles: {e}")
         return
 
     # 4) Finalización
-    mostrar_estado("🎉 Terminó el proceso RoadShow. Todos los pasos completados con éxito.")
+    mostrar_estado("[OK] Terminó el proceso RoadShow. Todos los pasos completados con éxito.")
 
 if __name__ == "__main__":
     main()
