@@ -6,9 +6,9 @@ from datetime import datetime
 lista_archivos = [
     r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\INCIDENCIAS\INCIDENCIAS_2025.xlsx",
     r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\BO HISTORICO\BO - HISTORICO PARA POWER BI 2025.xlsx",
-    r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\3-Reporte de Tipificación de Devoluciones\País\2025\10-2025-Devoluciones.xlsx",
+    r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Proyectos Reportes 3PL\3-Reporte de Tipificación de Devoluciones\País\2025\11-2025-Devoluciones.xlsx",
     r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\OTIF ENT CD01\REP PLR ESTATUS ENTREGAS v25.xlsx",
-    r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\VOL POR PORTAFOLIO ENE-2025",  # <-- SIN EXTENSIÓN
+    r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\VOL POR PORTAFOLIO ENE-2025.xlsx",  # <-- SIN EXTENSIÓN
     r"C:\Users\ELOPEZ21334\OneDrive - Distribuidora La Florida S.A\Temporada 2024\MONITOR GUIA.xlsx"
 ]
 
