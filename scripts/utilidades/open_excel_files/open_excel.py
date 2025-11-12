@@ -21,6 +21,8 @@ LOG_FILE = cfg.get("log_file")
 # Configuraciones
 MAX_DOWNLOAD_WAIT = 60  # segundos para esperar descarga
 CHECK_INTERVAL = 2  # segundos entre verificaciones
+RETRY_ATTEMPTS = int(cfg.get("retry_open_attempts", 4))  # intentos de apertura
+RETRY_BASE_DELAY = float(cfg.get("retry_base_delay", 1.5))  # delay base entre reintentos
 
 # ================== ATRIBUTOS WINDOWS (OneDrive) ==================
 FILE_ATTRIBUTE_OFFLINE = 0x1000
@@ -71,28 +73,72 @@ def trigger_download(path):
     print(f"  >> ADVERTENCIA: Tiempo de espera agotado")
     return False
 
+def looks_like_com_ole_timeout(exc):
+    """Detecta si un error es relacionado con timeout OLE/COM"""
+    msg = str(exc).upper()
+    needles = [
+        "RPC_E_SERVERCALL_RETRYLATER",
+        "RPC_E_CALL_REJECTED",
+        "CALL WAS REJECTED BY CALLEE",
+        "OLE",
+        "COM_ERROR",
+        "AUTOMATION ERROR"
+    ]
+    return any(n in msg for n in needles)
+
 def verify_can_open(path):
-    """Verifica si el archivo se puede abrir con openpyxl"""
-    try:
-        wb = load_workbook(path, read_only=True, data_only=True)
-        sheets = wb.sheetnames
-        wb.close()
-        return True, sheets
-    except Exception as e:
-        return False, str(e)
+    """Verifica si el archivo se puede abrir con openpyxl (con reintentos)"""
+    last_error = None
+    
+    for attempt in range(RETRY_ATTEMPTS):
+        try:
+            wb = load_workbook(path, read_only=True, data_only=True)
+            sheets = wb.sheetnames
+            wb.close()
+            return True, sheets
+        except PermissionError as e:
+            last_error = f"Archivo bloqueado: {e}"
+            if attempt < RETRY_ATTEMPTS - 1:
+                delay = RETRY_BASE_DELAY * (2 ** attempt)
+                print(f"  >> Archivo bloqueado. Reintento {attempt + 1}/{RETRY_ATTEMPTS} en {delay:.1f}s...")
+                time.sleep(delay)
+        except Exception as e:
+            if looks_like_com_ole_timeout(e):
+                last_error = f"Timeout OLE/COM: {repr(e)}"
+                if attempt < RETRY_ATTEMPTS - 1:
+                    delay = RETRY_BASE_DELAY * (2 ** attempt)
+                    print(f"  >> Timeout OLE/COM detectado. Reintento {attempt + 1}/{RETRY_ATTEMPTS} en {delay:.1f}s...")
+                    time.sleep(delay)
+            else:
+                last_error = str(e)
+                break  # Error no recuperable
+    
+    return False, last_error
 
 def open_with_excel(path):
-    """Abre el archivo con Excel (programa predeterminado)"""
-    try:
-        if os.name == 'nt':
-            os.startfile(path)
-        elif sys.platform == 'darwin':
-            subprocess.call(['open', path])
-        else:
-            subprocess.call(['xdg-open', path])
-        return True
-    except Exception as e:
-        return False
+    """Abre el archivo con Excel (programa predeterminado, con reintentos)"""
+    last_error = None
+    
+    for attempt in range(RETRY_ATTEMPTS):
+        try:
+            if os.name == 'nt':
+                os.startfile(path)
+            elif sys.platform == 'darwin':
+                subprocess.call(['open', path])
+            else:
+                subprocess.call(['xdg-open', path])
+            return True, None
+        except Exception as e:
+            last_error = str(e)
+            if looks_like_com_ole_timeout(e) or "permission" in str(e).lower():
+                if attempt < RETRY_ATTEMPTS - 1:
+                    delay = RETRY_BASE_DELAY * (2 ** attempt)
+                    print(f"  >> Error al abrir. Reintento {attempt + 1}/{RETRY_ATTEMPTS} en {delay:.1f}s...")
+                    time.sleep(delay)
+            else:
+                break  # Error no recuperable
+    
+    return False, last_error
 
 def log_write(mensaje):
     """Escribe en consola y archivo de log"""
@@ -148,11 +194,12 @@ def main():
         
         # Abrir con Excel
         log_write(f"  >> Abriendo con Excel...")
-        if open_with_excel(archivo):
+        success, error_msg = open_with_excel(archivo)
+        if success:
             log_write(f"  >> OK: Archivo abierto exitosamente")
             archivos_abiertos += 1
         else:
-            log_write(f"  >> ERROR: No se pudo abrir con Excel")
+            log_write(f"  >> ERROR: No se pudo abrir con Excel - {error_msg}")
             archivos_error += 1
         
         # Pausa entre archivos (excepto el ultimo)
