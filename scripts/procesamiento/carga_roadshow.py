@@ -2,6 +2,10 @@ import os
 import ftplib
 import shutil
 from datetime import datetime
+
+import socket
+
+
 ###
 # --- Configuración ---
 # Directorios
@@ -17,20 +21,21 @@ FTP_PASS_DEFAULT = "usaim"   # ⚠️ Usa variables de entorno: FTP_USER / FTP_P
 # Base y centros (subcarpetas dentro de RoadShow)
 FTP_BASE_REMOTO = "RoadShow"
 CENTROS = [
-    "SncaSubeRS",
-    "VYDSubeRS",
     "SubeRS",
     "GuapSubeRS",
+    "SncaSubeRS",
     "LibeSubeRS",
-    "LimoSubeRS",
-    "CneiSubeRS",
     "NicoSubeRS",
     "PuntaSubeRS",
+    "CneiSubeRS",
     "SnisSubeRS",
+    "LimoSubeRS",
+    "VYDSubeRS",
 ]
 
 # --- Utilidades ---
 def mostrar_estado(mensaje):
+    print(socket.gethostbyname("fifjumpftp-prd.cloud.fifco.com"))
     """Muestra un mensaje de estado en la consola con marca de tiempo."""
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {mensaje}")
 

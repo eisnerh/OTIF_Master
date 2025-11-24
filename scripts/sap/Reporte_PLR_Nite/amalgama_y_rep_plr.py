@@ -70,7 +70,7 @@ SAP_LANG    = _CREDS.get("sap_language", "ES") or "ES"
 
 TCODE       = "zsd_rep_planeamiento"
 NODE_KEY    = "F00120"
-ROW_NUMBER  = 11  # Ajustar según la fila que se necesite
+ROW_NUMBER  = 12  # Ajustar según la fila que se necesite
 OUTPUT_DIR  = Path(r"C:/data/SAP_Extraction/rep_plr_nite")
 # Usar fecha de HOY (no ayer)
 DATE_STR = datetime.now().strftime("%d.%m.%Y")
@@ -356,7 +356,35 @@ def run_once(cfg: RunConfig) -> Path:
 
     # Verificación final (ya no hace limpieza adicional)
     clean_excel_file(xlsx_path, rows_to_drop=0)
-
+    
+    # Bloque para histórico
+    from pathlib import Path
+    import shutil
+    import csv
+    from datetime import datetime
+    
+    # Archivo fila actualizado cada día
+    archivo_fijo = OUTPUT_DIR / "REP_PLR_NITE_processed.xlsx"
+    shutil.copy2(xlsx_path, archivo_fijo)
+    
+    # Carpeta histórica con año
+    historico_dir = OUTPUT_DIR / "historico"
+    historico_dir.mkdir(parents=True, exist_ok=True)
+    anio_actual = datetime.now().strftime('%Y')
+    carpeta_anio = historico_dir / anio_actual
+    carpeta_anio.mkdir(parents=True, exist_ok=True)
+    
+    # Archivo histórico con fecha
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')
+    archivo_historico = carpeta_anio / f"REP_PLR_NITE_{fecha_actual}.xlsx"
+    shutil.copy2(archivo_fijo, archivo_historico)
+    
+    # Anexar Registro en CSV
+    csv_log = historico_dir / "historico.csv"
+    with open(csv_log, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([fecha_actual, str(archivo_fijo), str(archivo_historico)])
+    
     # Generar dashboard regional
     try:
         logger.info("[GRAFICO] Generando dashboard regional por zonas...")
