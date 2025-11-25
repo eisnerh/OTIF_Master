@@ -301,6 +301,71 @@ def clean_excel_file(xlsx_path: Path, rows_to_drop: int = 0) -> None:
     except Exception as e:
         logger.warning(f"[ADVERTENCIA] Error al verificar el archivo Excel: {e}")
 
+def save_to_historical_file(xlsx_path: Path, output_dir: Path) -> None:
+    """
+    Guarda los datos procesados en un archivo histórico, anexando los datos
+    cada vez que se ejecuta el script.
+    
+    Args:
+        xlsx_path: Ruta del archivo Excel procesado actual
+        output_dir: Directorio donde se guardará el archivo histórico
+    """
+    try:
+        logger.info("[HISTORICO] Guardando datos en archivo histórico...")
+        
+        # Leer el archivo Excel procesado (sin header)
+        df_current = pd.read_excel(xlsx_path, header=None, engine="openpyxl")
+        
+        # Agregar columna con fecha y hora de ejecución al final
+        fecha_ejecucion = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        num_cols = df_current.shape[1]
+        df_current[num_cols] = fecha_ejecucion
+        
+        # Definir ruta del archivo histórico
+        historico_dir = output_dir / "historico"
+        ensure_dir(historico_dir)
+        historico_path = historico_dir / "REP_PLR_NITE_historico.xlsx"
+        
+        # Si el archivo histórico existe, leerlo y anexar datos
+        if historico_path.exists():
+            try:
+                # Leer histórico (puede tener header si es la primera vez con la nueva estructura)
+                df_historico = pd.read_excel(historico_path, header=None, engine="openpyxl")
+                logger.info(f"[HISTORICO] Archivo histórico encontrado con {len(df_historico)} filas existentes")
+                
+                # Verificar que las columnas coincidan
+                cols_current = df_current.shape[1]
+                cols_historico = df_historico.shape[1]
+                
+                if cols_current != cols_historico:
+                    logger.warning(f"[HISTORICO] Advertencia: Número de columnas diferente. "
+                                 f"Actual: {cols_current}, Histórico: {cols_historico}")
+                    # Ajustar columnas para que coincidan (usar el mínimo)
+                    min_cols = min(cols_current, cols_historico)
+                    df_current = df_current.iloc[:, :min_cols]
+                    df_historico = df_historico.iloc[:, :min_cols]
+                    logger.info(f"[HISTORICO] Columnas ajustadas a {min_cols} columnas")
+                
+                # Combinar los dataframes
+                df_combined = pd.concat([df_historico, df_current], ignore_index=True)
+                logger.info(f"[HISTORICO] Datos anexados. Total de filas en histórico: {len(df_combined)}")
+            except Exception as e:
+                logger.warning(f"[HISTORICO] Error al leer archivo histórico existente: {e}. Creando nuevo archivo.")
+                df_combined = df_current
+        else:
+            logger.info("[HISTORICO] Creando nuevo archivo histórico")
+            df_combined = df_current
+        
+        # Guardar el archivo histórico
+        df_combined.to_excel(historico_path, index=False, header=False, engine="openpyxl")
+        logger.info(f"[OK] Histórico guardado: {historico_path}")
+        logger.info(f"[INFO] Total de registros en histórico: {len(df_combined)}")
+        logger.info(f"[INFO] Nueva ejecución agregada: {fecha_ejecucion}")
+        
+    except Exception as e:
+        logger.error(f"[ERROR] Error al guardar en archivo histórico: {e}")
+        logger.exception("Detalle del error:")
+
 @dataclass
 class RunConfig:
     system_label: str
@@ -356,6 +421,9 @@ def run_once(cfg: RunConfig) -> Path:
 
     # Verificación final (ya no hace limpieza adicional)
     clean_excel_file(xlsx_path, rows_to_drop=0)
+
+    # Guardar en archivo histórico
+    save_to_historical_file(xlsx_path, cfg.output_dir)
 
     # Generar dashboard regional
     try:
