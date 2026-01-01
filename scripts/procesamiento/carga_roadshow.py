@@ -14,6 +14,7 @@ DIRECTORIO_MOVIDOS = os.path.join(DIRECTORIO_TRABAJO, "Movidos")
 ARCHIVO_ULTIMO_CENTRO = os.path.join(DIRECTORIO_TRABAJO, "ultimo_centro.txt")
 
 # Configuración FTP (puedes sobrescribir con variables de entorno)
+
 FTP_HOST = "fifjumpftp-prd.cloud.fifco.com"
 FTP_USER_DEFAULT = "usaim"   # ⚠️ Evita credenciales en claro en producción
 FTP_PASS_DEFAULT = "usaim"   # ⚠️ Usa variables de entorno: FTP_USER / FTP_PASS

@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 # ===================== CONFIGURACIÓN =====================
-carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\11-Noviembre"
+carpeta = r"C:\Users\elopez21334\OneDrive - Distribuidora La Florida S.A\Retail\Proyectos de Reportes\2023\Torre de Control\YTD 2025\12-diciembre"
 bahias = 'Bahias'
 
 # Modo para nombrar el archivo de salida:
